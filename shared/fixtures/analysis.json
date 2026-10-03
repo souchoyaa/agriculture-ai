@@ -1,0 +1,50 @@
+{
+  "contract_version": "0.1.0",
+  "id": "demo-analysis-001",
+  "observation_id": "demo-coffee-001",
+  "data_mode": "demo",
+  "generated_at": "2026-10-03T08:00:00Z",
+  "status": "needs_review",
+  "condition": {
+    "id": "coffee_leaf_rust",
+    "label": "Possible coffee leaf rust",
+    "confidence": 0.65,
+    "uncertainty": "Synthetic example, not a confirmed diagnosis"
+  },
+  "environment": {
+    "status": "unavailable",
+    "as_of": null,
+    "temperature_c": null,
+    "relative_humidity_pct": null,
+    "rainfall_mm": null
+  },
+  "map": {
+    "status": "unavailable",
+    "type": "FeatureCollection",
+    "features": [],
+    "limitations": "No calibrated spatial model in bootstrap"
+  },
+  "scouting": [
+    {
+      "id": "inspect_leaf_underside",
+      "text": "Inspect leaf undersides and record additional evidence."
+    }
+  ],
+  "recommendations": [
+    {
+      "id": "seek_local_review",
+      "text": "Request local agricultural review before treatment decisions.",
+      "source_ids": []
+    }
+  ],
+  "sources": [],
+  "provenance": {
+    "adapter": "mock-api",
+    "source": "synthetic demo, guidance requires sourced review"
+  },
+  "offline": {
+    "cached": true,
+    "stale": true,
+    "sync_status": "local_only"
+  }
+}

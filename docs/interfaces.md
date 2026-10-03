@@ -1,0 +1,18 @@
+# Canonical API 0.1.0
+
+Authoritative shapes: shared/contracts/*.schema.json; examples: shared/fixtures/*.json. Optional observation location/locale may be omitted. Fields not supplied must not be invented by real adapters. Additive fields are permitted; breaking versions need acknowledgement. `/v1` is the HTTP major version; each canonical payload contains `contract_version: 0.1.0`.
+
+| Operation | Input | Output |
+| --- | --- | --- |
+| GET /v1/health | none | status, contract_version, data_mode |
+| POST /v1/analyses | canonical observation JSON | canonical analysis JSON, 200 |
+
+POST is stateless and does not save or sync observations. Retries may recompute; IDs identify observations, not persisted records. No bootstrap authentication; local development only. Content-Type application/json. MockAPI implements the same analyze operation with fixed fixture output; both adapters echo observation_id and report unsupported non-coffee crops. Real inference and weather are unavailable. Even HTTP responses remain data_mode=demo until backend implements real/cached sourced analysis.
+
+Errors: 422 `{ "detail": { "code": "invalid_observation", "message": "…", "retryable": false } }` for schema-invalid JSON objects. Malformed JSON/non-object bodies use FastAPI's standard 422 detail array. Frontend maps such errors to http_error without assuming a structured domain detail. 5xx is retryable; HTTP adapter throws ApiError; timeout/network failure is network_unavailable, retryable=true. Ten-second timeout; retain local input, expose failure, no automatic fake upload. Future services should preserve the domain envelope. A non-2xx response is never a canonical analysis.
+
+UTC/offset ISO 8601 timestamps; observed_at is capture time, generated_at is analysis time, environment.as_of is source measurement/cache time or null. Fixed demo timestamps are stale. Temperature Celsius; relative humidity percent 0–100; rainfall millimetres over a future explicitly documented period (unavailable now). Coordinates WGS84 decimal degrees: location object names latitude/longitude; GeoJSON geometry arrays are longitude, latitude. Features may later carry suitability scores with documented scale/horizon/limitations; no bootstrap map or calibrated risk is asserted.
+
+Data mode demo/live/cached describes origin; provenance names adapter and source. Environment freshness is fresh/stale/unavailable independently of origin. offline.cached/stale describe response cache state; sync_status local_only/pending/synced/failed describes observation synchronization, not inference quality. Demo is cached/stale/local_only. HTTP connectivity does not imply fresh data or persistence. Mock response clones fixtures; HTTP returns server analysis. No persistent cache/queue exists yet.
+
+Analysis status supported/needs_review/unsupported/unavailable; uncertainty is explicit. Missing service output uses unavailable rather than zero risk. condition confidence is in [0,1] but must not be described as a calibrated probability. Map status available/unavailable/unsupported and limitations remain visible. Scouting/recommendations use stable IDs plus display text; recommendations reference sources by ID. Real sources must include title, URL, accessed_at; backend may add author/publication/license fields. Bootstrap sources are empty and demo guidance is not vetted. Guidance never implies authorization to send/share.

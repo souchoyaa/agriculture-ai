@@ -1,0 +1,5 @@
+# Agent handoff
+
+Read README.md, docs/architecture.md, docs/interfaces.md, docs/continuation.md and your original prompt in docs/prompts/. Live coordination is **/Users/sachagodey/Documents/project/hackaton/.agent-coordination**, never a worktree copy. Verify run ID, STOP/deadline, architecture readiness, bootstrap ancestry, contract version and recorded checks before implementing.
+
+Backend owns backend/, shared/, docs/backend/ and integration. Frontend owns frontend/, docs/frontend/. Keep root/shared changes coordinated; propose through requests/<recipient>/ with run ID and compatibility impact. Read steering/<role>/ each iteration. Write only your own status/checkpoint atomically. Use role decisions/TODO docs. Preserve demo labels, uncertainty, source provenance, unavailable and stale states. Liquid stays behind adapter; UI uses mock/HTTP API. Backend uses uv; frontend Expo/TypeScript. Run relevant checks and commit coherent milestones until stored deadline. Never start duplicate workers/supervisors or switch another worktree's branch.

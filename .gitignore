@@ -1,0 +1,13 @@
+.venv/
+node_modules/
+.expo/
+dist/
+__pycache__/
+.pytest_cache/
+.env*
+!.env.example
+*.pt
+*.pth
+*.safetensors
+*.onnx
+.agent-coordination/

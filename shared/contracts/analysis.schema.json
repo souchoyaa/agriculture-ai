@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "contract_version": {
+      "const": "0.1.0"
+    },
+    "id": {
+      "type": "string"
+    },
+    "data_mode": {
+      "enum": [
+        "demo",
+        "live",
+        "cached"
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "adapter": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "adapter",
+        "source"
+      ],
+      "additionalProperties": true
+    },
+    "observation_id": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "needs_review",
+        "supported",
+        "unsupported",
+        "unavailable"
+      ]
+    },
+    "condition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "uncertainty": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "confidence",
+        "uncertainty"
+      ],
+      "additionalProperties": true
+    },
+    "environment": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "fresh",
+            "stale",
+            "unavailable"
+          ]
+        },
+        "as_of": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "temperature_c": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "relative_humidity_pct": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "rainfall_mm": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "required": [
+        "status",
+        "as_of",
+        "temperature_c",
+        "relative_humidity_pct",
+        "rainfall_mm"
+      ],
+      "additionalProperties": true
+    },
+    "map": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "available",
+            "unavailable",
+            "unsupported"
+          ]
+        },
+        "type": {
+          "const": "FeatureCollection"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "limitations": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "type",
+        "features",
+        "limitations"
+      ],
+      "additionalProperties": true
+    },
+    "scouting": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "text"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "source_ids"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "accessed_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "url",
+          "accessed_at"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "offline": {
+      "type": "object",
+      "properties": {
+        "cached": {
+          "type": "boolean"
+        },
+        "stale": {
+          "type": "boolean"
+        },
+        "sync_status": {
+          "enum": [
+            "local_only",
+            "pending",
+            "synced",
+            "failed"
+          ]
+        }
+      },
+      "required": [
+        "cached",
+        "stale",
+        "sync_status"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "contract_version",
+    "id",
+    "data_mode",
+    "provenance",
+    "observation_id",
+    "generated_at",
+    "status",
+    "condition",
+    "environment",
+    "map",
+    "scouting",
+    "recommendations",
+    "sources",
+    "offline"
+  ],
+  "additionalProperties": true
+}

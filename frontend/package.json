@@ -1,0 +1,27 @@
+{
+  "name": "agriculture-client",
+  "version": "0.1.0",
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "web": "expo start --web",
+    "check": "tsc --noEmit && tsx tests/adapters.ts",
+    "build:web": "expo export --platform web"
+  },
+  "dependencies": {
+    "expo": "54.0.33",
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "react-dom": "19.1.0",
+    "react-native-web": "^0.21.0",
+    "@expo/metro-runtime": "~6.1.2"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.2",
+    "@types/react": "19.1.17",
+    "ajv": "^8.17.1",
+    "tsx": "^4.20.0",
+    "ajv-formats": "^3.0.1"
+  }
+}
