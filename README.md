@@ -7,6 +7,8 @@ Offline demo: Liquid → VLM adapter → canonical observation → backend → c
 Backend (Python 3.12, uv):
 ```sh
 cd backend
+export UV_CACHE_DIR="$PWD/.cache/uv"
+export UV_PYTHON_INSTALL_DIR="$PWD/.cache/python"
 uv sync --python 3.12
 uv run python -m unittest discover -s tests -v
 uv run uvicorn app.main:app --host 127.0.0.1 --port 8000
@@ -14,6 +16,7 @@ uv run uvicorn app.main:app --host 127.0.0.1 --port 8000
 Frontend (Node 22+ recommended, npm):
 ```sh
 cd frontend
+export npm_config_cache="$PWD/.cache/npm"
 npm ci
 npm run check
 npm run web

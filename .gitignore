@@ -11,3 +11,6 @@ __pycache__/
 *.safetensors
 *.onnx
 .agent-coordination/
+
+# Writable dependency caches for sandboxed setup
+.cache/
