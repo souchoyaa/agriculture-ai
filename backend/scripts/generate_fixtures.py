@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.contracts import SHARED, read, validate  # noqa: E402
 from app.domain.analysis import analyze  # noqa: E402
 
-DEMO_NOW = datetime(2026, 10, 4, 0, 0, tzinfo=timezone.utc)
+DEMO_NOW = datetime(2026, 10, 4, 4, 59, tzinfo=timezone.utc)
 
 
 def scenarios():

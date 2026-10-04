@@ -107,7 +107,7 @@ def fetch_live(lat: float, lon: float, now: datetime, timeout: float = 8.0) -> W
         "fetched_at": now.astimezone(timezone.utc).isoformat().replace("+00:00", "Z"),
         "request": {"latitude": round(lat, 3), "longitude": round(lon, 3), "past_days": 14, "forecast_days": 7, "timezone": "UTC"},
         "grid_latitude": raw.get("latitude"), "grid_longitude": raw.get("longitude"), "elevation_m": raw.get("elevation"),
-        "notes": "Open-Meteo model output; hours before fetched_at are past-days model data, later hours forecast.",
+        "notes": "Open-Meteo model output, not station observations; hours before fetched_at are past-days model data, later hours forecast.",
         "hourly_units": raw.get("hourly_units"), "hourly": raw["hourly"],
     }
     CACHE_DIR.mkdir(parents=True, exist_ok=True)

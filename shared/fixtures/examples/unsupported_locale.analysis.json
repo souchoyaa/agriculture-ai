@@ -1,12 +1,12 @@
 {
  "contract_version": "0.1.0",
- "id": "analysis-583a7a5f3ea9899e",
+ "id": "analysis-9c1174973fcccd05",
  "observation_id": "demo-coffee-001-rw",
  "data_mode": "demo",
- "generated_at": "2026-10-04T00:00:00Z",
+ "generated_at": "2026-10-04T04:59:00Z",
  "environment": {
   "status": "fresh",
-  "as_of": "2026-10-03T23:46:00Z",
+  "as_of": "2026-10-04T04:45:47.168074Z",
   "temperature_c": 24.0,
   "relative_humidity_pct": 53.4,
   "rainfall_mm": 0.0,
@@ -68,7 +68,7 @@
    "id": "scout_point_2",
    "text": "Priority point 2: about 45 m south-west of the reported plant.",
    "rank": 2,
-   "priority": 0.5483,
+   "priority": 0.5558,
    "location": {
     "latitude": -1.9501799,
     "longitude": 30.0596401
@@ -80,7 +80,7 @@
    "id": "scout_point_3",
    "text": "Priority point 3: about 40 m south of the reported plant.",
    "rank": 3,
-   "priority": 0.4348,
+   "priority": 0.4269,
    "location": {
     "latitude": -1.9503597,
     "longitude": 30.06
@@ -502,23 +502,13 @@
   "pathogen": "Hemileia vastatrix"
  },
  "weather_risk": {
-  "status": "available",
+  "status": "partial",
   "class": "moderate",
-  "favourable_day_fraction": 0.381,
-  "favourable_days": 8,
-  "assessed_days": 21,
+  "favourable_day_fraction": 0.25,
+  "favourable_days": 5,
+  "assessed_days": 20,
   "expected_days": 21,
   "days": [
-   {
-    "hours": 24,
-    "complete": true,
-    "longest_wet_spell_h": 6,
-    "spell_temperature_factor": 0.99,
-    "favourable": true,
-    "date": "2026-09-19",
-    "period": "history",
-    "data_kind": "model_past"
-   },
    {
     "hours": 24,
     "complete": true,
@@ -657,14 +647,14 @@
     "favourable": false,
     "date": "2026-10-03",
     "period": "reference_and_after",
-    "data_kind": "includes_forecast"
+    "data_kind": "model_past"
    },
    {
     "hours": 24,
     "complete": true,
-    "longest_wet_spell_h": 9,
-    "spell_temperature_factor": 0.62,
-    "favourable": true,
+    "longest_wet_spell_h": 3,
+    "spell_temperature_factor": 0.44,
+    "favourable": false,
     "date": "2026-10-04",
     "period": "reference_and_after",
     "data_kind": "includes_forecast"
@@ -672,7 +662,7 @@
    {
     "hours": 24,
     "complete": true,
-    "longest_wet_spell_h": 3,
+    "longest_wet_spell_h": 5,
     "spell_temperature_factor": 0.49,
     "favourable": false,
     "date": "2026-10-05",
@@ -682,8 +672,8 @@
    {
     "hours": 24,
     "complete": true,
-    "longest_wet_spell_h": 4,
-    "spell_temperature_factor": 0.41,
+    "longest_wet_spell_h": 5,
+    "spell_temperature_factor": 0.48,
     "favourable": false,
     "date": "2026-10-06",
     "period": "reference_and_after",
@@ -692,9 +682,9 @@
    {
     "hours": 24,
     "complete": true,
-    "longest_wet_spell_h": 16,
-    "spell_temperature_factor": 0.82,
-    "favourable": true,
+    "longest_wet_spell_h": 4,
+    "spell_temperature_factor": 0.83,
+    "favourable": false,
     "date": "2026-10-07",
     "period": "reference_and_after",
     "data_kind": "includes_forecast"
@@ -702,8 +692,8 @@
    {
     "hours": 24,
     "complete": true,
-    "longest_wet_spell_h": 16,
-    "spell_temperature_factor": 0.74,
+    "longest_wet_spell_h": 24,
+    "spell_temperature_factor": 0.69,
     "favourable": true,
     "date": "2026-10-08",
     "period": "reference_and_after",
@@ -712,8 +702,8 @@
    {
     "hours": 24,
     "complete": true,
-    "longest_wet_spell_h": 14,
-    "spell_temperature_factor": 0.85,
+    "longest_wet_spell_h": 24,
+    "spell_temperature_factor": 0.74,
     "favourable": true,
     "date": "2026-10-09",
     "period": "reference_and_after",
@@ -781,26 +771,26 @@
   "climatology": {
    "status": "available",
    "possible_source_bias": "operational_more_favourable",
-   "relation": "above_usual",
-   "current_fraction": 0.381,
-   "baseline_median": 0.166,
-   "baseline_p25": 0.107,
-   "baseline_p75": 0.369,
-   "baseline_min": 0.048,
-   "baseline_max": 0.476,
-   "years_at_or_below_current": 9,
+   "relation": "typical",
+   "current_fraction": 0.25,
+   "baseline_median": 0.15,
+   "baseline_p25": 0.113,
+   "baseline_p75": 0.388,
+   "baseline_min": 0.05,
+   "baseline_max": 0.45,
+   "years_at_or_below_current": 6,
    "baseline_years": 10,
    "per_year": {
-    "2015": 0.143,
-    "2016": 0.381,
-    "2017": 0.19,
-    "2018": 0.048,
-    "2019": 0.381,
-    "2020": 0.143,
-    "2021": 0.095,
-    "2022": 0.048,
-    "2023": 0.476,
-    "2024": 0.333
+    "2015": 0.15,
+    "2016": 0.4,
+    "2017": 0.15,
+    "2018": 0.05,
+    "2019": 0.4,
+    "2020": 0.15,
+    "2021": 0.1,
+    "2022": 0.05,
+    "2023": 0.45,
+    "2024": 0.35
    },
    "baseline_source": {
     "source_ids": [
@@ -898,7 +888,7 @@
     "note": "Small sample; ERA5 lags ~5 days so only early overlap days exist. Not a bias correction."
    },
    "technical_note": "Baseline is ERA5 reanalysis; the current window is operational model/forecast data. Their wetness differs (see cross_source_check); treat the relation as indicative only.",
-   "summary": "This is more often favourable than usual for these dates here (2015-2024 reanalysis).",
+   "summary": "This is within the usual range for these dates here (2015-2024 reanalysis).",
    "caveat": "The long-term baseline uses a different weather dataset than the current period, so this comparison is only indicative."
   },
   "limitations": [
@@ -943,7 +933,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1669,
+     "priority": 0.1629,
      "row": -5,
      "col": -5
     }
@@ -979,7 +969,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1835,
+     "priority": 0.1762,
      "row": -5,
      "col": -4
     }
@@ -1015,7 +1005,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1864,
+     "priority": 0.177,
      "row": -5,
      "col": -3
     }
@@ -1051,7 +1041,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1744,
+     "priority": 0.165,
      "row": -5,
      "col": -2
     }
@@ -1087,7 +1077,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1518,
+     "priority": 0.144,
      "row": -5,
      "col": -1
     }
@@ -1123,7 +1113,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1246,
+     "priority": 0.1191,
      "row": -5,
      "col": 0
     }
@@ -1159,7 +1149,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.098,
+     "priority": 0.0945,
      "row": -5,
      "col": 1
     }
@@ -1195,7 +1185,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0746,
+     "priority": 0.0728,
      "row": -5,
      "col": 2
     }
@@ -1231,7 +1221,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0556,
+     "priority": 0.0549,
      "row": -5,
      "col": 3
     }
@@ -1339,7 +1329,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2016,
+     "priority": 0.2015,
      "row": -4,
      "col": -5
     }
@@ -1375,7 +1365,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2388,
+     "priority": 0.2341,
      "row": -4,
      "col": -4
     }
@@ -1411,7 +1401,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.26,
+     "priority": 0.2509,
      "row": -4,
      "col": -3
     }
@@ -1447,7 +1437,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.256,
+     "priority": 0.245,
      "row": -4,
      "col": -2
     }
@@ -1483,7 +1473,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2287,
+     "priority": 0.219,
      "row": -4,
      "col": -1
     }
@@ -1519,7 +1509,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.189,
+     "priority": 0.1822,
      "row": -4,
      "col": 0
     }
@@ -1555,7 +1545,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.148,
+     "priority": 0.1441,
      "row": -4,
      "col": 1
     }
@@ -1591,7 +1581,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1117,
+     "priority": 0.1101,
      "row": -4,
      "col": 2
     }
@@ -1627,7 +1617,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0823,
+     "priority": 0.0821,
      "row": -4,
      "col": 3
     }
@@ -1735,7 +1725,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2215,
+     "priority": 0.2267,
      "row": -3,
      "col": -5
     }
@@ -1771,7 +1761,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2852,
+     "priority": 0.2865,
      "row": -3,
      "col": -4
     }
@@ -1807,7 +1797,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.3416,
+     "priority": 0.3366,
      "row": -3,
      "col": -3
     }
@@ -1843,7 +1833,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.3658,
+     "priority": 0.3552,
      "row": -3,
      "col": -2
     }
@@ -1879,7 +1869,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.3427,
+     "priority": 0.3315,
      "row": -3,
      "col": -1
     }
@@ -1915,7 +1905,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2867,
+     "priority": 0.2789,
      "row": -3,
      "col": 0
     }
@@ -1951,7 +1941,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2229,
+     "priority": 0.2192,
      "row": -3,
      "col": 1
     }
@@ -1987,7 +1977,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1661,
+     "priority": 0.1653,
      "row": -3,
      "col": 2
     }
@@ -2131,7 +2121,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2175,
+     "priority": 0.2268,
      "row": -2,
      "col": -5
     }
@@ -2167,7 +2157,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.3007,
+     "priority": 0.3089,
      "row": -2,
      "col": -4
     }
@@ -2203,7 +2193,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.4,
+     "priority": 0.4038,
      "row": -2,
      "col": -3
     }
@@ -2239,7 +2229,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.4887,
+     "priority": 0.4839,
      "row": -2,
      "col": -2
     }
@@ -2275,7 +2265,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.506,
+     "priority": 0.495,
      "row": -2,
      "col": -1
     }
@@ -2311,7 +2301,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.4348,
+     "priority": 0.4269,
      "row": -2,
      "col": 0
     }
@@ -2347,7 +2337,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.3342,
+     "priority": 0.3317,
      "row": -2,
      "col": 1
     }
@@ -2527,7 +2517,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1917,
+     "priority": 0.2018,
      "row": -1,
      "col": -5
     }
@@ -2563,7 +2553,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2756,
+     "priority": 0.2868,
      "row": -1,
      "col": -4
     }
@@ -2599,7 +2589,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.3931,
+     "priority": 0.4041,
      "row": -1,
      "col": -3
     }
@@ -2635,7 +2625,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.5483,
+     "priority": 0.5558,
      "row": -1,
      "col": -2
     }
@@ -2671,7 +2661,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.6991,
+     "priority": 0.6956,
      "row": -1,
      "col": -1
     }
@@ -2707,7 +2697,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.6594,
+     "priority": 0.6534,
      "row": -1,
      "col": 0
     }
@@ -2923,7 +2913,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.155,
+     "priority": 0.1633,
      "row": 0,
      "col": -5
     }
@@ -2959,7 +2949,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.225,
+     "priority": 0.2346,
      "row": 0,
      "col": -4
     }
@@ -2995,7 +2985,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.3267,
+     "priority": 0.3371,
      "row": 0,
      "col": -3
     }
@@ -3031,7 +3021,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.4744,
+     "priority": 0.4844,
      "row": 0,
      "col": -2
     }
@@ -3067,7 +3057,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.6887,
+     "priority": 0.696,
      "row": 0,
      "col": -1
     }
@@ -3319,7 +3309,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1179,
+     "priority": 0.1237,
      "row": 1,
      "col": -5
     }
@@ -3355,7 +3345,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1702,
+     "priority": 0.1766,
      "row": 1,
      "col": -4
     }
@@ -3391,7 +3381,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.245,
+     "priority": 0.2515,
      "row": 1,
      "col": -3
     }
@@ -3427,7 +3417,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.3506,
+     "priority": 0.3558,
      "row": 1,
      "col": -2
     }
@@ -3463,7 +3453,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.4942,
+     "priority": 0.4954,
      "row": 1,
      "col": -1
     }
@@ -3715,7 +3705,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0861,
+     "priority": 0.0897,
      "row": 2,
      "col": -5
     }
@@ -3751,7 +3741,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1229,
+     "priority": 0.1266,
      "row": 2,
      "col": -4
     }
@@ -3787,7 +3777,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1743,
+     "priority": 0.1774,
      "row": 2,
      "col": -3
     }
@@ -3823,7 +3813,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2442,
+     "priority": 0.2455,
      "row": 2,
      "col": -2
     }
@@ -4111,7 +4101,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0612,
+     "priority": 0.0632,
      "row": 3,
      "col": -5
     }
@@ -4147,7 +4137,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0864,
+     "priority": 0.0881,
      "row": 3,
      "col": -4
     }
@@ -4183,7 +4173,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1207,
+     "priority": 0.1216,
      "row": 3,
      "col": -3
     }
@@ -4507,7 +4497,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0427,
+     "priority": 0.0437,
      "row": 4,
      "col": -5
     }
@@ -4543,7 +4533,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0596,
+     "priority": 0.0602,
      "row": 4,
      "col": -4
     }
@@ -4903,7 +4893,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0295,
+     "priority": 0.0298,
      "row": 5,
      "col": -5
     }
@@ -5315,7 +5305,7 @@
      "kind": "scouting_point",
      "rank": 2,
      "label": "Priority point 2",
-     "priority": 0.5483,
+     "priority": 0.5558,
      "scouting_id": "scout_point_2"
     }
    },
@@ -5332,7 +5322,7 @@
      "kind": "scouting_point",
      "rank": 3,
      "label": "Priority point 3",
-     "priority": 0.4348,
+     "priority": 0.4269,
      "scouting_id": "scout_point_3"
     }
    },
@@ -5383,8 +5373,8 @@
   "horizon_days": 7,
   "wind": {
    "used": true,
-   "mean_from_deg": 50,
-   "consistency": 0.44,
+   "mean_from_deg": 53,
+   "consistency": 0.48,
    "stretch": 1.0
   },
   "method": "Relative scouting priority on a local grid: exponential distance decay from reported symptomatic points, stretched downwind when forecast wind direction is consistent; reduced near prior observations reported clear. Weather favourability is reported separately (farm-level). Not an infection probability.",

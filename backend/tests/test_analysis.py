@@ -351,7 +351,8 @@ class Reproducibility(unittest.TestCase):
 
 class Http(unittest.TestCase):
     def setUp(self):
-        patcher = mock.patch.dict(os.environ, {"AGRI_FIXED_NOW": "2026-10-04T00:00:00Z"})
+        from scripts.generate_fixtures import DEMO_NOW
+        patcher = mock.patch.dict(os.environ, {"AGRI_FIXED_NOW": DEMO_NOW.isoformat()})
         patcher.start()
         self.addCleanup(patcher.stop)
         self.client = TestClient(app)
