@@ -3,6 +3,7 @@ from datetime import datetime
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from jsonschema.exceptions import ValidationError
 
 from .adapters.vlm import MockVLMAdapter
@@ -27,6 +28,7 @@ def analyze(observation, now: datetime | None = None):
 
 
 app = FastAPI(title="Agriculture analysis", version=CONTRACT_VERSION)
+app.add_middleware(GZipMiddleware, minimum_size=1024)  # ~59 KB analysis -> ~10 KB on slow links
 app.add_middleware(CORSMiddleware, allow_origins=os.environ.get("AGRI_CORS_ORIGINS", "http://localhost:8081,http://localhost:19006").split(","),
                    allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
 

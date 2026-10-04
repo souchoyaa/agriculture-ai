@@ -54,3 +54,9 @@ Commands: `uv run python scripts/fetch_data.py climatology` (ERA5 `models=era5`,
 Images (~GB) were not downloaded: Liquid training is out of scope and no backend method consumes pixels. `backend/data/vlm_label_map.json` proposes a dataset-label → signal mapping for the future Liquid adapter (status `proposed_unverified`).
 
 **Differentials**: signals for cercospora leaf spot, brown leaf spot, leaf miner, red spider mite and `healthy_leaf` never add evidence; any at ≥ 0.5 blocks `supported` (status `needs_review`, `support_blocked_by_differential`), those ≥ 0.3 are listed and translated. **Severity**: optional `affected_leaf_area_pct` on a rust signal → OIRSA level 0–4 for that leaf (not plot incidence).
+
+## Measured performance / storage (Apple Silicon laptop, Python 3.12, 2026-10-04)
+- `analyze()` demo observation: median 3.6 ms, p95 4.2 ms (50 runs); without location 0.4 ms.
+- Analysis JSON 59 KB (121 grid cells dominate); gzip 9.5 KB — HTTP responses are gzip-compressed when the client accepts it (GZipMiddleware ≥ 1 KB).
+- Committed backend data (sources, conditions, messages, weather cache, climatology, validation): ~88 KB. Backend venv ~19 MB.
+- This is a Python service; it is not evidence of on-device mobile performance.
