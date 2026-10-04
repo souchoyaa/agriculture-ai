@@ -24,6 +24,15 @@ async function journey(page: Page, prefix: string) {
   await page.getByRole('button', { name: 'Open' }).first().click();
   await page.getByText('DEMO RESULT').waitFor();
   await shot(page, `${prefix}-02-result-demo`);
+  for (const [heading, name] of [['Ask an expert to confirm', '02b-review'], ['Where to look next', '02c-map'], ['Is the weather favourable for the disease?', '02d-weather']] as const) {
+    await page.getByText(heading).first().evaluate(el => el.scrollIntoView({ block: 'start' }));
+    await page.waitForTimeout(150);
+    await page.screenshot({ path: path.join(OUT, `${prefix}-${name}.png`) });
+  }
+  await page.getByRole('button', { name: 'Prepare a message for an extension officer' }).click();
+  await page.getByText('This text will be shared').waitFor();
+  await page.getByText('This text will be shared').evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await page.screenshot({ path: path.join(OUT, `${prefix}-02e-review-preview.png`) });
 
   await page.getByRole('tab', { name: 'New check' }).click();
   await page.getByRole('radio', { name: /Hillside coffee/ }).click();
@@ -61,7 +70,7 @@ async function journey(page: Page, prefix: string) {
   await page.getByRole('radio', { name: /Valley coffee/ }).click();
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByRole('button', { name: 'Next' }).click();
-  await page.getByRole('checkbox', { name: 'Leaves turning yellow' }).click();
+  await page.getByRole('checkbox', { name: 'Pale yellow spots on top of leaves' }).click();
   await page.getByRole('button', { name: 'Save check' }).click();
   await page.getByText('No connection to the server').waitFor();
   await shot(page, `${prefix}-08-pending-offline`);

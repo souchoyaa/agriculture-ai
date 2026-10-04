@@ -10,6 +10,12 @@ Expo / React Native / TypeScript client for web, iOS and Android. Contract 0.1.0
 4. **History / field timeline** — every check with status, demo tag, "On this phone", follow-up due/date, photo marker.
 5. **Settings** — language, result source (built-in demo vs server URL + Test connection), reset to example data (confirmation), explicit list of what this version does not do.
 
+## Backend rich response (imported shared/ from backend 24a6816)
+
+Result renders, when present: abstention, pathogen, differentials ("Could also be") and blocked support, leaf severity with scope, evidence (recognised / specific), weather favourability class + 21-day strip (dashed = forecast) + climatology comparison/caveat + limitations, model-weather age/origin, guidance scope ("check locally"), all sources with licence, officer review (user previews exact text, then the OS share sheet; nothing is sent automatically, the app never claims delivery), localization fallback / unreviewed-translation notes. Map branches on `properties.kind`: `scouting_priority_cell` → relative-priority heat layer (3 named buckets, not risk), `scouting_point` → numbered pins matched to ranked scouting text, `reported_observation` → ✚. The ranked text list is the accessible alternative.
+
+Labels: the top banner describes the **service** (health `capabilities`: no image model, uncalibrated); each **result** is labelled from its own `data_mode`/adapter: demo/mock → "DEMO RESULT"; server → "SERVER ESTIMATE · rule-based · not a diagnosis" + "Based on your symptom report, not on a photo". The offline mock returns published backend examples verbatim (rust example, or the abstaining example when no recognised signal) and says it does not use the report.
+
 ## Structure and conventions
 
 - `src/api.ts` — canonical types, `mockApi`, `httpApi(baseUrl)`, `normalizeAnalysis` (missing sections → `unavailable`, never zero risk; missing identity → `invalid_response`). Views only see the `Api` interface. Real model integration belongs behind the backend adapter; nothing in the UI changes.
@@ -40,13 +46,13 @@ npm run build:web        # static export in dist/
 # Browser journey + screenshots (Chrome required; serve dist on a CORS-allowed origin):
 (cd dist && python3 -m http.server 8081) &
 npm run screenshots      # phone + desktop journey, persistence-after-reload, offline pending, locale fallback
-# Real HTTP smoke (backend running on :8000):
-npx tsx tests/http-smoke.ts
+# Real HTTP smoke (backend running; app served on a CORS-allowed origin):
+npx tsx tests/http-smoke.ts http://localhost:8081 http://localhost:8100
 ```
 Physical devices: set the server address in Settings to the host LAN IP; the backend must bind to it and allow the origin.
 
 ## Verified vs simulated (honest status)
 
-Verified in headless Chrome (web export, 390×844 and 1280×860): full journey, validation, save, reload persistence, unreachable server → pending, retry UI, French, unsupported-locale fallback, real HTTP POST to the bootstrap FastAPI. Screenshots in `screenshots/`.
+Verified in headless Chrome (web export, 390×844 and 1280×860): full journey, validation, save, reload persistence, unreachable server → pending, retry UI, French, unsupported-locale fallback, real HTTP journey against backend 24a6816 (agri-backend: map grid, weather, review rendered; request body checked to contain no note/photo). Screenshots in `screenshots/`.
 
-Not verified: native iOS/Android builds, native camera/permissions, screen readers on device, offline behaviour on a device. Simulated/absent: diagnosis (demo fixture), photo analysis (none), weather and risk map (backend returns unavailable; the map renderer is exercised only by unit checks), sync/upload (none), notifications (in-app reminders only), voice (none).
+Not verified: native iOS/Android builds, native camera/permissions, screen readers on device, offline behaviour on a device. Simulated/absent: diagnosis (demo fixture), photo analysis (none), weather favourability and scouting map are backend heuristics (uncalibrated) and shown as such, sync/upload (none), notifications (in-app reminders only), voice (none).

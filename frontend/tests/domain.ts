@@ -7,7 +7,9 @@ import analysisSchema from '../../shared/contracts/analysis.schema.json';
 import analysisFixture from '../../shared/fixtures/analysis.json';
 import { ApiError, httpApi, mockApi, normalizeAnalysis, type Api, type Analysis } from '../src/api.ts';
 import { buildObservation, fieldAttention, signalStrength, sortFieldsByAttention, SYMPTOMS, EVIDENCE_CHECKS, type ObservationRecord } from '../src/domain/model.ts';
-import { describeFeatures, project, timeSlots } from '../src/domain/mapFeatures.ts';
+import { describeFeatures, priorityBucket, project, timeSlots } from '../src/domain/mapFeatures.ts';
+import { readdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 import { CORRUPT_KEY, loadState, runAnalysis, saveState, seedState, STORAGE_KEY, retryable } from '../src/state/repository.ts';
 import { memoryStore } from '../src/storageMemory.ts';
 import { ConnectionGate } from '../src/state/connection.ts';
@@ -38,7 +40,7 @@ test('farmer report builds a schema-valid canonical observation', () => {
 });
 
 test('mock analysis of a farmer report is schema-valid and echoes the id', async () => {
-  const obs = buildObservation({ id: 'o3', field, symptoms: ['leaf_yellowing'], certainty: 'unsure', locale: 'en', now: new Date(), hasPhoto: false });
+  const obs = buildObservation({ id: 'o3', field, symptoms: ['yellow_spots_upper_leaf'], certainty: 'unsure', locale: 'en', now: new Date(), hasPhoto: false });
   const result = await mockApi.analyze(obs);
   assert(validAnalysis(result)); assert.equal(result.observation_id, 'o3'); assert.equal(result.data_mode, 'demo');
 });
@@ -134,8 +136,16 @@ test('map features are displayed as provided; no frontend risk computation', () 
   assert.equal(views[0].level, 'high'); assert.equal(views[1].score, 0.3); assert.equal(views[1].level, undefined);
   assert.deepEqual(views[1].center, [30.1, -1.9]); assert.equal(views[2].center, undefined); assert.equal(views[2].label, '#3');
   assert.deepEqual(timeSlots(views), ['2026-10-04T00:00:00Z', '2026-10-05T00:00:00Z']);
-  const p = project([[30, -2], [30.2, -1.8]]);
-  assert.deepEqual(p([30, -1.8]), { x: 0.1, y: 0.1 });
+  const p = project([[0, 0], [1, 1]], 0);
+  const near = (a: { x: number; y: number }, x: number, y: number) => assert(Math.abs(a.x - x) < 1e-3 && Math.abs(a.y - y) < 1e-3, JSON.stringify(a));
+  near(p([0, 1]), 0, 0); near(p([1, 0]), 1, 1);
+  const tall = project([[0, 60], [1, 61]], 0);   // at 60°N a degree of longitude is half as wide
+  const tp = tall([1, 61]); assert(Math.abs(tp.x - 0.746) < 0.005 && tp.y === 0, JSON.stringify(tp));
+  const fx = describeFeatures((analysisFixture as Analysis).map.features);
+  assert(fx.filter(v => v.role === 'cell').length > 50);
+  assert.equal(fx.filter(v => v.role === 'reported').length, 1);
+  assert.deepEqual(fx.filter(v => v.role === 'scouting_point').map(v => v.rank), [1, 2, 3, 4, 5]);
+  assert.equal(priorityBucket(0.1), 'low'); assert.equal(priorityBucket(0.5), 'mid'); assert.equal(priorityBucket(1), 'high');
 });
 
 test('localization: complete French, transparent fallback, ids covered', () => {
@@ -191,6 +201,24 @@ test('source-mode copy never claims nothing leaves the device in server mode', (
     assert.doesNotMatch(lang['settings.source.http.detail'], /no data|rien/i);
   }
   assert.match(en['result.sent.http'], /photo/);
+});
+
+test('mock returns published examples; every example survives normalization unchanged', async () => {
+  const base = { field, certainty: 'sure' as const, locale: 'en', now: new Date(), hasPhoto: false };
+  const rust = await mockApi.analyze(buildObservation({ ...base, id: 'm1', symptoms: ['orange_powder_leaf_underside'] }));
+  assert.equal(rust.condition.id, 'coffee_leaf_rust'); assert.equal(rust.observation_id, 'm1');
+  const unknown = await mockApi.analyze(buildObservation({ ...base, id: 'm2', symptoms: ['insect_damage'] }));
+  assert.equal(unknown.condition.abstained, true, 'unrecognised report → abstaining example');
+  const maize = await mockApi.analyze(buildObservation({ ...base, id: 'm3', field: { ...field, crop: 'maize' }, symptoms: ['yellow_spots_upper_leaf'] }));
+  assert.equal(maize.status, 'unsupported');
+  for (const r of [rust, unknown, maize]) assert(validAnalysis(r), JSON.stringify(validAnalysis.errors));
+  const dir = path.resolve(__dirname, '../../shared/fixtures/examples');
+  for (const f of readdirSync(dir).filter(f => f.endsWith('.analysis.json'))) {
+    const example = JSON.parse(readFileSync(path.join(dir, f), 'utf8'));
+    assert(validAnalysis(example), f);
+    assert.deepEqual(normalizeAnalysis(example), example, `${f} must pass through unchanged`);
+  }
+  for (const f of readdirSync(dir).filter(f => f.endsWith('.observation.json'))) assert(validObservation(JSON.parse(readFileSync(path.join(dir, f), 'utf8'))), f);
 });
 
 (async () => {

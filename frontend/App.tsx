@@ -91,9 +91,11 @@ function ModeBar({ onPress }: { onPress: () => void }) {
   else if (connection.kind === 'checking') { text = t('mode.http', { url: state.settings.baseUrl }); detail = t('mode.http.checking'); bg = color.skySoft; }
   else {
     text = t('mode.http', { url: state.settings.baseUrl });
-    const live = connection.kind === 'ok' && connection.health.data_mode === 'live';
-    detail = live ? t('mode.http.live') : t('mode.http.demo');
-    bg = live ? color.skySoft : color.turmeric;
+    // Health describes service capability only; result provenance is labelled per analysis.
+    const caps = connection.kind === 'ok' ? connection.health.capabilities : undefined;
+    const limited = !caps || /^none/i.test(String(caps.image_inference ?? '')) || /^none/i.test(String(caps.calibration ?? ''));
+    detail = limited ? t('mode.http.limits') : t('mode.http.live');
+    bg = color.skySoft;
   }
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`${text}. ${detail}`} style={{ backgroundColor: bg, paddingHorizontal: space(4), paddingVertical: space(2), borderBottomWidth: 2, borderBottomColor: '#0002', minHeight: 48, justifyContent: 'center' }}>

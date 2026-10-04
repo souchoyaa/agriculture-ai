@@ -36,11 +36,11 @@ export async function seedState(api: Api, settings: Settings = DEFAULT_SETTINGS)
     observation: demoObservation, symptoms: demoObservation.signals.map(s => s.label), certainty: 'unsure',
     evidence: [], analysis: { kind: 'not_requested' }, completedScouting: [],
   };
-  const maizeObs = buildObservation({ id: 'demo-maize-001', field: fields[2], symptoms: ['leaf_yellowing'], certainty: 'unsure', locale: 'en', now: new Date('2026-09-28T07:30:00Z'), hasPhoto: false });
+  const maizeObs = buildObservation({ id: 'demo-maize-001', field: fields[2], symptoms: ['yellow_spots_upper_leaf'], certainty: 'unsure', locale: 'en', now: new Date('2026-09-28T07:30:00Z'), hasPhoto: false });
   maizeObs.data_mode = 'demo';
   const maize: ObservationRecord = {
     id: maizeObs.id, fieldId: fields[2].id, createdAt: maizeObs.observed_at, observation: maizeObs,
-    symptoms: ['leaf_yellowing'], certainty: 'unsure', evidence: ['daylight'], analysis: { kind: 'not_requested' }, completedScouting: [],
+    symptoms: ['yellow_spots_upper_leaf'], certainty: 'unsure', evidence: ['daylight'], analysis: { kind: 'not_requested' }, completedScouting: [],
   };
   const records = [hillside, maize];
   for (const r of records) r.analysis = await runAnalysis(r, api);
