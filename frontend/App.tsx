@@ -80,7 +80,7 @@ function Shell() {
       <Header onMode={() => goTab('settings')} showBrand={!wide} />
       <View style={{ flex: 1, flexDirection: wide ? 'row' : 'column' }}>
         {wide ? tabs : null}
-        <ScrollView ref={scroll} style={{ flex: 1 }} contentContainerStyle={{ padding: space(wide ? 8 : 4), paddingTop: space(wide ? 8 : 2), paddingBottom: space(8), width: '100%', maxWidth: route.name === 'result' && width >= RESULT_TWO_COLUMN_MIN ? 1180 : 760, alignSelf: 'center', gap: space(3) }}>
+        <ScrollView ref={scroll} style={{ flex: 1 }} contentContainerStyle={{ padding: space(wide ? 8 : 4), paddingTop: space(wide ? 8 : 2), paddingBottom: space(8), width: '100%', maxWidth: (route.name === 'result' || route.name === 'fields') && width >= RESULT_TWO_COLUMN_MIN ? 1180 : 760, alignSelf: 'center', gap: space(3) }}>
           <LanguageNotice />
           {storageError ? <Text accessibilityRole="alert" style={[type.body, { color: color.clay }]}>Storage error: {storageError}</Text> : null}
           {recovered ? <Text accessibilityRole="alert" style={[type.small, { color: color.clay }]}>Saved data could not be read; example data restored (backup kept).</Text> : null}

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Pressable, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import { fieldAttention, sortFieldsByAttention, type Field } from '../domain/model';
 import { formatDate, type MessageId } from '../i18n';
 import type { Nav } from '../navigation';
@@ -29,6 +29,7 @@ export function FieldsScreen({ nav }: { nav: Nav }) {
   const actCount = summaries.filter(s => s.level === 'act').length;
   const top = summaries[0] && summaries[0].level !== 'ok' ? summaries[0] : undefined;
   const [adding, setAdding] = useState(false);
+  const wide = useWindowDimensions().width >= 1180;
 
   return (
     <View style={{ gap: space(5) }}>
@@ -61,8 +62,8 @@ export function FieldsScreen({ nav }: { nav: Nav }) {
         </LinearGradient>
       ) : null}
 
-      <View style={{ gap: space(3) }}>
-        {summaries.filter(s => s !== top).map(s => <FieldCard key={s.field.id} summary={s} nav={nav} />)}
+      <View style={wide ? { flexDirection: 'row', flexWrap: 'wrap', gap: space(4) } : { gap: space(3) }}>
+        {summaries.filter(s => s !== top).map(s => <View key={s.field.id} style={wide ? { flexBasis: '47%', flexGrow: 1 } : undefined}><FieldCard summary={s} nav={nav} /></View>)}
       </View>
 
       {adding ? <AddField onDone={() => setAdding(false)} /> : <Button kind="secondary" icon="plus" label={t('fields.add')} onPress={() => setAdding(true)} />}
@@ -74,7 +75,7 @@ export function FieldsScreen({ nav }: { nav: Nav }) {
   );
 }
 
-export const CROP_ICON: Record<string, string> = { coffee: 'coffee-outline', maize: 'corn', beans: 'seed-outline', banana: 'fruit-pineapple' };
+export const CROP_ICON: Record<string, string> = { coffee: 'fruit-cherries', maize: 'corn', beans: 'seed-outline', banana: 'leaf' };
 
 function condLabel(r?: { analysis: { kind: string; analysis?: { condition: { label: string } } } }) {
   return r?.analysis.kind === 'done' ? r.analysis.analysis?.condition.label : undefined;
