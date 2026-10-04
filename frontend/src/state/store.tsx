@@ -27,6 +27,13 @@ interface Store {
 }
 
 const Ctx = createContext<Store | null>(null);
+// One adapter instance per address, so a Test-button check verifies the same instance the store uses.
+const httpApis = new Map<string, Api>();
+export function apiForUrl(url: string): Api {
+  let a = httpApis.get(url);
+  if (!a) { a = httpApi(url); httpApis.set(url, a); }
+  return a;
+}
 const EMPTY: PersistedState = { version: 1, fields: [], records: [], settings: { locale: 'en', source: 'mock', baseUrl: 'http://localhost:8000' } };
 
 export function StoreProvider({ children, storage = deviceStore }: { children: React.ReactNode; storage?: KeyValueStore }) {
@@ -41,7 +48,7 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
   const activeApi = useRef<Api>(mockApi);
   const writes = useRef(Promise.resolve());
 
-  const api = useMemo<Api>(() => state.settings.source === 'http' ? httpApi(state.settings.baseUrl) : mockApi, [state.settings.source, state.settings.baseUrl]);
+  const api = useMemo<Api>(() => state.settings.source === 'http' ? apiForUrl(state.settings.baseUrl) : mockApi, [state.settings.source, state.settings.baseUrl]);
   const t = useMemo(() => translator(state.settings.locale), [state.settings.locale]);
   activeApi.current = api;
 
@@ -81,13 +88,12 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
   }, [patchRecord]);
 
   /** Checks the active adapter (or an explicit address, for display only — never verified for retries). */
+  /** Probes the active adapter, or the adapter for an explicit address (the one the store will adopt). */
   const testConnection = useCallback(async (baseUrl?: string): Promise<Connection> => {
-    if (baseUrl && baseUrl !== api.baseUrl) {
-      try { const health = await httpApi(baseUrl).health(); return { kind: 'ok', health }; }
-      catch (e) { return { kind: 'unreachable', message: String((e as Error)?.message ?? e) }; }
-    }
-    if (api.kind === 'http') setConnection({ kind: 'checking' });
-    const result = await gate.current.check(api);
+    const target = baseUrl ? apiForUrl(baseUrl) : api;
+    if (target.kind === 'mock') { const c: Connection = { kind: 'local' }; setConnection(c); return c; }
+    setConnection({ kind: 'checking' });
+    const result = await gate.current.check(target);
     if (result) setConnection(result);
     return result ?? { kind: 'checking' };
   }, [api]);
@@ -98,7 +104,14 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
     for (const r of current.current.records) if (retryable(r) && !busy[r.id]) analyse(r, api);
   }, [analyse, api, busy]);
 
-  useEffect(() => { gate.current.invalidate(); if (ready) testConnection(); }, [ready, testConnection]);
+  // Probe the saved server once at launch. Later source/address changes are NOT probed
+  // automatically (no request to a half-typed or default address); the user taps Test.
+  const probedAtLaunch = useRef(false);
+  useEffect(() => {
+    if (!ready) return;
+    if (!probedAtLaunch.current) { probedAtLaunch.current = true; testConnection(); return; }
+    if (!gate.current.adopt(api)) setConnection(api.kind === 'mock' ? { kind: 'local' } : { kind: 'unverified' });
+  }, [ready, api]); // eslint-disable-line react-hooks/exhaustive-deps
   // Only a verified server connection triggers automatic retries; failed server checks are
   // never silently re-run through the demo adapter (a manual retry in demo mode is explicit).
   useEffect(() => { if (ready && connection.kind === 'ok') retryPending(); }, [ready, connection.kind, api]); // eslint-disable-line react-hooks/exhaustive-deps

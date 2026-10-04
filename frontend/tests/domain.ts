@@ -221,6 +221,21 @@ test('mock returns published examples; every example survives normalization unch
   for (const f of readdirSync(dir).filter(f => f.endsWith('.observation.json'))) assert(validObservation(JSON.parse(readFileSync(path.join(dir, f), 'utf8'))), f);
 });
 
+test('changing address does not probe; a Test-button check survives adoption', async () => {
+  const gate = new ConnectionGate();
+  const a = httpApi('http://a.invalid'); const b = httpApi('http://b.invalid');
+  let calls = 0;
+  await withFetch(async () => { calls++; return new Response(JSON.stringify({ status: 'ok', contract_version: '0.1.0', data_mode: 'cached' })); }, async () => {
+    assert.equal(gate.adopt(a), false, 'unprobed adapter is not adopted as verified');
+    assert.equal(calls, 0, 'adopting never sends a request');
+    const pending = gate.check(b);            // user taps Test for b …
+    assert.equal(gate.adopt(b), true);        // … settings update makes b active mid-check
+    assert.equal((await pending)?.kind, 'ok');
+    assert(gate.isVerified(b)); assert.equal(calls, 1);
+    assert.equal(gate.adopt(a), false); assert(!gate.isVerified(b));
+  });
+});
+
 (async () => {
   let failed = 0;
   for (const [name, fn] of tests) {

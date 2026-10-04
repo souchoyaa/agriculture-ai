@@ -246,6 +246,7 @@ export const fr: Messages = {
   'result.fromReport': 'Fondé sur vos symptômes signalés, pas sur une photo.',
   'result.env.fetched': 'Données météo de modèle (pas une station), récupérées {age} h avant l’analyse{cached}.',
   'result.env.cached': ' · copie enregistrée',
+  'mode.http.unverified': 'Pas encore vérifié. Ouvrez les réglages et touchez « Tester la connexion ».',
   'common.loading': 'Chargement…',
   'common.close': 'Fermer',
   'common.yes': 'Oui',

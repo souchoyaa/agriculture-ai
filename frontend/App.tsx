@@ -88,6 +88,7 @@ function ModeBar({ onPress }: { onPress: () => void }) {
   let text: string; let detail: string; let bg = color.turmeric; let fg = color.ink;
   if (api.kind === 'mock') { text = t('mode.mock'); detail = t('mode.mock.detail'); }
   else if (connection.kind === 'unreachable') { text = t('mode.http.unreachable'); detail = connection.message; bg = color.clay; fg = '#fff'; }
+  else if (connection.kind === 'unverified') { text = t('mode.http', { url: state.settings.baseUrl }); detail = t('mode.http.unverified'); bg = color.skySoft; }
   else if (connection.kind === 'checking') { text = t('mode.http', { url: state.settings.baseUrl }); detail = t('mode.http.checking'); bg = color.skySoft; }
   else {
     text = t('mode.http', { url: state.settings.baseUrl });

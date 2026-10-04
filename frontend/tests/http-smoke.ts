@@ -14,13 +14,17 @@ const OUT = path.resolve(__dirname, '../../docs/frontend/screenshots');
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const posts: number[] = [];
   const bodies: string[] = [];
+  const failures: string[] = [];
+  page.on('requestfailed', r => failures.push(`FAILED ${r.resourceType()} ${r.method()} ${r.url()} ${r.failure()?.errorText}`));
+  page.on('response', r => { if (r.status() >= 400) failures.push(`HTTP ${r.status()} ${r.request().resourceType()} ${r.request().method()} ${r.url()}`); });
+  page.on('console', m => { if (m.type() === 'error') failures.push(`CONSOLE ${m.text()}`); });
   page.on('response', r => { if (r.url().startsWith(`${API}/v1/analyses`)) posts.push(r.status()); });
   page.on('request', r => { if (r.url().startsWith(`${API}/v1/analyses`) && r.method() === 'POST') bodies.push(r.postData() ?? ''); });
   await page.goto(APP); await page.evaluate(() => localStorage.clear()); await page.reload();
   await page.getByRole('tab', { name: 'Settings' }).click();
   await page.getByRole('radio', { name: /^Server/ }).click();
   await page.getByRole('textbox', { name: 'Server address' }).fill(API);
-  await page.getByRole('button', { name: 'Test connection' }).click();
+  await page.getByRole('button', { name: 'Test connection', exact: true }).click();
   await page.getByText(/Connected\. Contract 0\.1\.0/).waitFor({ timeout: 10000 });
   await page.getByRole('tab', { name: 'New check' }).click();
   await page.getByRole('radio', { name: /Hillside coffee/ }).click();
@@ -43,6 +47,8 @@ const OUT = path.resolve(__dirname, '../../docs/frontend/screenshots');
   }
   await page.getByText('Where to look next').first().evaluate(el => el.scrollIntoView({ block: 'start' }));
   await page.screenshot({ path: path.join(OUT, 'phone-12-http-map.png') });
+  // A connected journey must not produce any failed/unexpected request.
+  if (failures.length) throw new Error('unexpected failed requests in connected journey:\n' + failures.join('\n'));
   console.log('HTTP smoke passed: POST /v1/analyses', posts, '— agri-backend result with map/weather rendered; no note/photo in request');
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

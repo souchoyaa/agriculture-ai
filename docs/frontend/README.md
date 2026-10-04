@@ -16,7 +16,7 @@ Result renders, when present: abstention, pathogen, differentials ("Could also b
 
 Labels: the top banner describes the **service** (health `capabilities`: no image model, uncalibrated); each **result** is labelled from its own `data_mode`/adapter: demo/mock → "DEMO RESULT"; server → "SERVER ESTIMATE · rule-based · not a diagnosis" + "Based on your symptom report, not on a photo". The offline mock returns published backend examples verbatim (rust example, or the abstaining example when no recognised signal) and says it does not use the report.
 
-Layout: phones stack everything; ≥ 900 px uses a side rail; ≥ 1180 px the result splits into understand/act (left) and map/weather/follow-up (right). Switching to Server mode immediately probes the saved address, so a browser console shows one `ERR_CONNECTION_REFUSED` when no server runs — expected, surfaced in the banner.
+Layout: phones stack everything; ≥ 900 px uses a side rail; ≥ 1180 px the result splits into understand/act (left) and map/weather/follow-up (right). Network requests are deliberate: the saved server is probed once at launch; choosing Server or editing the address does **not** probe (banner: "Not checked yet") until Test connection. The connected HTTP smoke fails on any failed request, HTTP ≥ 400 or console error (zero observed). The offline journey intentionally targets `http://127.0.0.1:9` (unreachable) and tolerates only those failures.
 
 ## Structure and conventions
 
