@@ -69,5 +69,16 @@ class SpatialUncertainty(unittest.TestCase):
                     self.assertGreaterEqual((d[0] ** 2 + d[1] ** 2) ** 0.5, 2 * result["map"]["cell_size_m"] - 1)
 
 
+class FamilyRequired(unittest.TestCase):
+    def test_no_transmission_family_no_map(self):
+        obs = json.loads((ROOT / "shared/fixtures/observation.json").read_text())
+        sm = {"cell_size_m": 20, "half_width_cells": 5, "decay_length_m": 40, "downwind_stretch": 1.0,
+              "default_position_uncertainty_m": 50, "max_position_uncertainty_m": 250, "description": "x"}
+        cond = {"id": "coffee_leaf_rust", "weather_model": {"forecast_days": 7}}
+        m, points = analysis.build_map(obs, cond, sm, None, NOW, False, lambda k, **kw: k)
+        self.assertEqual(m["status"], "unsupported")
+        self.assertEqual(points, [])
+
+
 if __name__ == "__main__":
     unittest.main()

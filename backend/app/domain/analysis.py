@@ -316,6 +316,10 @@ def build_map(observation, condition, sm, series, observed_at, abstained, t) -> 
     if abstained:
         return {"status": "unavailable", "type": "FeatureCollection", "features": [],
                 "limitations": "No suspected condition; scouting priority not computed."}, []
+    if not sm.get("transmission_family") or not sm.get("kernel"):
+        # A dispersal kernel is only meaningful for the transmission mechanism it was chosen for.
+        return {"status": "unsupported", "type": "FeatureCollection", "features": [],
+                "limitations": "No spatial model declared for this condition's transmission mechanism."}, []
     lat0, lon0 = location["latitude"], location["longitude"]
     radius, basis = position_uncertainty(location, sm)
     if radius > sm["max_position_uncertainty_m"]:
