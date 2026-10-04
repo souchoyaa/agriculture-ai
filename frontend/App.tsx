@@ -5,7 +5,7 @@ import type { Nav, Route, TabName } from './src/navigation';
 import { CheckScreen } from './src/screens/CheckScreen';
 import { FieldsScreen } from './src/screens/FieldsScreen';
 import { FieldScreen, HistoryScreen } from './src/screens/HistoryScreens';
-import { ResultScreen } from './src/screens/ResultScreen';
+import { RESULT_TWO_COLUMN_MIN, ResultScreen } from './src/screens/ResultScreen';
 import { SettingsScreen } from './src/screens/SettingsScreen';
 import { StoreProvider, useStore } from './src/state/store';
 import { color, space, type } from './src/ui/theme';
@@ -66,7 +66,7 @@ function Shell() {
       <ModeBar onPress={() => goTab('settings')} />
       <View style={{ flex: 1, flexDirection: wide ? 'row' : 'column' }}>
         {wide ? tabs : null}
-        <ScrollView ref={scroll} style={{ flex: 1 }} contentContainerStyle={{ padding: space(wide ? 8 : 4), paddingBottom: space(10), width: '100%', maxWidth: 760, alignSelf: 'center', gap: space(3) }}>
+        <ScrollView ref={scroll} style={{ flex: 1 }} contentContainerStyle={{ padding: space(wide ? 8 : 4), paddingBottom: space(10), width: '100%', maxWidth: route.name === 'result' && width >= RESULT_TWO_COLUMN_MIN ? 1180 : 760, alignSelf: 'center', gap: space(3) }}>
           <LanguageNotice />
           {storageError ? <Text accessibilityRole="alert" style={[type.body, { color: color.clay }]}>⚠ Storage error: {storageError}</Text> : null}
           {recovered ? <Text accessibilityRole="alert" style={[type.small, { color: color.clay }]}>⚠ Saved data could not be read; example data restored (backup kept).</Text> : null}
