@@ -41,7 +41,7 @@ function PendingView({ record }: { record: ObservationRecord }) {
   const a = record.analysis;
   const working = busy[record.id] || a.kind === 'waiting';
   const msg = a.kind === 'failed'
-    ? (a.code === 'network_unavailable' || a.code === 'interrupted' ? t('pending.network') : a.retryable ? t('pending.error', { code: a.code }) : t('pending.permanent', { code: a.code }))
+    ? (a.code === 'network_unavailable' || a.code === 'timeout' || a.code === 'interrupted' ? t('pending.network') : a.retryable ? t('pending.error', { code: a.code }) : t('pending.permanent', { code: a.code }))
     : t('pending.analysing');
   return (
     <Card tone={a.kind === 'failed' && !a.retryable ? 'alert' : 'warn'}>
@@ -129,7 +129,7 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
         <Body soft>{due ? t('result.followUp.set', { date: formatDate(due.toISOString(), locale) }) : t('result.followUp.none')}</Body>
       </Card>
 
-      <Details analysis={analysis} record={record} />
+      <Details analysis={analysis} record={record} via={via} />
     </View>
   );
 }
@@ -176,7 +176,7 @@ function ReportView({ record }: { record: ObservationRecord }) {
   );
 }
 
-function Details({ analysis, record }: { analysis: Analysis; record: ObservationRecord }) {
+function Details({ analysis, record, via }: { analysis: Analysis; record: ObservationRecord; via: 'mock' | 'http' }) {
   const { t, state } = useStore();
   const [open, setOpen] = useState(false);
   const locale = state.settings.locale;
@@ -194,6 +194,7 @@ function Details({ analysis, record }: { analysis: Analysis; record: Observation
       <Pressable accessibilityRole="button" accessibilityState={{ expanded: open }} onPress={() => setOpen(!open)} style={{ minHeight: 48, justifyContent: 'center' }}>
         <Text style={type.heading}>{open ? '▾' : '▸'}  {t('result.details')}</Text>
       </Pressable>
+      <Body soft>{via === 'http' ? t('result.sent.http') : t('result.sent.mock')}</Body>
       <Body soft>{t('result.sync')}</Body>
       {open ? rows.map(([k, v]) => (
         <View key={k} style={{ borderTopWidth: 1, borderTopColor: color.line, paddingTop: space(2) }}>

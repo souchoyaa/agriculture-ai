@@ -10,6 +10,7 @@ const OUT = path.resolve(__dirname, '../../docs/frontend/screenshots');
 
 (async () => {
   const browser = await chromium.launch({ executablePath: CHROME });
+  try {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const posts: number[] = [];
   page.on('response', r => { if (r.url().startsWith(`${API}/v1/analyses`)) posts.push(r.status()); });
@@ -29,8 +30,8 @@ const OUT = path.resolve(__dirname, '../../docs/frontend/screenshots');
   await page.getByRole('button', { name: /Details and data origin/ }).click();
   const body = await page.locator('body').innerText();
   await page.screenshot({ path: path.join(OUT, 'phone-11-http-result.png') });
-  await browser.close();
   if (!posts.includes(200)) throw new Error(`expected a 200 POST /v1/analyses, saw ${posts}`);
   if (!/SERVER · /.test(body)) throw new Error('server mode banner missing');
   console.log('HTTP smoke passed: POST /v1/analyses', posts, '— result rendered with demo labelling');
+  } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

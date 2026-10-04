@@ -95,11 +95,19 @@ export function normalizeAnalysis(raw: unknown): Analysis {
   } as Analysis;
 }
 
+/** Portable timeout (AbortController + timer): AbortSignal.timeout is missing on some RN runtimes. */
 async function request(url: string, init: RequestInit, timeoutMs: number): Promise<Response> {
+  const controller = new AbortController();
+  let timedOut = false;
+  const timer = setTimeout(() => { timedOut = true; controller.abort(); }, timeoutMs);
   try {
-    return await fetch(url, { ...init, signal: AbortSignal.timeout(timeoutMs) });
+    return await fetch(url, { ...init, signal: controller.signal });
   } catch {
-    throw new ApiError('network_unavailable', 'Connection unavailable; observation kept on this device.', true);
+    throw timedOut
+      ? new ApiError('timeout', 'Server did not answer in time; observation kept on this device.', true)
+      : new ApiError('network_unavailable', 'Connection unavailable; observation kept on this device.', true);
+  } finally {
+    clearTimeout(timer);
   }
 }
 

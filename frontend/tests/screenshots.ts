@@ -80,16 +80,20 @@ async function journey(page: Page, prefix: string) {
 
 async function main() {
   mkdirSync(OUT, { recursive: true });
-  const browser = await chromium.launch({ executablePath: CHROME, headless: true });
+  const browser = await chromium.launch({ executablePath: CHROME, headless: true }); // isolated temp profile
   const errors: string[] = [];
-  for (const [prefix, viewport] of [['phone', { width: 390, height: 844 }], ['desktop', { width: 1280, height: 860 }]] as const) {
-    const page = await browser.newPage({ viewport, deviceScaleFactor: 1 });
-    page.on('pageerror', e => errors.push(`${prefix}: ${e.message}`));
-    page.on('console', m => { if (m.type() === 'error' && !/127\.0\.0\.1:9|ERR_CONNECTION_REFUSED|Failed to load resource/.test(m.text())) errors.push(`${prefix}: ${m.text()}`); });
-    try { await journey(page, prefix); } catch (e) { await page.screenshot({ path: path.join(OUT, `FAIL-${prefix}.png`), fullPage: true }); throw e; }
-    await page.close();
+  try {
+    for (const [prefix, viewport] of [['phone', { width: 390, height: 844 }], ['desktop', { width: 1280, height: 860 }]] as const) {
+      const page = await browser.newPage({ viewport, deviceScaleFactor: 1 });
+      page.on('pageerror', e => errors.push(`${prefix}: ${e.message}`));
+      page.on('console', m => { if (m.type() === 'error' && !/127\.0\.0\.1:9|ERR_CONNECTION_REFUSED|ERR_UNSAFE_PORT|Failed to load resource/.test(m.text())) errors.push(`${prefix}: ${m.text()}`); });
+      try { await journey(page, prefix); }
+      catch (e) { await page.screenshot({ path: path.join(OUT, `FAIL-${prefix}.png`), fullPage: true }).catch(() => {}); throw e; }
+      finally { await page.close().catch(() => {}); }
+    }
+  } finally {
+    await browser.close();
   }
-  await browser.close();
   if (errors.length) { console.error('Console errors:\n' + errors.join('\n')); process.exitCode = 1; }
   else console.log('Journey passed with no console errors');
 }
