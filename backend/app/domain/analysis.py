@@ -270,6 +270,9 @@ def build_map(observation, condition, sm, series, observed_at, abstained, t) -> 
         return {"status": "unavailable", "type": "FeatureCollection", "features": [],
                 "limitations": "No suspected condition; scouting priority not computed."}, []
     lat0, lon0 = location["latitude"], location["longitude"]
+    if not spatial.grid_supported(lat0, lon0, sm["cell_size_m"] * (sm["half_width_cells"] + 0.5)):
+        return {"status": "unavailable", "type": "FeatureCollection", "features": [],
+                "limitations": "Local grid unsupported within 85° of a pole or across the ±180° meridian."}, []
     near = lambda p: math.hypot(*spatial.to_local(lat0, lon0, p["latitude"], p["longitude"])) <= PRIOR_RADIUS_M
     priors = [p for p in observation.get("prior_observations", []) if p.get("condition_id") == condition["id"] and near(p)]
     sources = [location] + [p for p in priors if p.get("present")]

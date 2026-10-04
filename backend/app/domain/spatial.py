@@ -22,6 +22,15 @@ def to_geo(lat0, lon0, east, north) -> tuple[float, float]:
     return lat, lon
 
 
+def grid_supported(lat0: float, lon0: float, half_extent_m: float) -> bool:
+    """The equirectangular local plane breaks down near the poles and must not wrap the antimeridian."""
+    if abs(lat0) > 85:
+        return False
+    lat_n, lon_e = to_geo(lat0, lon0, half_extent_m, half_extent_m)
+    lat_s, lon_w = to_geo(lat0, lon0, -half_extent_m, -half_extent_m)
+    return -90 <= lat_s and lat_n <= 90 and -180 <= lon_w and lon_e <= 180
+
+
 def bearing_label(east: float, north: float) -> str:
     angle = math.degrees(math.atan2(east, north)) % 360
     return BEARINGS[int((angle + 22.5) // 45) % 8]

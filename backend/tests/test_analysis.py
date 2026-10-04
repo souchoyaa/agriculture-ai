@@ -489,3 +489,24 @@ class DifferentialsAndSeverity(unittest.TestCase):
         for name, entry in label_map["labels"].items():
             self.assertIn(entry["signal"], known, name)
         self.assertEqual(sum(label_map["class_counts"]["rocole_2019"].values()), 1560)
+
+
+class EdgeCaseInputs(unittest.TestCase):
+    def test_poles_and_antimeridian_never_500(self):
+        client = TestClient(app)
+        for lat, lon in [(90, 0), (-90, -180), (0, 180), (-59.3, 180), (0, -180), (89.9, 10)]:
+            response = client.post("/v1/analyses", json=observation(id=f"edge-{lat}-{lon}", location={"latitude": lat, "longitude": lon}))
+            self.assertEqual(response.status_code, 200, (lat, lon))
+            self.assertEqual(response.json()["map"]["status"], "unavailable")
+
+    def test_randomised_observations_always_valid(self):
+        import random
+        rng = random.Random(7)
+        labels = list(CLR["signals"]) + ["healthy_leaf", "cercospora_leaf_spot_marks", "junk", ""]
+        for i in range(200):
+            obs = observation(id=f"fuzz-{i}", locale=rng.choice(["en", "es", "fr", "zz", "", "ES"]),
+                              signals=[{"label": rng.choice(labels), "confidence": rng.random()} for _ in range(rng.randint(0, 5))],
+                              observed_at=rng.choice(["2026-10-03T08:00:00Z", "2020-01-01T00:00:00+05:00", "2030-01-01T00:00:00Z"]))
+            if rng.random() < 0.6:
+                obs["location"] = {"latitude": rng.uniform(-90, 90), "longitude": rng.choice([180, -180, rng.uniform(-180, 180)])}
+            run(obs)  # validates against the analysis schema
