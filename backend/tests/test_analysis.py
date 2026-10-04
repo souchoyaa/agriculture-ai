@@ -588,3 +588,24 @@ class RegionalGuidance(unittest.TestCase):
         self.assertIn("rab_plantwise_rw014_2012", recs["count_spots_threshold"]["source_ids"])
         text = " ".join(r["text"] for r in result["recommendations"])
         self.assertIsNone(re.search(r"\b(\d+\s?(ml|g|l)\b|cyproconazole|copper oxychloride)", text, re.I))
+
+
+class RegionalScoping(unittest.TestCase):
+    REGIONAL = {"count_spots_threshold", "open_canopy_spacing_pruning"}
+
+    def test_regional_recommendations_only_in_region(self):
+        inside = {r["id"]: r for r in run(observation())["recommendations"]}
+        self.assertTrue(self.REGIONAL <= set(inside))
+        scope = inside["count_spots_threshold"]["regional_scope"]
+        self.assertEqual((scope["region_id"], scope["match"], scope["source_year"]), ("rwanda_approx", "approximate_bounding_box", 2012))
+        self.assertIn("neighbouring", scope["note"])
+        self.assertNotIn("regional_scope", inside["flag_area_limit_movement"])
+        for obs in (observation(location={"latitude": 4.99, "longitude": -75.6}), observation(location=None)):
+            ids = {r["id"] for r in run(obs)["recommendations"]}
+            self.assertFalse(self.REGIONAL & ids)
+            self.assertIn("consult_extension_before_fungicide", ids)
+
+    def test_regional_context_marks_approximate_match(self):
+        context = run(observation())["regional_context"][0]
+        self.assertEqual(context["regional_scope"]["match"], "approximate_bounding_box")
+        self.assertIn("2012", context["text"])

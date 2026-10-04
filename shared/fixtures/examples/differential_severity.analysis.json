@@ -142,7 +142,13 @@
    "text": "Count rust spots on a sample of leaves. Rwandan extension guidance (2012) considers control when there are about two spots per leaf; discuss with your extension officer before acting.",
    "source_ids": [
     "rab_plantwise_rw014_2012"
-   ]
+   ],
+   "regional_scope": {
+    "region_id": "rwanda_approx",
+    "match": "approximate_bounding_box",
+    "source_year": 2012,
+    "note": "Shown because the location falls in an approximate Rwanda area (a rough box that also covers border areas of neighbouring countries); based on 2012 sources."
+   }
   },
   {
    "id": "open_canopy_spacing_pruning",
@@ -150,7 +156,13 @@
    "source_ids": [
     "rab_plantwise_rw014_2012",
     "bigirimana_2012_ajar"
-   ]
+   ],
+   "regional_scope": {
+    "region_id": "rwanda_approx",
+    "match": "approximate_bounding_box",
+    "source_year": 2012,
+    "note": "Shown because the location falls in an approximate Rwanda area (a rough box that also covers border areas of neighbouring countries); based on 2012 sources."
+   }
   },
   {
    "id": "consult_extension_before_fungicide",
@@ -5462,7 +5474,13 @@
    "text": "Rwanda (2012 survey of 307 farms, dry season): rust in all provinces, worst in Eastern Province; less rust on farms above about 1800 m and more below about 1400 m; all commercial varieties then grown were susceptible.",
    "source_ids": [
     "bigirimana_2012_ajar"
-   ]
+   ],
+   "regional_scope": {
+    "region_id": "rwanda_approx",
+    "match": "approximate_bounding_box",
+    "source_year": 2012,
+    "note": "Shown because the location falls in an approximate Rwanda area (a rough box that also covers border areas of neighbouring countries); based on 2012 sources."
+   }
   }
  ]
 }

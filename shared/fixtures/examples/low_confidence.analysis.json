@@ -713,7 +713,13 @@
    "text": "Rwanda (2012 survey of 307 farms, dry season): rust in all provinces, worst in Eastern Province; less rust on farms above about 1800 m and more below about 1400 m; all commercial varieties then grown were susceptible.",
    "source_ids": [
     "bigirimana_2012_ajar"
-   ]
+   ],
+   "regional_scope": {
+    "region_id": "rwanda_approx",
+    "match": "approximate_bounding_box",
+    "source_year": 2012,
+    "note": "Shown because the location falls in an approximate Rwanda area (a rough box that also covers border areas of neighbouring countries); based on 2012 sources."
+   }
   }
  ]
 }

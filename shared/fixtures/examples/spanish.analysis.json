@@ -142,7 +142,13 @@
    "text": "Cuente las manchas de roya en una muestra de hojas. La guía de extensión de Ruanda (2012) considera el control con unas dos manchas por hoja; consulte a su técnico de extensión antes de actuar.",
    "source_ids": [
     "rab_plantwise_rw014_2012"
-   ]
+   ],
+   "regional_scope": {
+    "region_id": "rwanda_approx",
+    "match": "approximate_bounding_box",
+    "source_year": 2012,
+    "note": "Se muestra porque la ubicación cae en una zona aproximada de Ruanda (un recuadro que también cubre zonas fronterizas de países vecinos); basado en fuentes de 2012."
+   }
   },
   {
    "id": "open_canopy_spacing_pruning",
@@ -150,7 +156,13 @@
    "source_ids": [
     "rab_plantwise_rw014_2012",
     "bigirimana_2012_ajar"
-   ]
+   ],
+   "regional_scope": {
+    "region_id": "rwanda_approx",
+    "match": "approximate_bounding_box",
+    "source_year": 2012,
+    "note": "Se muestra porque la ubicación cae en una zona aproximada de Ruanda (un recuadro que también cubre zonas fronterizas de países vecinos); basado en fuentes de 2012."
+   }
   },
   {
    "id": "consult_extension_before_fungicide",
@@ -5397,7 +5409,13 @@
    "text": "Ruanda (estudio de 2012 en 307 fincas, estación seca): roya en todas las provincias, peor en la Provincia Oriental; menos roya en fincas por encima de unos 1800 m y más por debajo de unos 1400 m; todas las variedades comerciales cultivadas entonces eran susceptibles.",
    "source_ids": [
     "bigirimana_2012_ajar"
-   ]
+   ],
+   "regional_scope": {
+    "region_id": "rwanda_approx",
+    "match": "approximate_bounding_box",
+    "source_year": 2012,
+    "note": "Se muestra porque la ubicación cae en una zona aproximada de Ruanda (un recuadro que también cubre zonas fronterizas de países vecinos); basado en fuentes de 2012."
+   }
   }
  ]
 }
