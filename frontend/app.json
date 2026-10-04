@@ -7,6 +7,14 @@
       "ios",
       "android",
       "web"
+    ],
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Used only when you tap \u201cUse my current location\u201d to save where a field is. Stored rounded (about 100 m)."
+        }
+      ]
     ]
   }
 }

@@ -6,6 +6,7 @@ import type { Nav } from '../navigation';
 import { useStore } from '../state/store';
 import { AttentionBadge, Body, Button, Card, Choice, H1, H2, Row, Tag } from '../ui/components';
 import { color, radius, space, type } from '../ui/theme';
+import { LocationEditor, type LocationValue } from './LocationEditor';
 
 export const CROPS = ['coffee', 'maize', 'beans', 'banana'] as const;
 
@@ -98,6 +99,7 @@ function AddField({ onDone }: { onDone: (f?: Field) => void }) {
   const [name, setName] = useState('');
   const [crop, setCrop] = useState<string>('coffee');
   const [error, setError] = useState(false);
+  const [location, setLocation] = useState<LocationValue>();
   return (
     <Card>
       <H2>{t('fields.add')}</H2>
@@ -109,8 +111,9 @@ function AddField({ onDone }: { onDone: (f?: Field) => void }) {
       <View accessibilityRole="radiogroup" style={{ gap: space(2) }}>
         {CROPS.map(c => <Choice key={c} multi={false} label={t(`crop.${c}`)} selected={crop === c} onPress={() => setCrop(c)} />)}
       </View>
+      <LocationEditor value={location} onChange={setLocation} />
       <Row wrap>
-        <Button label={t('fields.add.save')} onPress={async () => { if (!name.trim()) { setError(true); return; } onDone(await addField(name, crop)); }} />
+        <Button label={t('fields.add.save')} onPress={async () => { if (!name.trim()) { setError(true); return; } onDone(await addField(name, crop, location)); }} />
         <Button kind="quiet" label={t('fields.add.cancel')} onPress={() => onDone()} />
       </Row>
     </Card>

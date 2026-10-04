@@ -14,6 +14,7 @@ import { CORRUPT_KEY, loadState, runAnalysis, saveState, seedState, STORAGE_KEY,
 import { memoryStore } from '../src/storageMemory.ts';
 import { ConnectionGate } from '../src/state/connection.ts';
 import { isAppOwnedPhoto } from '../src/photoPaths.ts';
+import { parseCoordinates, roundLocation } from '../src/domain/location.ts';
 import { isSupported, missingKeys, translator } from '../src/i18n/index.ts';
 import { en } from '../src/i18n/en.ts';
 import { fr } from '../src/i18n/fr.ts';
@@ -254,6 +255,22 @@ test('live reports disclose example-field coordinates in their provenance', () =
   assert.equal(example.data_mode, 'live', 'the symptom report is still current');
   assert.match(example.provenance.source, /example field location/);
   assert.doesNotMatch(buildObservation(args).provenance.source, /example field location/);
+});
+
+test('field location entry: validation, comma decimals, rounding to ~100 m, provenance', () => {
+  assert.deepEqual(parseCoordinates('-1,95049', ' 30.06071 '), { ok: true, value: { latitude: -1.95, longitude: 30.061 } });
+  assert.deepEqual(parseCoordinates('', '30'), { ok: false, error: 'missing' });
+  assert.deepEqual(parseCoordinates('abc', '30'), { ok: false, error: 'not_number' });
+  assert.deepEqual(parseCoordinates('91', '30'), { ok: false, error: 'latitude_range' });
+  assert.deepEqual(parseCoordinates('10', '-181'), { ok: false, error: 'longitude_range' });
+  assert.deepEqual(roundLocation({ latitude: 12.345678, longitude: -98.76543 }), { latitude: 12.346, longitude: -98.765 });
+  const base = { id: 'loc', symptoms: ['yellow_spots_upper_leaf'], certainty: 'sure' as const, locale: 'en', now: new Date(), hasPhoto: false };
+  const gps = buildObservation({ ...base, field: { ...field, locationSource: 'gps' } });
+  assert(validObservation(gps)); assert.match(gps.provenance.source, /device GPS, rounded/);
+  const manual = buildObservation({ ...base, field: { ...field, locationSource: 'manual' } });
+  assert.match(manual.provenance.source, /manual entry/);
+  const none = buildObservation({ ...base, field: { ...field, location: undefined, locationSource: undefined } });
+  assert(!('location' in none)); assert.doesNotMatch(none.provenance.source, /GPS|manual/);
 });
 
 (async () => {

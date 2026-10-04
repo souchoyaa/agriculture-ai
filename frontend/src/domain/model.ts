@@ -5,6 +5,8 @@ export interface Field {
   id: string; name: string; crop: string;
   location?: { latitude: number; longitude: number };
   demo: boolean; // seeded example data; always labelled in UI
+  /** How a user-added field got its location; absent for example fields. */
+  locationSource?: 'gps' | 'manual';
 }
 
 export type AnalysisState =
@@ -72,7 +74,8 @@ export function buildObservation(args: {
     provenance: {
       adapter: 'farmer-report',
       source: (args.hasPhoto ? 'symptom checklist; photo kept on device, not analysed' : 'symptom checklist; no photo')
-        + (args.field.demo && args.field.location ? '; example field location, not verified as your farm' : ''),
+        + (args.field.demo && args.field.location ? '; example field location, not verified as your farm' : '')
+        + (!args.field.demo && args.field.location && args.field.locationSource ? `; field location from ${args.field.locationSource === 'gps' ? 'device GPS' : 'manual entry'}, rounded to about 100 m` : ''),
     },
   };
 }

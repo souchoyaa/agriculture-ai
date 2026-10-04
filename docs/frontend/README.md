@@ -31,6 +31,10 @@ Keyboard (verified in Chrome): Tab order is mode banner → primary actions → 
 ### Farmer report → canonical observation
 Symptom ids are the canonical `signals[].label`. `confidence` encodes the farmer's stated certainty (sure 0.8 / unsure 0.5) and each signal carries additive `origin: "farmer_report"`; `provenance.adapter = "farmer-report"`, `data_mode = "live"` (real user input; analysis may still be demo). Location is only sent if the field has one. Photos never leave the device.
 
+## Field location (optional, user-added fields)
+
+Add-field form and field page offer **Use my current location** (expo-location, foreground one-shot; permission requested only on tap) or **Type coordinates** (comma decimals accepted, WGS84 ranges validated). Coordinates are rounded to 3 decimals (≈100 m) before storage; source (`gps`/`manual`) is recorded and stated in observation provenance. Denied/unavailable location keeps the field usable and offers manual entry. The location leaves the phone only inside a server-mode check. Example fields keep their labelled example coordinates. Verified in headless Chrome via the browser geolocation API (`tests/location-journey.ts`: granted → rounded → sent with server check → map + weather; denied → manual entry validated, persisted) — **not on a device GPS**.
+
 ## Offline, persistence, sync
 
 - AsyncStorage (device storage on native, localStorage on web), one versioned key; corrupt data is backed up and example data restored with a visible notice.
@@ -53,6 +57,7 @@ npm run bundle:native    # Android + iOS JS bundles compile (no device needed)
 npm run screenshots      # phone + desktop journey, persistence-after-reload, offline pending, locale fallback
 # Real HTTP smoke (backend running; app served on a CORS-allowed origin):
 npx tsx tests/http-smoke.ts http://localhost:8081 http://localhost:8100
+npx tsx tests/location-journey.ts http://localhost:8081 http://localhost:8100
 ```
 Physical devices: set the server address in Settings to the host LAN IP; the backend must bind to it and allow the origin.
 
@@ -60,4 +65,4 @@ Physical devices: set the server address in Settings to the host LAN IP; the bac
 
 Verified in headless Chrome (web export, 390×844 and 1280×860): full journey, validation, save, reload persistence, unreachable server → pending, retry UI, French, unsupported-locale fallback, real HTTP journey against backend 24a6816 (agri-backend: map grid, weather, review rendered; request body checked to contain no note/photo). Screenshots in `screenshots/`.
 
-Not verified: native iOS/Android builds on a device (only JS bundles compile), native camera/permissions, native photo copy/delete, OS share sheet, screen readers on device, offline behaviour on a device. Simulated/absent: diagnosis (demo fixture), photo analysis (none), weather favourability and scouting map are backend heuristics (uncalibrated) and shown as such, sync/upload (none), notifications (in-app reminders only), voice (none).
+Not verified: native iOS/Android builds on a device, device GPS/location permission prompt (only JS bundles compile), native camera/permissions, native photo copy/delete, OS share sheet, screen readers on device, offline behaviour on a device. Simulated/absent: diagnosis (demo fixture), photo analysis (none), weather favourability and scouting map are backend heuristics (uncalibrated) and shown as such, sync/upload (none), notifications (in-app reminders only), voice (none).
