@@ -35,17 +35,18 @@ export interface Analysis {
   environment: { status: Freshness; as_of: string | null; temperature_c: number | null; relative_humidity_pct: number | null; rainfall_mm: number | null; [extra: string]: unknown };
   map: { status: 'available' | 'unavailable' | 'unsupported'; type: 'FeatureCollection'; features: MapFeature[]; limitations: string; [extra: string]: unknown };
   scouting: { id: string; text: string; rank?: number; priority?: number; location?: { latitude: number; longitude: number }; distance_m?: number; source_ids?: string[]; [extra: string]: unknown }[];
-  recommendations: { id: string; text: string; source_ids: string[]; [extra: string]: unknown }[];
+  recommendations: { id: string; text: string; source_ids: string[]; regional_scope?: RegionalScope; [extra: string]: unknown }[];
   sources: { id: string; title: string; url: string; accessed_at: string; license?: string; kind?: string; publisher?: string; [extra: string]: unknown }[];
   weather_risk?: WeatherRisk;
   review?: { suggested: boolean; reasons?: { id: string; text: string }[]; requires_user_authorization?: boolean; auto_contact?: boolean };
   localization?: { requested?: string; used?: string; fallback?: boolean; reviewed_by_native_speaker?: boolean; catalog_status?: string };
-  regional_context?: { id: string; region?: string; text: string; source_ids?: string[] }[];
+  regional_context?: { id: string; region?: string; text: string; source_ids?: string[]; regional_scope?: RegionalScope }[];
   guidance_scope?: { applicability?: string; local_check_required?: string[]; regions_of_guidance_sources?: string[] };
   evidence?: { label: string; confidence?: number; recognized?: boolean; specific?: boolean; contribution?: number }[];
   offline: { cached: boolean; stale: boolean; sync_status: 'local_only' | 'pending' | 'synced' | 'failed'; [extra: string]: unknown };
   [extra: string]: unknown;
 }
+export interface RegionalScope { region_id?: string; match?: string; source_year?: number; note?: string }
 export interface WeatherRisk {
   status: 'available' | 'partial' | 'unavailable';
   class?: 'low' | 'moderate' | 'high' | null;

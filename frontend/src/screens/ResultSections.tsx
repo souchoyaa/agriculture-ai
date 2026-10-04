@@ -153,6 +153,7 @@ export function RegionalContext({ items, sources }: { items?: Analysis['regional
       {items.filter(i => i && typeof i.text === 'string').map(i => (
         <View key={i.id} style={{ gap: 2 }}>
           <Body>{i.text}</Body>
+          {i.regional_scope?.note ? <Body soft>ⓘ {i.regional_scope.note}</Body> : null}
           {(i.source_ids ?? []).map(id => byId.get(id)).filter(Boolean).map(s => (
             <Pressable key={s!.id} accessibilityRole="link" onPress={() => Linking.openURL(s!.url)}>
               <Text style={[type.small, { color: color.sky, textDecorationLine: 'underline' }]}>{s!.title}</Text>

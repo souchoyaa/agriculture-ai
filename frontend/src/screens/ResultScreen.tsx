@@ -133,6 +133,7 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
           return (
             <View key={r.id} style={{ gap: space(1), borderLeftWidth: 4, borderLeftColor: sources.length ? color.leaf : color.turmeric, paddingLeft: space(3) }}>
               <Body>{r.text}</Body>
+              {r.regional_scope?.note ? <Body soft>⌖ {r.regional_scope.note}</Body> : null}
               {sources.length ? sources.map(s => (
                 <Pressable key={s.id} accessibilityRole="link" onPress={() => Linking.openURL(s.url)}>
                   <Text style={[type.small, { color: color.sky, textDecorationLine: 'underline' }]}>{s.title} — {t('result.accessed', { date: formatDate(s.accessed_at, locale) })}</Text>
