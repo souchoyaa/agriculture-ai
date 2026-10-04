@@ -52,6 +52,8 @@ def priority_grid(origin: tuple[float, float], sources: list[dict], cleared: lis
     """sources/cleared: dicts with latitude/longitude. Returns cells sorted row-major with priority in [0, 1]."""
     lat0, lon0 = origin
     size, half, decay = model["cell_size_m"], model["half_width_cells"], model["decay_length_m"]
+    size = model.get("effective_cell_size_m", size)
+    decay = model.get("effective_decay_length_m", decay)
     downwind = None
     if wind_from_deg is not None:
         to_rad = math.radians((wind_from_deg + 180) % 360)
@@ -88,3 +90,23 @@ def pick_points(cells: list[dict], count: int = 5, min_separation_m: float = 40.
         if len(chosen) == count:
             break
     return chosen
+
+
+def effective_geometry(model: dict, uncertainty_m: float) -> tuple[float, float]:
+    """Cell size and kernel length consistent with positional uncertainty r (metres).
+
+    Cells are never finer than r (rounded up to 10 m): a 20 m grid from a 100 m position would be false precision.
+    The exponential kernel is broadened by the position error with the variance-addition approximation
+    L_eff = sqrt(L^2 + r^2) (exact for Gaussian kernels; an approximation for exponential ones).
+    """
+    cell = max(float(model["cell_size_m"]), 10.0 * math.ceil(uncertainty_m / 10.0))
+    return cell, math.hypot(float(model["decay_length_m"]), uncertainty_m)
+
+
+def circle_polygon(lat0, lon0, radius_m, segments=32) -> list[list[float]]:
+    pts = []
+    for i in range(segments + 1):
+        a = 2 * math.pi * i / segments
+        lat, lon = to_geo(lat0, lon0, radius_m * math.sin(a), radius_m * math.cos(a))
+        pts.append([round(lon, 7), round(lat, 7)])
+    return pts

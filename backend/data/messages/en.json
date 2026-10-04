@@ -1,5 +1,9 @@
 {
-  "_meta": {"locale": "en", "status": "source_language", "reviewed_by_native_speaker": false},
+  "_meta": {
+    "locale": "en",
+    "status": "source_language",
+    "reviewed_by_native_speaker": false
+  },
   "condition.coffee_leaf_rust.label": "Possible coffee leaf rust",
   "condition.undetermined.label": "Condition not determined",
   "condition.unsupported_crop.label": "Unsupported crop",
@@ -61,5 +65,8 @@
   "regional.match_note.rwanda_approx": "Shown because the location falls in an approximate Rwanda area (a rough box that also covers border areas of neighbouring countries); based on 2012 sources.",
   "local_check.pesticide_registration_labels": "Pesticide registration and labels",
   "local_check.official_reporting_obligations": "Official reporting obligations",
-  "local_check.local_resistant_cultivars": "Locally recommended resistant varieties"
+  "local_check.local_resistant_cultivars": "Locally recommended resistant varieties",
+  "map.location_too_coarse": "Location is only known to about {radius_m} m, too coarse for plant-level scouting; walk the whole plot instead.",
+  "map.label.position_uncertainty": "Location uncertainty (about {radius_m} m)",
+  "map.limitations_uncertain": "Relative scouting priority (0-1) around reported points; not an infection probability. Uncalibrated distance decay and wind stretch. Location known to about {radius_m} m, so cells are {cell_m} m."
 }

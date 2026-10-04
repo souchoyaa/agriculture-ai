@@ -123,7 +123,17 @@
       "marino_2026_frontiers",
       "rab_plantwise_rw014_2012"
     ],
-    "note": "Wind and rain-splash dispersal are documented; decay length, stretch and grid size are uncalibrated layout assumptions for scouting, not fitted dispersal kernels."
+    "note": "Wind and rain-splash dispersal are documented; decay length, stretch and grid size are uncalibrated layout assumptions for scouting, not fitted dispersal kernels. Grid cells are never finer than the reported position uncertainty, and the kernel length is broadened by it (L_eff = sqrt(L^2 + r^2)); see docs/science/spatial-model.md.",
+    "transmission_family": "wind_and_rain_splash",
+    "kernel": "anisotropic_exponential",
+    "default_position_uncertainty_m": 50,
+    "max_position_uncertainty_m": 250,
+    "horizons_h": [
+      24,
+      72,
+      168
+    ],
+    "min_wind_consistency": 0.3
   },
   "scouting": [
     {

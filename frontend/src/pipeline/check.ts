@@ -13,13 +13,15 @@ export interface PriorObservation { id?: string; observed_at?: string; condition
 
 export interface CheckDeps {
   perceive(image: string | Blob): Promise<PerceptionResult>;
-  observe(raw: RawVisionOutput, context: { id: string; observed_at: string; crop: string; locale?: string; location?: { latitude: number; longitude: number }; data_mode?: string }): Promise<Observation>;
+  observe(raw: RawVisionOutput, context: { id: string; observed_at: string; crop: string; locale?: string; location?: { latitude: number; longitude: number; accuracy_m?: number; basis?: string }; data_mode?: string }): Promise<Observation>;
   analyze(observation: Observation): Promise<Analysis>;
   translate(analysis: Analysis, locale: string): Promise<Analysis>;
   needsTranslation(locale: string): boolean;
 }
 
-export interface CheckInput { id: string; observedAt: string; field: Field; image: string | Blob; locale: string; history: ObservationRecord[]; analyseAnyway?: boolean }
+export interface CheckInput { id: string; observedAt: string; field: Field; image: string | Blob; locale: string; history: ObservationRecord[]; analyseAnyway?: boolean;
+  /** Plant position captured automatically at photo time (only when permission was already granted). */
+  plantLocation?: { latitude: number; longitude: number; accuracy_m?: number; basis?: string } }
 export type CheckOutcome =
   | { kind: 'follow_up'; perception: PerceptionResult; followUp: NonNullable<PerceptionResult['followUp']> }
   | { kind: 'analysed'; perception: PerceptionResult; observation: Observation; analysis: Analysis };
@@ -48,10 +50,11 @@ export async function runAutomaticCheck(input: CheckInput, deps: CheckDeps, onSt
   const observation = await deps.observe(perception.raw, {
     id: input.id, observed_at: input.observedAt, crop: input.field.crop,
     locale: machine ? 'en' : input.locale,             // engine localises en/fr/es; other languages are translated after
-    ...(input.field.location ? { location: input.field.location } : {}),
+    ...(input.plantLocation ? { location: input.plantLocation } : input.field.location ? { location: { ...input.field.location, basis: input.field.location.basis ?? (input.field.demo ? 'example' : 'field') } } : {}),
     data_mode: 'live',
   });
-  const locationNote = input.field.demo && input.field.location ? '; example field location, not verified as your farm'
+  const locationNote = input.plantLocation ? '; plant position from device GPS at capture'
+    : input.field.demo && input.field.location ? '; example field location, not verified as your farm'
     : input.field.location && input.field.locationSource ? `; field location from ${input.field.locationSource === 'gps' ? 'device GPS' : 'manual entry'}` : '';
   observation.provenance = { ...observation.provenance, source: `${observation.provenance.source}; on-device inference (${perception.device})${locationNote}` };
   const priors = priorsFromHistory(input.history, input.field.id, input.id);

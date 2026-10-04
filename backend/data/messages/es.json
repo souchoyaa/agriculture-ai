@@ -1,5 +1,9 @@
 {
-  "_meta": {"locale": "es", "status": "authored_by_agent", "reviewed_by_native_speaker": false},
+  "_meta": {
+    "locale": "es",
+    "status": "authored_by_agent",
+    "reviewed_by_native_speaker": false
+  },
   "condition.coffee_leaf_rust.label": "Posible roya del café",
   "condition.undetermined.label": "Condición no determinada",
   "condition.unsupported_crop.label": "Cultivo no compatible",
@@ -61,5 +65,8 @@
   "regional.match_note.rwanda_approx": "Se muestra porque la ubicación cae en una zona aproximada de Ruanda (un recuadro que también cubre zonas fronterizas de países vecinos); basado en fuentes de 2012.",
   "local_check.pesticide_registration_labels": "Registro y etiquetas de plaguicidas",
   "local_check.official_reporting_obligations": "Obligaciones oficiales de notificación",
-  "local_check.local_resistant_cultivars": "Variedades resistentes recomendadas localmente"
+  "local_check.local_resistant_cultivars": "Variedades resistentes recomendadas localmente",
+  "map.location_too_coarse": "La ubicación solo se conoce con unos {radius_m} m de precisión, demasiado para ubicar plantas; recorra toda la parcela.",
+  "map.label.position_uncertainty": "Incertidumbre de ubicación (unos {radius_m} m)",
+  "map.limitations_uncertain": "Prioridad relativa de inspección (0-1) alrededor de los puntos reportados; no es una probabilidad de infección. Decaimiento con la distancia y estiramiento por viento no calibrados. Ubicación conocida con unos {radius_m} m, por eso las celdas miden {cell_m} m."
 }

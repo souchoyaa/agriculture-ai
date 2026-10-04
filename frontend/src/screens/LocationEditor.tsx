@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
-import { LOCATION_DECIMALS, parseCoordinates, type FieldLocation } from '../domain/location';
+import { DISPLAY_DECIMALS, parseCoordinates, type FieldLocation } from '../domain/location';
 import type { MessageId } from '../i18n';
 import { locateOnce } from '../locationService';
 import { useStore } from '../state/store';
@@ -40,7 +40,8 @@ export function LocationEditor({ value, onChange }: { value?: LocationValue; onC
       <Text style={type.heading}>{t('location.title')}</Text>
       {value ? (
         <Card>
-          <Body>⌖ {value.value.latitude.toFixed(LOCATION_DECIMALS)}, {value.value.longitude.toFixed(LOCATION_DECIMALS)}</Body>
+          <Body>{value.value.latitude.toFixed(DISPLAY_DECIMALS)}, {value.value.longitude.toFixed(DISPLAY_DECIMALS)}</Body>
+          {value.value.accuracy_m ? <Body soft>{t('location.accuracy', { m: value.value.accuracy_m })}</Body> : null}
           <Body soft>{t(value.source === 'gps' ? 'location.fromGps' : 'location.fromManual')}</Body>
           <Button kind="quiet" icon="✕" label={t('location.remove')} onPress={() => onChange(undefined)} />
         </Card>

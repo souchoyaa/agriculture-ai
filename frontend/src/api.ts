@@ -11,7 +11,7 @@ export interface Signal { label: string; confidence: number; [extra: string]: un
 export interface Observation {
   contract_version: string; id: string; data_mode: DataMode; provenance: Provenance;
   observed_at: string; crop: string; locale?: string;
-  location?: { latitude: number; longitude: number };
+  location?: { latitude: number; longitude: number; accuracy_m?: number; basis?: string };
   signals: Signal[]; [extra: string]: unknown;
 }
 export type AnalysisStatus = 'supported' | 'needs_review' | 'unsupported' | 'unavailable';

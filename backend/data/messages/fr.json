@@ -1,5 +1,9 @@
 {
-  "_meta": {"locale": "fr", "status": "authored_by_agent", "reviewed_by_native_speaker": false},
+  "_meta": {
+    "locale": "fr",
+    "status": "authored_by_agent",
+    "reviewed_by_native_speaker": false
+  },
   "condition.coffee_leaf_rust.label": "Rouille orangée du caféier possible",
   "condition.undetermined.label": "Problème non déterminé",
   "condition.unsupported_crop.label": "Culture non prise en charge",
@@ -61,5 +65,8 @@
   "regional.match_note.rwanda_approx": "Affiché car la position se trouve dans une zone approximative du Rwanda (un cadre qui couvre aussi des zones frontalières des pays voisins) ; fondé sur des sources de 2012.",
   "local_check.pesticide_registration_labels": "Homologation et étiquettes des pesticides",
   "local_check.official_reporting_obligations": "Obligations officielles de déclaration",
-  "local_check.local_resistant_cultivars": "Variétés résistantes recommandées localement"
+  "local_check.local_resistant_cultivars": "Variétés résistantes recommandées localement",
+  "map.location_too_coarse": "L’emplacement n’est connu qu’à environ {radius_m} m près, trop imprécis pour cibler des plants ; parcourez toute la parcelle.",
+  "map.label.position_uncertainty": "Incertitude de position (environ {radius_m} m)",
+  "map.limitations_uncertain": "Priorité d’inspection relative (0-1) autour des points signalés ; ce n’est pas une probabilité d’infection. Décroissance avec la distance et étirement par le vent non calibrés. Position connue à environ {radius_m} m près, donc cases de {cell_m} m."
 }

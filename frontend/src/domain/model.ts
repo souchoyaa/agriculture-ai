@@ -1,9 +1,10 @@
 // Pure domain state for the field companion. No React, storage or network here.
 import type { Analysis, Observation, Signal } from '../api';
+import type { FieldLocation } from './location';
 
 export interface Field {
   id: string; name: string; crop: string;
-  location?: { latitude: number; longitude: number };
+  location?: FieldLocation;
   demo: boolean; // seeded example data; always labelled in UI
   /** How a user-added field got its location; absent for example fields. */
   locationSource?: 'gps' | 'manual';
@@ -47,13 +48,13 @@ export interface ObservationRecord {
 
 /** Symptom ids map 1:1 to canonical signal labels (backend coffee signal vocabulary; insect_damage is passed through as unrecognised). */
 export const SYMPTOMS = [
-  { id: 'orange_powder_leaf_underside', glyph: '◍' },
-  { id: 'yellow_spots_upper_leaf', glyph: '◐' },
-  { id: 'brown_dry_lesion_centres', glyph: '◉' },
-  { id: 'lesions_lower_canopy_first', glyph: '⤓' },
-  { id: 'premature_leaf_drop', glyph: '↓' },
-  { id: 'insect_damage', glyph: '✱' },
-  { id: 'none_visible', glyph: '○' },
+  { id: 'orange_powder_leaf_underside', glyph: 'blur' },
+  { id: 'yellow_spots_upper_leaf', glyph: 'circle-half-full' },
+  { id: 'brown_dry_lesion_centres', glyph: 'record-circle-outline' },
+  { id: 'lesions_lower_canopy_first', glyph: 'arrow-collapse-down' },
+  { id: 'premature_leaf_drop', glyph: 'leaf-off' },
+  { id: 'insect_damage', glyph: 'bug-outline' },
+  { id: 'none_visible', glyph: 'check-circle-outline' },
 ] as const;
 export type SymptomId = typeof SYMPTOMS[number]['id'];
 

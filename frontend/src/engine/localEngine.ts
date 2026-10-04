@@ -8,7 +8,7 @@ const client = new WorkerClient('/engine/engine.worker.js', ['result']);
 export const engineAvailable = () => WorkerClient.supported();
 export const loadEngine = () => client.ready({});
 
-export interface EngineContext { id: string; observed_at: string; crop: string; locale?: string; location?: { latitude: number; longitude: number }; data_mode?: string }
+export interface EngineContext { id: string; observed_at: string; crop: string; locale?: string; location?: { latitude: number; longitude: number; accuracy_m?: number; basis?: string }; data_mode?: string }
 
 /** Model output → canonical observation through the backend's own adapter boundary. */
 export async function observe(raw: RawVisionOutput, context: EngineContext): Promise<Observation> {

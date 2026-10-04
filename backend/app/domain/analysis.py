@@ -2,7 +2,7 @@
 import hashlib
 import json
 import math
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 
 from . import climatology, knowledge, risk, spatial, weather
 
@@ -293,6 +293,22 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
     return result
 
 
+def position_uncertainty(location: dict, sm: dict) -> tuple[float, str]:
+    """Horizontal position uncertainty (m) and its basis. Unknown accuracy assumes a field-level position."""
+    acc = location.get("accuracy_m")
+    if isinstance(acc, (int, float)) and math.isfinite(acc) and acc > 0:
+        return float(acc), str(location.get("basis", "reported"))
+    return float(sm["default_position_uncertainty_m"]), "assumed_field_level"
+
+
+def horizon_wind(series, observed_at, hours: int, min_consistency: float):
+    if not series:
+        return None, None
+    window = [h for h in series.hours if observed_at <= h.time < observed_at + timedelta(hours=hours)]
+    wind = weather.mean_wind_from(window)
+    return wind, (wind if wind and wind[1] >= min_consistency else None)
+
+
 def build_map(observation, condition, sm, series, observed_at, abstained, t) -> tuple[dict, list[dict]]:
     location = observation.get("location")
     if not location:
@@ -301,7 +317,13 @@ def build_map(observation, condition, sm, series, observed_at, abstained, t) -> 
         return {"status": "unavailable", "type": "FeatureCollection", "features": [],
                 "limitations": "No suspected condition; scouting priority not computed."}, []
     lat0, lon0 = location["latitude"], location["longitude"]
-    if not spatial.grid_supported(lat0, lon0, sm["cell_size_m"] * (sm["half_width_cells"] + 0.5)):
+    radius, basis = position_uncertainty(location, sm)
+    if radius > sm["max_position_uncertainty_m"]:
+        return {"status": "unavailable", "type": "FeatureCollection", "features": [],
+                "limitations": t("map.location_too_coarse", radius_m=round(radius)), "position_uncertainty_m": round(radius), "location_basis": basis}, []
+    cell_m, decay_m = spatial.effective_geometry(sm, radius)
+    geo = {**sm, "effective_cell_size_m": cell_m, "effective_decay_length_m": decay_m}
+    if not spatial.grid_supported(lat0, lon0, cell_m * (sm["half_width_cells"] + 0.5)):
         return {"status": "unavailable", "type": "FeatureCollection", "features": [],
                 "limitations": "Local grid unsupported within 85° of a pole or across the ±180° meridian."}, []
     near = lambda p: math.hypot(*spatial.to_local(lat0, lon0, p["latitude"], p["longitude"])) <= PRIOR_RADIUS_M
@@ -309,40 +331,55 @@ def build_map(observation, condition, sm, series, observed_at, abstained, t) -> 
     sources = [location] + [p for p in priors if p.get("present")]
     cleared = [p for p in priors if p.get("present") is False]
 
-    wind = None
-    if series:
-        forecast = [h for h in series.hours if h.time >= observed_at][:24 * condition["weather_model"]["forecast_days"]]
-        wind = weather.mean_wind_from(forecast)
-    wind_used = wind if wind and wind[1] >= 0.3 else None
-    cells = spatial.priority_grid((lat0, lon0), sources, cleared, sm, wind_used[0] if wind_used else None)
+    # Time horizons: same kernel, wind averaged over each forecast window (direction can change).
+    default_h = 24 * condition["weather_model"]["forecast_days"]
+    horizons = []
+    for h in sorted(set(sm.get("horizons_h", [default_h]) + [default_h])):
+        wind, wind_used = horizon_wind(series, observed_at, h, sm.get("min_wind_consistency", 0.3))
+        cells = spatial.priority_grid((lat0, lon0), sources, cleared, geo, wind_used[0] if wind_used else None)
+        horizons.append({"hours": h, "cells": cells, "wind": wind, "wind_used": wind_used})
+    main = next(x for x in horizons if x["hours"] == default_h)
+    cells, wind, wind_used = main["cells"], main["wind"], main["wind_used"]
 
-    features = [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [spatial.cell_polygon(lat0, lon0, c["east_m"], c["north_m"], sm["cell_size_m"])]},
+    features = [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [spatial.cell_polygon(lat0, lon0, c["east_m"], c["north_m"], cell_m)]},
                  "properties": {"kind": "scouting_priority_cell", "priority": c["priority"], "row": c["row"], "col": c["col"]}}
                 for c in cells]
+    features.append({"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [spatial.circle_polygon(lat0, lon0, radius)]},
+                     "properties": {"kind": "position_uncertainty", "radius_m": round(radius), "basis": basis,
+                                    "label": t("map.label.position_uncertainty", radius_m=round(radius))}})
     features += [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [p["longitude"], p["latitude"]]},
                   "properties": {"kind": "reported_observation", "present": p is location or bool(p.get("present")),
                                  "label": t("map.label.current" if p is location else ("map.label.prior_present" if p.get("present") else "map.label.prior_clear")),
                                  "observation_id": observation["id"] if p is location else p.get("id"), "current": p is location}}
                  for p in [location] + priors]
     points = []
-    for rank, cell in enumerate(spatial.pick_points(cells), start=1):
+    min_sep = max(40.0, 2 * cell_m)
+    for rank, cell in enumerate(spatial.pick_points(cells, min_separation_m=min_sep), start=1):
         lat, lon = spatial.to_geo(lat0, lon0, cell["east_m"], cell["north_m"])
         distance = round(math.hypot(cell["east_m"], cell["north_m"]))
-        text = (t("scouting.point_origin", rank=rank) if distance < sm["cell_size_m"]
+        text = (t("scouting.point_origin", rank=rank) if distance < cell_m
                 else t("scouting.point", rank=rank, distance_m=distance, bearing=t(f"bearing.{spatial.bearing_label(cell['east_m'], cell['north_m'])}")))
         point = {"id": f"scout_point_{rank}", "text": text, "rank": rank, "priority": cell["priority"],
                  "location": {"latitude": round(lat, 7), "longitude": round(lon, 7)}, "distance_m": distance, "source_ids": []}
         points.append(point)
         features.append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [round(lon, 7), round(lat, 7)]},
                          "properties": {"kind": "scouting_point", "rank": rank, "label": t("map.label.scouting_point", rank=rank), "priority": cell["priority"], "scouting_id": point["id"]}})
+    precise = radius <= sm["cell_size_m"]
     return {
         "status": "available", "type": "FeatureCollection", "features": features,
-        "limitations": t("map.limitations"),
+        "limitations": t("map.limitations") if precise else t("map.limitations_uncertain", radius_m=round(radius), cell_m=round(cell_m)),
         "value_kind": "relative_scouting_priority", "scale": [0, 1], "calibrated": False,
-        "crs": "EPSG:4326", "cell_size_m": sm["cell_size_m"],
+        "crs": "EPSG:4326", "cell_size_m": cell_m, "decay_length_m": round(decay_m, 1),
+        "position_uncertainty_m": round(radius), "location_basis": basis,
+        "transmission_family": sm.get("transmission_family"), "kernel": sm.get("kernel"),
         "horizon_days": condition["weather_model"]["forecast_days"],
         "wind": {"used": wind_used is not None, "mean_from_deg": round(wind[0]) if wind else None,
                  "consistency": round(wind[1], 2) if wind else None, "stretch": sm["downwind_stretch"]},
+        # Same grid geometry as the cell features (row-major); priorities per forecast window.
+        "horizons": [{"hours": x["hours"], "priorities": [c["priority"] for c in x["cells"]],
+                      "wind_from_deg": round(x["wind"][0]) if x["wind"] else None,
+                      "wind_consistency": round(x["wind"][1], 2) if x["wind"] else None, "wind_used": x["wind_used"] is not None}
+                     for x in horizons],
         "method": sm["description"],
         "prior_observations_used": len(priors),
     }, points

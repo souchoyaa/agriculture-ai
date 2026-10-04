@@ -5,6 +5,7 @@ import { httpApi, mockApi, type Api } from '../api';
 import { ConnectionGate, type Connection } from './connection';
 import { buildObservation, newId, type Field, type ObservationRecord } from '../domain/model';
 import { roundLocation, type FieldLocation } from '../domain/location';
+import { locateIfPermitted } from '../locationService';
 import { translator, type Translate } from '../i18n';
 import { deviceStore, type KeyValueStore } from '../storage';
 import { deletePhoto, persistPhoto, PHOTO_STORAGE_KIND } from '../photoStore';
@@ -200,8 +201,9 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
     };
     setBusy(b => ({ ...b, [id]: true }));
     try {
+      const plantLocation = field.demo ? undefined : await locateIfPermitted();
       const outcome = await runAutomaticCheck({ id, observedAt: record.createdAt, field, image: record.photoUri, locale: current.current.settings.locale,
-        history: current.current.records, analyseAnyway }, deps, step => { patchRecord(id, r => ({ ...r, pipelineStep: step })); });
+        history: current.current.records, analyseAnyway, plantLocation }, deps, step => { patchRecord(id, r => ({ ...r, pipelineStep: step })); });
       const p = outcome.perception;
       const perception = { model: p.raw.model, displayName: local || using.kind === 'http' ? VISION_MODEL.displayName : 'Demo example (no model)', fineTuned: local || using.kind === 'http' ? VISION_MODEL.fineTuned : false,
         device: p.device, ms: p.ms, labels: p.raw.labels, subject: p.subject };
@@ -223,7 +225,7 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
     ready, recovered, storageError, state, api, connection, t, busy,
     async addField(name, crop, location) {
       const field: Field = { id: newId('field'), name: name.trim(), crop, demo: false,
-        ...(location ? { location: roundLocation(location.value), locationSource: location.source } : {}) };
+        ...(location ? { location: roundLocation({ ...location.value, basis: location.value.basis ?? (location.source === 'gps' ? 'device_gps' : 'manual_entry') }), locationSource: location.source } : {}) };
       await commit(s => ({ ...s, fields: [...s.fields, field] }));
       return field;
     },
@@ -231,7 +233,7 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
       await commit(s => ({ ...s, fields: s.fields.map(f => {
         if (f.id !== fieldId || f.demo) return f;          // example fields keep their labelled example location
         if (!location) { const { location: _l, locationSource: _s, ...rest } = f; return rest; }
-        return { ...f, location: roundLocation(location.value), locationSource: location.source };
+        return { ...f, location: roundLocation({ ...location.value, basis: location.value.basis ?? (location.source === 'gps' ? 'device_gps' : 'manual_entry') }), locationSource: location.source };
       }) }));
     },
     async saveCheck(input) {

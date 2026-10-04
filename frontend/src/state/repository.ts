@@ -27,7 +27,7 @@ export async function runAnalysis(record: ObservationRecord, api: Api, now = new
 /** Example data, produced by running the mock adapter — never hand-written results. */
 export async function seedState(api: Api, settings: Settings = DEFAULT_SETTINGS): Promise<PersistedState> {
   const fields: Field[] = [
-    { id: 'demo-field-hillside', name: 'Hillside coffee', crop: 'coffee', location: demoObservation.location, demo: true },
+    { id: 'demo-field-hillside', name: 'Hillside coffee', crop: 'coffee', location: { latitude: demoObservation.location!.latitude, longitude: demoObservation.location!.longitude, basis: 'example' }, demo: true },
     { id: 'demo-field-valley', name: 'Valley coffee', crop: 'coffee', location: { latitude: -1.953, longitude: 30.071 }, demo: true },
     { id: 'demo-field-maize', name: 'Lower maize', crop: 'maize', demo: true },
   ];

@@ -44,6 +44,10 @@ def scenarios():
         {"label": "orange_powder_leaf_underside", "confidence": 0.9, "affected_leaf_area_pct": 12},
         {"label": "cercospora_leaf_spot_marks", "confidence": 0.6}]), DEMO_NOW
     yield "unsupported_locale", variant("rw", locale="rw"), DEMO_NOW
+    # Plant position from device GPS (5 m accuracy): fine scouting grid; the default demo location is field-level (50 m assumed).
+    yield "precise_gps", variant("gps", location={**base["location"], "accuracy_m": 5, "basis": "device_gps"}), DEMO_NOW
+    # Coarse position (300 m): no plant-level grid, explicit limitation instead of false precision.
+    yield "coarse_location", variant("coarse", location={**base["location"], "accuracy_m": 300, "basis": "manual_entry"}), DEMO_NOW
 
 
 def main(check: bool) -> int:
