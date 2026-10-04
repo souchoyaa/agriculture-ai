@@ -52,5 +52,6 @@
   "map.label.prior_present": "Earlier report: rust seen",
   "map.label.prior_clear": "Earlier report: no rust seen",
   "map.label.scouting_point": "Priority point {rank}",
-  "uncertainty.specific_low_certainty": "A specific sign of coffee leaf rust was reported, but with low certainty (evidence score {score}). Confirm it on more leaves before acting."
+  "uncertainty.specific_low_certainty": "A specific sign of coffee leaf rust was reported, but with low certainty (evidence score {score}). Confirm it on more leaves before acting.",
+  "review.reason.specific_low_certainty": "A specific sign was reported with low certainty; an expert should confirm before decisions."
 }

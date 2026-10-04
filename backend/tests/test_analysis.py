@@ -560,3 +560,4 @@ class UncertaintyWording(unittest.TestCase):
         self.assertIn("specific sign", result["condition"]["uncertainty"])
         self.assertNotIn("not specific enough", result["condition"]["uncertainty"])
         self.assertIn("not specific enough", run(observation())["condition"]["uncertainty"])
+        self.assertEqual([r["id"] for r in result["review"]["reasons"]], ["specific_low_certainty"])
