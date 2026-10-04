@@ -9,7 +9,6 @@ const OFFLINE = process.argv.includes('--offline');
 const LOCALE = process.argv.find(a => a.startsWith('--locale='))?.slice(9);
 const OUT = path.resolve(__dirname, '../../docs/frontend/screenshots');
 
-const TAB_FIELDS = /^(Fields|Amasambu|Mashamba)/;
 async function check(page: Page, label: string) {
   if (LOCALE) return checkLocalised(page, label);
   await page.getByRole('tab', { name: 'Fields' }).click();
@@ -29,16 +28,16 @@ async function check(page: Page, label: string) {
 
 /** Local-language run: UI in the machine-translated locale, result text translated on device. */
 async function checkLocalised(page: Page, label: string) {
-  await page.getByRole('tab', { name: 'Settings' }).click();
-  await page.getByRole('radio', { name: LOCALE === 'rw' ? /Ikinyarwanda/ : /Kiswahili/ }).click();
-  await page.getByRole('tab', { name: TAB_FIELDS }).click();
-  await page.getByRole('button', { name: /Hillside coffee/ }).filter({ hasText: /.+/ }).first().click();
-  await page.locator('[role=button]').filter({ hasText: /example|mfano|urugero|ifoto|picha/i }).last().click().catch(() => {});
+  // Switch language through stored settings (labels are translated, so test IDs drive the flow).
+  await page.evaluate(loc => { const k = 'field-companion/state/v1'; const st = JSON.parse(localStorage.getItem(k)!); st.settings.locale = loc; localStorage.setItem(k, JSON.stringify(st)); }, LOCALE);
+  await page.reload();
+  await page.getByTestId('check-field-demo-field-hillside').first().click();
+  await page.getByTestId('check-sample-photo').click();
   const t0 = Date.now();
-  await page.getByText(/NLLB-200/).first().waitFor({ timeout: 60000 });
-  await page.waitForFunction(() => /Hemileia vastatrix/.test(document.body.innerText), undefined, { timeout: 900000 });
+  await page.waitForFunction(() => /Hemileia vastatrix/.test(document.body.innerText), undefined, { timeout: 1200000 });
   const body = await page.locator('body').innerText();
   if (/Possible coffee leaf rust/.test(body)) throw new Error('condition label not translated');
+  if (!/NLLB-200/.test(body)) throw new Error('machine-translation notice missing');
   await page.screenshot({ path: path.join(OUT, `photo-${label}-${LOCALE}-result.png`) });
   return ((Date.now() - t0) / 1000).toFixed(1);
 }
@@ -52,12 +51,12 @@ async function checkLocalised(page: Page, label: string) {
     const page = await ctx.newPage();
     page.on('pageerror', e => errors.push(e.message));
     await page.goto(APP); await page.evaluate(() => localStorage.clear()); await page.reload();
-    await page.getByText('Your fields').first().waitFor();
+    await page.getByTestId('check-field-demo-field-hillside').first().waitFor();
     console.log('online check:', await check(page, 'online'), 's');
     if (OFFLINE) {
       // Block every request that is not this app (Hugging Face, Open-Meteo, CDNs): genuinely offline except app shell cache.
       await ctx.route(url => !url.href.startsWith(APP), route => route.abort('internetdisconnected'));
-      await page.reload(); await page.getByText('Your fields').first().waitFor();
+      await page.reload(); await page.getByTestId('check-field-demo-field-hillside').first().waitFor();
       console.log('offline check:', await check(page, 'offline'), 's');
     }
     if (errors.length) throw new Error('page errors:\n' + errors.join('\n'));

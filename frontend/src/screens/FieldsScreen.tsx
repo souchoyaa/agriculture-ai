@@ -48,7 +48,7 @@ export function FieldsScreen({ nav }: { nav: Nav }) {
           <AttentionBadge level={top.level} label={t(`attention.${top.level}`)} />
           <Text style={[type.body, { color: '#E8F3EC' }]}>{reasonText(t, top.reason, condLabel(top.latest))}</Text>
           <Row wrap style={{ marginTop: space(1) }}>
-            <Button kind="light" label={t('fields.checkThis')} a11yLabel={`${t('fields.checkThis')}: ${top.field.name}`} icon="camera-plus-outline" onPress={() => nav.push({ name: 'check', fieldId: top.field.id })} style={{ flexGrow: 1 }} />
+            <Button kind="light" testID={`check-field-${top.field.id}`} label={t('fields.checkThis')} a11yLabel={`${t('fields.checkThis')}: ${top.field.name}`} icon="camera-plus-outline" onPress={() => nav.push({ name: 'check', fieldId: top.field.id })} style={{ flexGrow: 1 }} />
             {top.latest && top.latest.analysis.kind !== 'not_requested'
               ? <Button kind="quiet" label={t('fields.open')} a11yLabel={`${t('fields.open')}: ${top.field.name}`} icon="arrow-right" onPress={() => nav.push({ name: 'result', recordId: top.latest!.id })} style={{ borderColor: 'rgba(255,255,255,0.35)', flexGrow: 1 }} textColor="#fff" />
               : null}
@@ -104,7 +104,7 @@ function FieldCard({ summary, nav }: { summary: ReturnType<typeof useFieldSummar
         <Text style={[type.small, { color: color.muted }]}>{latest ? t('fields.lastChecked', { date: formatDate(latest.createdAt, state.settings.locale) }) : t('fields.neverChecked')}</Text>
       </Row>
       <Row wrap>
-        <Button label={t('fields.checkThis')} a11yLabel={`${t('fields.checkThis')}: ${field.name}`} icon="camera-plus-outline" onPress={() => nav.push({ name: 'check', fieldId: field.id })} style={{ flexGrow: 1 }} />
+        <Button testID={`check-field-${field.id}`} label={t('fields.checkThis')} a11yLabel={`${t('fields.checkThis')}: ${field.name}`} icon="camera-plus-outline" onPress={() => nav.push({ name: 'check', fieldId: field.id })} style={{ flexGrow: 1 }} />
         <Button kind="secondary" label={t('fields.open')} a11yLabel={`${t('fields.open')}: ${field.name}`} icon="arrow-right" onPress={() => nav.push({ name: 'field', fieldId: field.id })} style={{ flexGrow: 1 }} />
       </Row>
     </Card>

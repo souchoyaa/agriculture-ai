@@ -99,7 +99,7 @@ export function CheckScreen({ nav, fieldId, analyseAnywayFor }: { nav: Nav; fiel
         <Button label={busy ? t('check.saving') : t('check.photo.take')} icon="camera" disabled={busy} onPress={() => start('camera')} style={{ alignSelf: 'stretch' }} />
         <Row wrap style={{ alignSelf: 'stretch' }}>
           <Button kind="secondary" label={t('check.photo.pick')} icon="image-outline" disabled={busy} onPress={() => start('library')} style={{ flexGrow: 1 }} />
-          <Button kind="secondary" label={t('check.photo.sample')} icon="leaf" disabled={busy} onPress={() => start('sample')} style={{ flexGrow: 1 }} />
+          <Button kind="secondary" label={t('check.photo.sample')} icon="leaf" testID="check-sample-photo" disabled={busy} onPress={() => start('sample')} style={{ flexGrow: 1 }} />
         </Row>
       </Card>
 

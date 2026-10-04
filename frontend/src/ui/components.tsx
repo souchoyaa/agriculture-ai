@@ -45,12 +45,12 @@ export function Body({ children, style, soft }: { children: React.ReactNode; sty
 }
 
 type ButtonKind = 'primary' | 'secondary' | 'quiet' | 'danger' | 'light';
-export function Button({ label, onPress, kind = 'primary', disabled, icon, hint, style, a11yLabel, textColor }: {
-  label: string; a11yLabel?: string; textColor?: string; onPress: () => void; kind?: ButtonKind; disabled?: boolean; icon?: string; hint?: string; style?: StyleProp<ViewStyle>;
+export function Button({ label, onPress, kind = 'primary', disabled, icon, hint, style, a11yLabel, textColor, testID }: {
+  label: string; a11yLabel?: string; textColor?: string; testID?: string; onPress: () => void; kind?: ButtonKind; disabled?: boolean; icon?: string; hint?: string; style?: StyleProp<ViewStyle>;
 }) {
   const k = textColor ? { ...buttonKinds[kind], fg: textColor } : buttonKinds[kind];
   return (
-    <Pressable accessibilityRole="button" accessibilityLabel={a11yLabel ?? label} accessibilityHint={hint} accessibilityState={{ disabled: !!disabled }}
+    <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={a11yLabel ?? label} accessibilityHint={hint} accessibilityState={{ disabled: !!disabled }}
       disabled={disabled} onPress={onPress}
       style={({ pressed, focused }: PS) => [styles.button, { backgroundColor: k.bg, borderColor: k.border }, kind === 'primary' && shadow, pressed && { opacity: 0.88, transform: [{ scale: 0.985 }] }, focused && styles.focus, disabled && { opacity: 0.45 }, style]}>
       {icon ? <Icon name={icon} size={20} color={k.fg} /> : null}
