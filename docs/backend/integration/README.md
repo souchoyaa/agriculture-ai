@@ -54,3 +54,8 @@ Still failing / open (sent to frontend): (1) banner "Server answers are demo dat
 - backend: Ran 65 tests, OK (skipped=1); frontend: npm ci (adds expo-file-system) + npm run check 15/15; expo export OK. Frontend runs against backend's current shared/ fixtures (newer than its own import) without failures.
 - strict tests/http-smoke.ts PASS; journey.ts phone 390 + desktop 1440 (int-a30e824-w*): POST 200, live, SERVER ESTIMATE, 0 console errors, 0 refusals.
 - Backend change from fe-005 note: weather_risk.climatology.caveat is now plain localized farmer text; developer detail moved to technical_note.
+
+## 2026-10-04 04:40Z: integration e5b30e9 = frontend ecdfd88 (fe-007, includes fe-006) + backend 2990100 — CLEAN
+- Merge conflicted only in shared/ and docs/interfaces.md (frontend carried backend 77193e7 copies); resolved to backend 2990100 (backend-owned, newer). `git diff backend -- shared docs/interfaces.md backend` empty after merge.
+- backend: Ran 67 tests, OK (skipped=1); frontend: npm ci + npm run check 16/16; expo export OK.
+- strict tests/http-smoke.ts PASS; journey.ts phone 390 + desktop 1440 (int-e5b30e9-w*): POST 200, live, 0 console errors. Rwandan recommendations (count_spots_threshold, open_canopy_spacing_pruning) render; "Guidance sources come from: Hawaiʻi, USA, Rwanda." `regional_context` not yet displayed by frontend (additive, requested).
