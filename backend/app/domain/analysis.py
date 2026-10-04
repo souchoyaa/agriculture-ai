@@ -2,9 +2,9 @@
 import hashlib
 import json
 import math
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
-from . import knowledge, risk, spatial, weather
+from . import climatology, knowledge, risk, spatial, weather
 
 CONTRACT_VERSION = "0.1.0"
 KNOWLEDGE_VERSION = "clr-2026-10-04"
@@ -135,6 +135,12 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
     result["environment"] = environment_block(series, notes, observed_at, now)
     assessment = risk.assess(series, observed_at, wm)
     risk_class = assessment["class"]
+    complete_dates = [date.fromisoformat(d["date"]) for d in assessment["days"] if d["complete"]]
+    baseline = climatology.compare(climatology.load(location["latitude"], location["longitude"]) if location else None,
+                                   wm, complete_dates, assessment["favourable_day_fraction"])
+    if baseline["status"] == "available":
+        baseline["summary"] = t(f"risk.relation.{baseline['relation']}")
+        used_sources |= set(baseline["baseline_source"]["source_ids"])
     result["weather_risk"] = {
         **assessment,
         "condition_id": condition["id"],
@@ -146,6 +152,7 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
         "interpretation": "Infection-favourable weather suitability class; not a probability of infection or disease.",
         "parameters": {k: wm[k] for k in ("temperature_c", "min_wet_hours", "wet_rh_pct", "wet_precip_mm", "min_temp_factor", "classes")},
         "latent_period_days": wm["latent_period_days"],
+        "climatology": baseline,
         "limitations": [
             "Leaf wetness approximated from relative humidity/precipitation of gridded model data; canopy conditions differ.",
             "Saturates in persistently humid zones (>0.9 favourable days in ERA5 for Chinchiná, Colombia, in both epidemic and non-epidemic years): 'high' means weather is not limiting, not that an epidemic is likely.",

@@ -337,6 +337,10 @@
    ],
    "note": "Characteristic lesions appear 4-6 weeks after infection."
   },
+  "climatology": {
+   "status": "unavailable",
+   "reason": "no_local_baseline_within_15km"
+  },
   "limitations": [
    "Leaf wetness approximated from relative humidity/precipitation of gridded model data; canopy conditions differ.",
    "Saturates in persistently humid zones (>0.9 favourable days in ERA5 for Chinchiná, Colombia, in both epidemic and non-epidemic years): 'high' means weather is not limiting, not that an epidemic is likely.",

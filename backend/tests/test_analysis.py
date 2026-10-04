@@ -405,3 +405,43 @@ class AcquiredData(unittest.TestCase):
         self.assertEqual(len(series.hours), 504)
         self.assertIn("not station observations", series.note)
         self.assertEqual(series.license, "CC BY 4.0 (Open-Meteo.com)")
+
+
+class Climatology(unittest.TestCase):
+    from app.domain import climatology as clim
+    model = CLR["weather_model"]
+
+    def baseline(self, flags_per_year, fingerprint=None):
+        return {"model_fingerprint": fingerprint or self.clim.fingerprint(self.model), "source": {"source_ids": []},
+                "overlap_check": {"operational_favourable_days": 1, "era5_favourable_days": 1},
+                "daily_favourable": {str(y): f for y, f in flags_per_year.items()}}
+
+    def test_relation_against_quartiles(self):
+        from datetime import date
+        dates = self.clim.window_dates(date(2026, 9, 19), 10)
+        flags = {2015 + i: "0" * 261 + "1" * i + "0" * (104 - i) for i in range(10)}  # day 262 = 19 Sep; i favourable days
+        base = self.baseline(flags)
+        self.assertEqual(self.clim.compare(base, self.model, dates, 0.95)["relation"], "above_usual")
+        self.assertEqual(self.clim.compare(base, self.model, dates, 0.0)["relation"], "below_usual")
+        self.assertEqual(self.clim.compare(base, self.model, dates, 0.45)["relation"], "typical")
+        result = self.clim.compare(base, self.model, dates, 0.45)
+        self.assertLessEqual(result["baseline_p25"], result["baseline_median"])
+        self.assertLessEqual(result["baseline_median"], result["baseline_p75"])
+
+    def test_parameter_change_invalidates_baseline(self):
+        from datetime import date
+        result = self.clim.compare(self.baseline({2015 + i: "0" * 366 for i in range(10)}, fingerprint="stale"), self.model, [date(2026, 9, 19)], 0.5)
+        self.assertEqual(result, {"status": "unavailable", "reason": "baseline_built_with_different_parameters"})
+
+    def test_missing_baseline_and_location(self):
+        self.assertEqual(self.clim.compare(None, self.model, [], 0.5)["status"], "unavailable")
+        self.assertEqual(run(observation(location=None))["weather_risk"]["climatology"]["status"], "unavailable")
+
+    def test_committed_baseline_matches_current_model(self):
+        baseline = self.clim.load(-1.95, 30.06)
+        self.assertEqual(baseline["model_fingerprint"], self.clim.fingerprint(self.model))
+        self.assertEqual(sorted(baseline["daily_favourable"]), [str(y) for y in range(2015, 2025)])
+        self.assertEqual(len(baseline["daily_favourable"]["2016"]), 366)
+        demo = run(observation())["weather_risk"]["climatology"]
+        self.assertEqual(demo["status"], "available")
+        self.assertIn("caveat", demo)

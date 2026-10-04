@@ -30,6 +30,15 @@
   "review.reason.high_weather": "Weather has been favourable; early confirmation helps limit spread.",
   "map.limitations": "Relative scouting priority (0-1) around reported points; not an infection probability. Uncalibrated distance decay and wind stretch.",
   "map.no_location": "No location supplied; map and scouting points unavailable.",
-  "bearing.N": "north", "bearing.NE": "north-east", "bearing.E": "east", "bearing.SE": "south-east",
-  "bearing.S": "south", "bearing.SW": "south-west", "bearing.W": "west", "bearing.NW": "north-west"
+  "bearing.N": "north",
+  "bearing.NE": "north-east",
+  "bearing.E": "east",
+  "bearing.SE": "south-east",
+  "bearing.S": "south",
+  "bearing.SW": "south-west",
+  "bearing.W": "west",
+  "bearing.NW": "north-west",
+  "risk.relation.above_usual": "This is more often favourable than usual for these dates here (2015-2024 reanalysis).",
+  "risk.relation.typical": "This is within the usual range for these dates here (2015-2024 reanalysis).",
+  "risk.relation.below_usual": "This is less often favourable than usual for these dates here (2015-2024 reanalysis)."
 }

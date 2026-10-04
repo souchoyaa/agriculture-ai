@@ -30,6 +30,15 @@
   "review.reason.high_weather": "La météo a été favorable ; une confirmation rapide aide à limiter la propagation.",
   "map.limitations": "Priorité relative d'inspection (0-1) autour des points signalés ; ce n'est pas une probabilité d'infection. Décroissance avec la distance et étirement par le vent non calibrés.",
   "map.no_location": "Aucune position fournie ; carte et points d'inspection indisponibles.",
-  "bearing.N": "nord", "bearing.NE": "nord-est", "bearing.E": "est", "bearing.SE": "sud-est",
-  "bearing.S": "sud", "bearing.SW": "sud-ouest", "bearing.W": "ouest", "bearing.NW": "nord-ouest"
+  "bearing.N": "nord",
+  "bearing.NE": "nord-est",
+  "bearing.E": "est",
+  "bearing.SE": "sud-est",
+  "bearing.S": "sud",
+  "bearing.SW": "sud-ouest",
+  "bearing.W": "ouest",
+  "bearing.NW": "nord-ouest",
+  "risk.relation.above_usual": "C'est plus souvent favorable que d'habitude à ces dates ici (réanalyse 2015-2024).",
+  "risk.relation.typical": "C'est dans la plage habituelle pour ces dates ici (réanalyse 2015-2024).",
+  "risk.relation.below_usual": "C'est moins souvent favorable que d'habitude à ces dates ici (réanalyse 2015-2024)."
 }
