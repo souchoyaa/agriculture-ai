@@ -285,7 +285,11 @@ class Localization(unittest.TestCase):
         self.assertEqual(ids(outputs["en"]), ids(outputs["es"]))
         self.assertEqual(ids(outputs["en"]), ids(outputs["fr"]))
         self.assertNotEqual(outputs["en"]["condition"]["label"], outputs["es"]["condition"]["label"])
-        self.assertEqual(outputs["en"]["map"]["features"], outputs["es"]["map"]["features"])
+        strip = lambda feats: [{**f, "properties": {k: v for k, v in f["properties"].items() if k != "label"}} for f in feats]
+        self.assertEqual(strip(outputs["en"]["map"]["features"]), strip(outputs["es"]["map"]["features"]), "only labels are localized")
+        labels = lambda r: [f["properties"].get("label") for f in r["map"]["features"] if f["properties"]["kind"] != "scouting_priority_cell"]
+        self.assertTrue(all(labels(outputs["es"])))
+        self.assertNotEqual(labels(outputs["en"]), labels(outputs["es"]))
 
     def test_meaning_preserved_numbers(self):
         """Distances, ranks and the 4-6 week latent period must survive translation."""
