@@ -202,5 +202,67 @@
     "regions_of_guidance_sources": [
       "Hawaiʻi, USA"
     ]
+  },
+  "differentials": {
+    "description": "Other biotic stresses producing leaf spots/damage on coffee (BRACOL classes; PD-118). A confident differential signal blocks 'supported' and is listed for the reviewer.",
+    "block_supported_at_or_above": 0.5,
+    "signals": {
+      "cercospora_leaf_spot_marks": {
+        "condition_id": "coffee_cercospora_leaf_spot",
+        "source_ids": [
+          "bracol_2019",
+          "ctahr_pd118_2021"
+        ]
+      },
+      "brown_leaf_spot_marks": {
+        "condition_id": "coffee_brown_leaf_spot",
+        "source_ids": [
+          "bracol_2019"
+        ]
+      },
+      "leaf_miner_mines": {
+        "condition_id": "coffee_leaf_miner",
+        "source_ids": [
+          "bracol_2019"
+        ]
+      },
+      "red_spider_mite_damage": {
+        "condition_id": "coffee_red_spider_mite",
+        "source_ids": [
+          "rocole_2019"
+        ]
+      }
+    },
+    "healthy_signal": "healthy_leaf"
+  },
+  "severity": {
+    "input": "optional numeric 'affected_leaf_area_pct' (0-100) on a rust signal",
+    "method": "OIRSA leaf-area classes as used by RoCoLe",
+    "levels": [
+      {
+        "level": 1,
+        "min_pct": 1,
+        "max_pct": 5
+      },
+      {
+        "level": 2,
+        "min_pct": 6,
+        "max_pct": 20
+      },
+      {
+        "level": 3,
+        "min_pct": 21,
+        "max_pct": 50
+      },
+      {
+        "level": 4,
+        "min_pct": 51,
+        "max_pct": 100
+      }
+    ],
+    "source_ids": [
+      "rocole_2019"
+    ],
+    "note": "Leaf-level severity of the photographed leaf, not plot incidence."
   }
 }

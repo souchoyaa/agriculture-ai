@@ -40,5 +40,12 @@
   "bearing.NW": "north-west",
   "risk.relation.above_usual": "This is more often favourable than usual for these dates here (2015-2024 reanalysis).",
   "risk.relation.typical": "This is within the usual range for these dates here (2015-2024 reanalysis).",
-  "risk.relation.below_usual": "This is less often favourable than usual for these dates here (2015-2024 reanalysis)."
+  "risk.relation.below_usual": "This is less often favourable than usual for these dates here (2015-2024 reanalysis).",
+  "differential.coffee_cercospora_leaf_spot": "Cercospora leaf spot (brown eye spot)",
+  "differential.coffee_brown_leaf_spot": "Brown leaf spot",
+  "differential.coffee_leaf_miner": "Coffee leaf miner damage",
+  "differential.coffee_red_spider_mite": "Red spider mite damage",
+  "uncertainty.differential": "Signals of another problem ({names}) are also present; a reviewer should distinguish them.",
+  "uncertainty.healthy": "The image also looks like a healthy leaf.",
+  "review.reason.differential": "Another condition with similar signs may be present; an expert can tell them apart."
 }

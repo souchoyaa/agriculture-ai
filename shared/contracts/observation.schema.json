@@ -73,6 +73,12 @@
             "type": "number",
             "minimum": 0,
             "maximum": 1
+          },
+          "affected_leaf_area_pct": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Optional leaf-level affected area estimate from the image adapter."
           }
         },
         "required": [

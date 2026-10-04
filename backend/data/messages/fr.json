@@ -40,5 +40,12 @@
   "bearing.NW": "nord-ouest",
   "risk.relation.above_usual": "C'est plus souvent favorable que d'habitude à ces dates ici (réanalyse 2015-2024).",
   "risk.relation.typical": "C'est dans la plage habituelle pour ces dates ici (réanalyse 2015-2024).",
-  "risk.relation.below_usual": "C'est moins souvent favorable que d'habitude à ces dates ici (réanalyse 2015-2024)."
+  "risk.relation.below_usual": "C'est moins souvent favorable que d'habitude à ces dates ici (réanalyse 2015-2024).",
+  "differential.coffee_cercospora_leaf_spot": "Cercosporiose (œil brun)",
+  "differential.coffee_brown_leaf_spot": "Tache brune de la feuille",
+  "differential.coffee_leaf_miner": "Dégâts de mineuse des feuilles",
+  "differential.coffee_red_spider_mite": "Dégâts d'acarien rouge",
+  "uncertainty.differential": "Des signaux d'un autre problème ({names}) sont aussi présents ; un examinateur doit les distinguer.",
+  "uncertainty.healthy": "L'image ressemble aussi à une feuille saine.",
+  "review.reason.differential": "Un autre problème aux signes similaires peut être présent ; un expert peut les distinguer."
 }

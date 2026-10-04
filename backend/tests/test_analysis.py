@@ -445,3 +445,47 @@ class Climatology(unittest.TestCase):
         demo = run(observation())["weather_risk"]["climatology"]
         self.assertEqual(demo["status"], "available")
         self.assertIn("caveat", demo)
+
+
+class DifferentialsAndSeverity(unittest.TestCase):
+    specific = {"label": "orange_powder_leaf_underside", "confidence": 0.95}
+
+    def test_confident_differential_blocks_support(self):
+        alone = run(observation(signals=[self.specific]))
+        self.assertEqual(alone["status"], "supported")
+        mixed = run(observation(signals=[self.specific, {"label": "cercospora_leaf_spot_marks", "confidence": 0.6}]))
+        self.assertEqual(mixed["status"], "needs_review")
+        self.assertTrue(mixed["condition"]["support_blocked_by_differential"])
+        self.assertEqual(mixed["condition"]["confidence"], alone["condition"]["confidence"], "differentials never add evidence")
+        self.assertEqual(mixed["condition"]["differentials"][0]["condition_id"], "coffee_cercospora_leaf_spot")
+        self.assertIn("differential", [r["id"] for r in mixed["review"]["reasons"]])
+        self.assertEqual(mixed["evidence"][1]["role"], "differential")
+
+    def test_weak_differential_listed_but_not_blocking(self):
+        result = run(observation(signals=[self.specific, {"label": "leaf_miner_mines", "confidence": 0.35}]))
+        self.assertEqual(result["status"], "supported")
+        self.assertEqual(len(result["condition"]["differentials"]), 1)
+
+    def test_healthy_signal_blocks_support(self):
+        result = run(observation(signals=[self.specific, {"label": "healthy_leaf", "confidence": 0.8}]))
+        self.assertEqual(result["status"], "needs_review")
+
+    def test_differential_text_translated_with_same_ids(self):
+        signals = [self.specific, {"label": "red_spider_mite_damage", "confidence": 0.7}]
+        en, es = run(observation(signals=signals)), run(observation(signals=signals, locale="es"))
+        self.assertEqual([d["condition_id"] for d in en["condition"]["differentials"]], [d["condition_id"] for d in es["condition"]["differentials"]])
+        self.assertNotEqual(en["condition"]["differentials"][0]["label"], es["condition"]["differentials"][0]["label"])
+
+    def test_oirsa_severity_levels(self):
+        expected = {0.5: 0, 3: 1, 5: 1, 12: 2, 20: 2, 35: 3, 80: 4, 100: 4}
+        for pct, level in expected.items():
+            signal = dict(self.specific, affected_leaf_area_pct=pct)
+            self.assertEqual(run(observation(signals=[signal]))["condition"]["severity"]["level"], level, pct)
+        self.assertIsNone(run(observation())["condition"]["severity"])
+
+    def test_label_map_targets_known_signals(self):
+        label_map = json.loads((knowledge.DATA / "vlm_label_map.json").read_text())
+        known = set(CLR["signals"]) | set(CLR["differentials"]["signals"]) | {CLR["differentials"]["healthy_signal"]}
+        for name, entry in label_map["labels"].items():
+            self.assertIn(entry["signal"], known, name)
+        self.assertEqual(sum(label_map["class_counts"]["rocole_2019"].values()), 1560)

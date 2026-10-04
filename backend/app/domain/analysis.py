@@ -43,6 +43,34 @@ def evidence_score(signals: list[dict], condition: dict) -> tuple[float, list[di
     return round(1 - remaining, 3), rows, specific
 
 
+def competing_signals(signals: list[dict], condition: dict) -> tuple[list[dict], float]:
+    """Look-alike conditions and 'healthy' signals: never evidence for the candidate, listed for the reviewer."""
+    spec = condition.get("differentials", {})
+    found, healthy = {}, 0.0
+    for signal in signals:
+        label = signal["label"].strip().lower()
+        if label == spec.get("healthy_signal"):
+            healthy = max(healthy, signal["confidence"])
+        elif label in spec.get("signals", {}) and signal["confidence"] > found.get(label, {}).get("confidence", -1):
+            found[label] = {"signal": label, "condition_id": spec["signals"][label]["condition_id"], "confidence": signal["confidence"],
+                            "source_ids": spec["signals"][label]["source_ids"]}
+    return sorted(found.values(), key=lambda d: (-d["confidence"], d["signal"])), healthy
+
+
+def leaf_severity(signals: list[dict], condition: dict) -> dict | None:
+    """OIRSA leaf-area class from an optional `affected_leaf_area_pct` on a recognised signal."""
+    spec = condition.get("severity")
+    values = [s["affected_leaf_area_pct"] for s in signals
+              if s["label"].strip().lower() in condition["signals"] and isinstance(s.get("affected_leaf_area_pct"), (int, float))]
+    if not spec or not values:
+        return None
+    pct = max(0.0, min(100.0, max(values)))
+    level = next((lv["level"] for lv in spec["levels"] if pct <= lv["max_pct"]), spec["levels"][-1]["level"])
+    if pct < spec["levels"][0]["min_pct"]:
+        level = 0
+    return {"affected_leaf_area_pct": pct, "level": level, "scale": spec["method"], "scope": spec["note"], "source_ids": spec["source_ids"]}
+
+
 def environment_block(series, notes, observed_at, now) -> dict:
     summary = risk.summarize_period(series, observed_at)
     block = {
@@ -108,10 +136,27 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
     scored = sorted(((evidence_score(observation["signals"], c), c) for c in candidates), key=lambda x: -x[0][0])
     (score, evidence, specific), condition = scored[0]
     em, wm, sm = condition["evidence_model"], condition["weather_model"], condition["spatial_model"]
+    competing, healthy = competing_signals(observation["signals"], condition)
+    block_at = condition.get("differentials", {}).get("block_supported_at_or_above", 0.5)
+    blocked = healthy >= block_at or any(d["confidence"] >= block_at for d in competing)
     abstained = score < em["abstain_below"]
-    supported = not abstained and score >= em["supported_at_or_above"] and (specific or not em["supported_requires_specific_signal"])
+    supported = (not abstained and not blocked and score >= em["supported_at_or_above"]
+                 and (specific or not em["supported_requires_specific_signal"]))
     status = "supported" if supported else "needs_review"
-    uncertainty_key = "uncertainty.abstain" if abstained else ("uncertainty.supported" if supported else "uncertainty.needs_review")
+    would_support = score >= em["supported_at_or_above"] and (specific or not em["supported_requires_specific_signal"])
+    uncertainty_key = "uncertainty.abstain" if abstained else ("uncertainty.supported" if would_support else "uncertainty.needs_review")
+    uncertainty = t(uncertainty_key, score=f"{score:.2f}")
+    listed = [d for d in competing if d["confidence"] >= 0.3]
+    for d in listed:
+        d["label"] = t(f"differential.{d['condition_id']}")
+    if listed:
+        uncertainty += " " + t("uncertainty.differential", names=", ".join(d["label"] for d in listed))
+    if healthy >= block_at:
+        uncertainty += " " + t("uncertainty.healthy")
+    for row in evidence:
+        label = row["label"].strip().lower()
+        if label in condition.get("differentials", {}).get("signals", {}) or label == condition.get("differentials", {}).get("healthy_signal"):
+            row["role"] = "differential"
 
     result = base_analysis(observation, now, locale_info)
     result["status"] = status
@@ -121,12 +166,18 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
         "label": t("condition.undetermined.label" if abstained else condition["label_key"]),
         "confidence": score,
         "confidence_kind": "uncalibrated evidence score from image signals; not a probability of infection",
-        "uncertainty": t(uncertainty_key, score=f"{score:.2f}"),
+        "uncertainty": uncertainty,
         "abstained": abstained,
+        "differentials": listed,
+        "support_blocked_by_differential": blocked and not abstained,
+        "severity": None if abstained else leaf_severity(observation["signals"], condition),
         "candidate_id": condition["id"],
         "pathogen": condition["pathogen"],
     }
     used_sources = {s for row in evidence for s in row.get("source_ids", [])}
+    used_sources |= {s for d in listed for s in d["source_ids"]}
+    if result["condition"]["severity"]:
+        used_sources |= set(result["condition"]["severity"]["source_ids"])
 
     # Environment and weather favourability (needs location).
     location = observation.get("location")
@@ -191,6 +242,8 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
     reasons = []
     if not abstained:
         reasons.append("supported" if supported else "needs_review")
+        if listed:
+            reasons.append("differential")
         if risk_class == "high":
             reasons.append("high_weather")
     result["review"] = {"suggested": bool(reasons), "reasons": [{"id": r, "text": t(f"review.reason.{r}")} for r in reasons],

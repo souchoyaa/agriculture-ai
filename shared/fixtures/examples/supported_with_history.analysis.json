@@ -437,6 +437,9 @@
   "confidence_kind": "uncalibrated evidence score from image signals; not a probability of infection",
   "uncertainty": "Image signals are consistent with coffee leaf rust (evidence score 0.84). This is not a laboratory-confirmed diagnosis.",
   "abstained": false,
+  "differentials": [],
+  "support_blocked_by_differential": false,
+  "severity": null,
   "candidate_id": "coffee_leaf_rust",
   "pathogen": "Hemileia vastatrix"
  },

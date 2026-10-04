@@ -40,5 +40,12 @@
   "bearing.NW": "noroeste",
   "risk.relation.above_usual": "Es más favorable de lo habitual para estas fechas en este lugar (reanálisis 2015-2024).",
   "risk.relation.typical": "Está dentro del rango habitual para estas fechas en este lugar (reanálisis 2015-2024).",
-  "risk.relation.below_usual": "Es menos favorable de lo habitual para estas fechas en este lugar (reanálisis 2015-2024)."
+  "risk.relation.below_usual": "Es menos favorable de lo habitual para estas fechas en este lugar (reanálisis 2015-2024).",
+  "differential.coffee_cercospora_leaf_spot": "Mancha de hierro (Cercospora)",
+  "differential.coffee_brown_leaf_spot": "Mancha parda de la hoja",
+  "differential.coffee_leaf_miner": "Daño de minador de la hoja",
+  "differential.coffee_red_spider_mite": "Daño de arañita roja",
+  "uncertainty.differential": "También hay señales de otro problema ({names}); un revisor debe distinguirlos.",
+  "uncertainty.healthy": "La imagen también parece una hoja sana.",
+  "review.reason.differential": "Puede haber otra condición con signos similares; un experto puede distinguirlas."
 }

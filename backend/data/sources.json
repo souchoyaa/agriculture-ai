@@ -175,5 +175,39 @@
     "used_for": [
       "reanalysis_dataset_description"
     ]
+  },
+  {
+    "id": "rocole_2019",
+    "title": "RoCoLe: A robusta coffee leaf images dataset for evaluation of machine learning based methods in plant diseases recognition",
+    "authors": "Parraga-Alava, J.; Cusme, K.; Loor, A.; Santander, E.",
+    "publisher": "Data in Brief 25:104414; dataset Mendeley Data doi:10.17632/c5yvn32dzg.2",
+    "published": "2019-08-19",
+    "doi": "10.1016/j.dib.2019.104414",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6727496/",
+    "accessed_at": "2026-10-04T00:18:00Z",
+    "license": "CC BY 4.0",
+    "kind": "dataset_paper",
+    "region": "Ecuador (Manabí)",
+    "used_for": [
+      "class_vocabulary",
+      "oirsa_severity_levels"
+    ]
+  },
+  {
+    "id": "bracol_2019",
+    "title": "BRACOL - A Brazilian Arabica Coffee Leaf images dataset to identification and quantification of coffee diseases and pests",
+    "authors": "Krohling, R. A.; et al.",
+    "publisher": "Mendeley Data",
+    "published": "2019",
+    "doi": "10.17632/yy2k5y8mxg.1",
+    "url": "https://doi.org/10.17632/yy2k5y8mxg.1",
+    "accessed_at": "2026-10-04T00:19:00Z",
+    "license": "CC BY 4.0",
+    "kind": "dataset",
+    "region": "Brazil (Espírito Santo)",
+    "used_for": [
+      "class_vocabulary",
+      "differential_biotic_stresses"
+    ]
   }
 ]

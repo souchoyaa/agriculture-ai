@@ -40,6 +40,9 @@ def scenarios():
     yield "unsupported_crop", variant("maize", crop="maize"), DEMO_NOW
     yield "spanish", variant("es", locale="es-CO"), DEMO_NOW
     yield "stale_weather", base, datetime(2026, 10, 7, 12, 0, tzinfo=timezone.utc)
+    yield "differential_severity", variant("differential", signals=[
+        {"label": "orange_powder_leaf_underside", "confidence": 0.9, "affected_leaf_area_pct": 12},
+        {"label": "cercospora_leaf_spot_marks", "confidence": 0.6}]), DEMO_NOW
     yield "unsupported_locale", variant("rw", locale="rw"), DEMO_NOW
 
 

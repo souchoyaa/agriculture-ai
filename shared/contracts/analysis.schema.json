@@ -74,6 +74,56 @@
         },
         "pathogen": {
           "type": "string"
+        },
+        "differentials": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "signal": {
+                "type": "string"
+              },
+              "condition_id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "required": [
+              "signal",
+              "condition_id",
+              "label",
+              "confidence"
+            ]
+          }
+        },
+        "severity": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "affected_leaf_area_pct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "level": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4
+            }
+          },
+          "required": [
+            "affected_leaf_area_pct",
+            "level"
+          ]
         }
       },
       "required": [

@@ -45,3 +45,12 @@ Commands: `uv run python scripts/fetch_data.py climatology` (ERA5 `models=era5`,
 - Demo window (2026-09-19 → 10-09): 0.381 vs baseline median 0.166 (p25 0.107, p75 0.369; 9/10 years ≤ current) → above_usual.
 - **Cross-source check** on 9 overlapping UTC days (ERA5 lags ~5 days): favourable flags agree 7/9; operational data had 3 favourable days vs ERA5 1, and ERA5 shows an implausible 11.8 °C daily mean on 2026-09-25. So "above_usual" may be partly a source artefact; output carries `possible_source_bias: operational_more_favourable` and a caveat. No bias correction applied (sample too small).
 - Note: Open-Meteo's archive endpoint without `models=era5` serves recent days from the same operational blend as the forecast cache (values identical), so it cannot serve as an independent check.
+
+## Coffee-leaf image datasets (assessed, not downloaded)
+| Dataset | Licence | Region / species | Classes (counts) | Use here |
+| --- | --- | --- | --- | --- |
+| RoCoLe (Parraga-Alava et al. 2019, doi:10.1016/j.dib.2019.104414; data doi:10.17632/c5yvn32dzg.2) | CC BY 4.0 | Ecuador, Robusta; upper and lower leaf sides | healthy 791, red spider mite 167, rust level 1–4: 344/166/62/30 (OIRSA leaf-area 1–5 / 6–20 / 21–50 / >50 %) | severity levels; class vocabulary; shows severe rust is rare (30/1560) |
+| BRACOL (Krohling 2019, doi:10.17632/yy2k5y8mxg.1) | CC BY 4.0 | Brazil, Arabica; abaxial side, white background | healthy, leaf miner, rust, brown leaf spot, cercospora leaf spot | look-alike conditions (differentials) |
+Images (~GB) were not downloaded: Liquid training is out of scope and no backend method consumes pixels. `backend/data/vlm_label_map.json` proposes a dataset-label → signal mapping for the future Liquid adapter (status `proposed_unverified`).
+
+**Differentials**: signals for cercospora leaf spot, brown leaf spot, leaf miner, red spider mite and `healthy_leaf` never add evidence; any at ≥ 0.5 blocks `supported` (status `needs_review`, `support_blocked_by_differential`), those ≥ 0.3 are listed and translated. **Severity**: optional `affected_leaf_area_pct` on a rust signal → OIRSA level 0–4 for that leaf (not plot incidence).
