@@ -70,8 +70,36 @@ export function FieldScreen({ nav, fieldId }: { nav: Nav; fieldId: string }) {
         <Body soft>{field.location ? t('field.location', { lat: field.location.latitude.toFixed(3), lon: field.location.longitude.toFixed(3) }) : t('field.noLocation')}</Body>
       </View>
       <Button label={t('field.newCheck')} icon="＋" onPress={() => nav.push({ name: 'check', fieldId })} />
+      <CompareLastTwo records={records} />
       <H2>{t('field.timeline')}</H2>
       {records.length ? records.map(r => <RecordRow key={r.id} record={r} nav={nav} />) : <Card><Body>{t('field.noChecks')}</Body></Card>}
     </View>
+  );
+}
+
+/** Monitor: the two most recent analysed checks side by side. Displays backend values only; no trend is inferred. */
+function CompareLastTwo({ records }: { records: ObservationRecord[] }) {
+  const { t, state } = useStore();
+  const done = records.filter(r => r.analysis.kind === 'done').slice(0, 2);
+  if (done.length < 2) return null;
+  const cell = (r: ObservationRecord, label: string) => {
+    const a = r.analysis.kind === 'done' ? r.analysis.analysis : undefined;
+    if (!a) return null;
+    return (
+      <View style={{ flex: 1, minWidth: 140, gap: space(1), padding: space(3), borderRadius: radius.sm, backgroundColor: color.paper }}>
+        <Text style={type.label}>{label.toUpperCase()} · {formatDate(r.createdAt, state.settings.locale)}</Text>
+        <Text style={type.heading}>{a.condition.label}</Text>
+        <Text style={type.small}>{t(`result.status.${a.status}` as MessageId)}</Text>
+        <Text style={type.small}>{t('field.compare.score', { score: a.condition.confidence.toFixed(2) })}</Text>
+        {a.weather_risk?.class ? <Text style={type.small}>{t('field.compare.weather', { cls: t(`result.weather.class.${a.weather_risk.class}` as MessageId) })}</Text> : null}
+      </View>
+    );
+  };
+  return (
+    <Card>
+      <H2 glyph="⇆">{t('field.compare')}</H2>
+      <Row wrap style={{ alignItems: 'stretch' }}>{cell(done[1], t('field.compare.before'))}{cell(done[0], t('field.compare.latest'))}</Row>
+      <Body soft>{t('field.compare.note')}</Body>
+    </Card>
   );
 }
