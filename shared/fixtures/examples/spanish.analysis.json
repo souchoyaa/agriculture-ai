@@ -139,14 +139,14 @@
   },
   {
    "id": "count_spots_threshold",
-   "text": "Cuente las manchas de roya en una muestra de hojas. La guía de extensión de Ruanda considera el control con unas dos manchas por hoja; consulte a su técnico de extensión antes de actuar.",
+   "text": "Cuente las manchas de roya en una muestra de hojas. La guía de extensión de Ruanda (2012) considera el control con unas dos manchas por hoja; consulte a su técnico de extensión antes de actuar.",
    "source_ids": [
     "rab_plantwise_rw014_2012"
    ]
   },
   {
    "id": "open_canopy_spacing_pruning",
-   "text": "Mantenga la distancia de siembra recomendada y pode para abrir el arbusto. En un estudio de fincas en Ruanda, la poda, el acolchado y la fertilización se asociaron con menos roya, y la intercalación de cultivos con más.",
+   "text": "Mantenga la distancia de siembra recomendada y pode para abrir el arbusto. En un estudio de fincas de Ruanda de 2012, las fincas podadas, con acolchado y fertilizadas tenían menos roya, y las intercaladas más (una asociación, no una prueba de causa).",
    "source_ids": [
     "rab_plantwise_rw014_2012",
     "bigirimana_2012_ajar"
@@ -200,12 +200,12 @@
    "id": "bigirimana_2012_ajar",
    "title": "Incidence and severity of coffee leaf rust and other coffee pests and diseases in Rwanda",
    "authors": "Bigirimana, J.; Njoroge, K.; Gahakwa, D.; Phiri, N. A.",
-   "publisher": "African Journal of Agricultural Research 7(26)",
+   "publisher": "African Journal of Agricultural Research 7(26):3847-3852",
    "published": "2012-07-10",
    "doi": "10.5897/ajar11.955",
-   "url": "https://doi.org/10.5897/ajar11.955",
-   "accessed_at": "2026-10-04T04:39:00Z",
-   "license": "Open access (Academic Journals); abstract read via Semantic Scholar, full text not read",
+   "url": "https://academicjournals.org/journal/AJAR/article-abstract/861952B33957",
+   "accessed_at": "2026-10-04T04:45:00Z",
+   "license": "CC BY 4.0 (stated on publisher page)",
    "kind": "peer_reviewed",
    "region": "Rwanda",
    "used_for": [
@@ -214,7 +214,9 @@
     "commercial_cultivars_susceptible",
     "mulching_pruning_fertiliser_lower_severity",
     "intercropping_higher_severity"
-   ]
+   ],
+   "full_text_url": "https://academicjournals.org/journal/AJAR/article-full-text-pdf/861952B33957.pdf",
+   "note": "Full text read from publisher PDF. Survey of 307 farms during the dry season (2011/2012); findings are associations, not causal effects, and reflect 2012 conditions/cultivars. Altitude: less CLR at >=1800 m, more at <=1400 m (r = -0.71). More than two pustules per leaf recorded in all provinces."
   },
   {
    "id": "ctahr_pd118_2021",
@@ -5392,7 +5394,7 @@
   {
    "id": "rwanda_survey_context",
    "region": "Rwanda",
-   "text": "Ruanda: un estudio de 2012 en 307 fincas encontró roya en todas las provincias (peor en la Provincia Oriental), menos roya a mayor altitud y todas las variedades comerciales susceptibles.",
+   "text": "Ruanda (estudio de 2012 en 307 fincas, estación seca): roya en todas las provincias, peor en la Provincia Oriental; menos roya en fincas por encima de unos 1800 m y más por debajo de unos 1400 m; todas las variedades comerciales cultivadas entonces eran susceptibles.",
    "source_ids": [
     "bigirimana_2012_ajar"
    ]
