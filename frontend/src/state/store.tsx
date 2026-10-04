@@ -1,17 +1,14 @@
 // React binding for app state. Views call these actions; they never touch storage or fetch.
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Platform } from 'react-native';
-import { httpApi, mockApi, type Api, type Health } from '../api';
+import { httpApi, mockApi, type Api } from '../api';
+import { ConnectionGate, type Connection } from './connection';
 import { buildObservation, newId, type Field, type ObservationRecord } from '../domain/model';
 import { translator, type Translate } from '../i18n';
 import { deviceStore, type KeyValueStore } from '../storage';
 import { loadState, retryable, runAnalysis, saveState, seedState, type PersistedState, type Settings } from './repository';
 
-export type Connection =
-  | { kind: 'local' }
-  | { kind: 'checking' }
-  | { kind: 'ok'; health: Health }
-  | { kind: 'unreachable'; message: string };
+export type { Connection };
 
 interface NewCheck { fieldId: string; symptoms: string[]; certainty: 'sure' | 'unsure'; evidence: string[]; photoUri?: string; note?: string }
 
@@ -40,10 +37,13 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
   const [connection, setConnection] = useState<Connection>({ kind: 'local' });
   const [busy, setBusy] = useState<Record<string, boolean>>({});
   const current = useRef(state);
+  const gate = useRef(new ConnectionGate());
+  const activeApi = useRef<Api>(mockApi);
   const writes = useRef(Promise.resolve());
 
   const api = useMemo<Api>(() => state.settings.source === 'http' ? httpApi(state.settings.baseUrl) : mockApi, [state.settings.source, state.settings.baseUrl]);
   const t = useMemo(() => translator(state.settings.locale), [state.settings.locale]);
+  activeApi.current = api;
 
   /** Apply an update and queue a durable write; resolves once written. */
   const commit = useCallback((update: (s: PersistedState) => PersistedState) => {
@@ -73,26 +73,32 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
     const result = await runAnalysis(record, using);
     setBusy(b => { const next = { ...b }; delete next[record.id]; return next; });
     await patchRecord(record.id, r => ({ ...r, analysis: result }));
-    if (using.kind === 'http') {
-      if (result.kind === 'failed' && result.code === 'network_unavailable') setConnection({ kind: 'unreachable', message: result.message });
-      else if (result.kind === 'done') setConnection(c => c.kind === 'ok' ? c : { kind: 'ok', health: { status: 'ok', contract_version: result.analysis.contract_version, data_mode: result.analysis.data_mode } });
+    // Only the adapter that is still active may change the connection banner.
+    if (using.kind === 'http' && using === activeApi.current && result.kind === 'failed' && (result.code === 'network_unavailable' || result.code === 'timeout')) {
+      gate.current.invalidate();
+      setConnection({ kind: 'unreachable', message: result.message });
     }
   }, [patchRecord]);
 
+  /** Checks the active adapter (or an explicit address, for display only — never verified for retries). */
   const testConnection = useCallback(async (baseUrl?: string): Promise<Connection> => {
-    const target = baseUrl ? httpApi(baseUrl) : api;
-    if (target.kind === 'mock') { const c: Connection = { kind: 'local' }; setConnection(c); return c; }
-    setConnection({ kind: 'checking' });
-    try { const c: Connection = { kind: 'ok', health: await target.health() }; setConnection(c); return c; }
-    catch (e) { const c: Connection = { kind: 'unreachable', message: String((e as Error)?.message ?? e) }; setConnection(c); return c; }
+    if (baseUrl && baseUrl !== api.baseUrl) {
+      try { const health = await httpApi(baseUrl).health(); return { kind: 'ok', health }; }
+      catch (e) { return { kind: 'unreachable', message: String((e as Error)?.message ?? e) }; }
+    }
+    if (api.kind === 'http') setConnection({ kind: 'checking' });
+    const result = await gate.current.check(api);
+    if (result) setConnection(result);
+    return result ?? { kind: 'checking' };
   }, [api]);
 
   // When a working connection appears, retry saved checks that never got an analysis.
   const retryPending = useCallback(() => {
+    if (!gate.current.isVerified(api)) return;
     for (const r of current.current.records) if (retryable(r) && !busy[r.id]) analyse(r, api);
   }, [analyse, api, busy]);
 
-  useEffect(() => { if (ready) testConnection(); }, [ready, testConnection]);
+  useEffect(() => { gate.current.invalidate(); if (ready) testConnection(); }, [ready, testConnection]);
   // Only a verified server connection triggers automatic retries; failed server checks are
   // never silently re-run through the demo adapter (a manual retry in demo mode is explicit).
   useEffect(() => { if (ready && connection.kind === 'ok') retryPending(); }, [ready, connection.kind, api]); // eslint-disable-line react-hooks/exhaustive-deps

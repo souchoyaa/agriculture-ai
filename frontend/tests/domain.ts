@@ -10,6 +10,7 @@ import { buildObservation, fieldAttention, signalStrength, sortFieldsByAttention
 import { describeFeatures, project, timeSlots } from '../src/domain/mapFeatures.ts';
 import { CORRUPT_KEY, loadState, runAnalysis, saveState, seedState, STORAGE_KEY, retryable } from '../src/state/repository.ts';
 import { memoryStore } from '../src/storageMemory.ts';
+import { ConnectionGate } from '../src/state/connection.ts';
 import { isSupported, missingKeys, translator } from '../src/i18n/index.ts';
 import { en } from '../src/i18n/en.ts';
 import { fr } from '../src/i18n/fr.ts';
@@ -146,6 +147,50 @@ test('localization: complete French, transparent fallback, ids covered', () => {
   for (const e of EVIDENCE_CHECKS) assert(`evidence.${e}` in en, e);
   const ph = (v: string) => (v.match(/\{\w+\}/g) ?? []).sort().join();
   for (const k of Object.keys(en) as (keyof typeof en)[]) assert.equal(ph(fr[k]), ph(en[k]), `placeholders differ for ${k}`);
+});
+
+test('stale health responses are discarded after switching source/address', async () => {
+  const gate = new ConnectionGate();
+  let release!: () => void;
+  const slow: Api = { ...httpApi('http://slow.invalid'), health: () => new Promise(r => { release = () => r({ status: 'ok', contract_version: '0.1.0', data_mode: 'demo' }); }) };
+  const pending = gate.check(slow);
+  // User switches to the demo adapter while the health check is in flight.
+  assert.deepEqual(await gate.check(mockApi), { kind: 'local' });
+  release();
+  assert.equal(await pending, null, 'late response must be ignored');
+  assert.equal(gate.isVerified(slow), false);
+  assert.equal(gate.isVerified(mockApi), false, 'mock is never verified for automatic retries');
+  // Address change: a new adapter instance; only it can be verified.
+  const a = httpApi('http://a.invalid'); const b = httpApi('http://b.invalid');
+  await withFetch(async () => new Response(JSON.stringify({ status: 'ok', contract_version: '0.1.0', data_mode: 'demo' })), async () => {
+    assert.equal((await gate.check(a))?.kind, 'ok');
+    assert(gate.isVerified(a));
+    gate.invalidate();
+    assert(!gate.isVerified(a));
+    await gate.check(b);
+    assert(gate.isVerified(b) && !gate.isVerified(a));
+  });
+});
+
+test('timeout path uses a portable abort and reports retryable timeout', async () => {
+  const obs = buildObservation({ id: 'o5', field, symptoms: [], certainty: 'unsure', locale: 'en', now: new Date(), hasPhoto: false });
+  const hanging: typeof fetch = (_u, init) => new Promise((_r, reject) => {
+    init?.signal?.addEventListener('abort', () => reject(new Error('aborted')));
+  });
+  await withFetch(hanging, async () => {
+    const started = Date.now();
+    await assert.rejects(httpApi('http://slow.invalid', 50).analyze(obs), { code: 'timeout', retryable: true });
+    assert(Date.now() - started < 2000);
+  });
+});
+
+test('source-mode copy never claims nothing leaves the device in server mode', () => {
+  for (const lang of [en, fr]) {
+    assert.match(lang['result.sent.http'], /server|serveur/i);
+    assert.doesNotMatch(lang['result.sync'], /not uploaded|non envoyé|nothing/i);
+    assert.doesNotMatch(lang['settings.source.http.detail'], /no data|rien/i);
+  }
+  assert.match(en['result.sent.http'], /photo/);
 });
 
 (async () => {
