@@ -248,7 +248,7 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
     # Human review is proposed, never sent.
     reasons = []
     if not abstained:
-        reasons.append("supported" if supported else "needs_review")
+        reasons.append("supported" if supported else ("specific_low_certainty" if uncertainty_key == "uncertainty.specific_low_certainty" else "needs_review"))
         if listed:
             reasons.append("differential")
         if risk_class == "high":

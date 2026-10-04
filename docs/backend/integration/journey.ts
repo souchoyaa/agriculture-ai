@@ -4,7 +4,8 @@ const APP = process.argv[2], API = process.argv[3], OUT = process.argv[4];
 const CHROME = process.env.CHROME_PATH ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 (async () => {
   const browser = await chromium.launch({ executablePath: CHROME });
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  const W = Number(process.env.VIEWPORT_W ?? 390), TAG = process.env.TAG ?? 'run';
+  const page = await browser.newPage({ viewport: { width: W, height: W > 800 ? 900 : 844 } });
   const posts: { status: number; body?: any }[] = [];
   page.on('response', async r => { if (r.url().startsWith(API + '/v1/analyses')) posts.push({ status: r.status(), body: await r.json().catch(() => undefined) }); });
   const errors: string[] = []; page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
@@ -21,13 +22,13 @@ const CHROME = process.env.CHROME_PATH ?? '/Applications/Google Chrome.app/Conte
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByRole('checkbox', { name: /Orange-yellow/ }).click();
   await page.getByRole('button', { name: 'Save check' }).click();
-  await page.getByText(/Result from server/).waitFor({ timeout: 15000 });
+  await page.getByText(/SERVER ESTIMATE/).waitFor({ timeout: 15000 });
   await page.getByRole('button', { name: /Details and data origin/ }).click();
-  await page.screenshot({ path: OUT + '/e85ff60-phone-result-top.png' });
-  await page.screenshot({ path: OUT + '/e85ff60-phone-result-full.png', fullPage: true });
+  await page.screenshot({ path: OUT + `/${TAG}-w${W}-result-top.png` });
+  await page.screenshot({ path: OUT + `/${TAG}-w${W}-result-full.png`, fullPage: true });
   const body = await page.locator('body').innerText();
   await browser.close();
   const a = posts.find(p => p.status === 200)?.body;
-  console.log(JSON.stringify({ connected, posts: posts.map(p => p.status), analysis: a && { data_mode: a.data_mode, status: a.status, condition: a.condition?.id, env: a.environment?.status, env_age_h: a.environment?.age_hours, adapter: a.provenance?.observation_adapter, signals: (a.evidence||[]).map((e:any)=>e.label) }, console_errors: errors }, null, 1));
+  console.log(JSON.stringify({ connected, posts: posts.map(p => p.status), analysis: a && { data_mode: a.data_mode, status: a.status, condition: a.condition?.id, env: a.environment?.status, env_age_h: a.environment?.age_hours, adapter: a.provenance?.observation_adapter, signals: (a.evidence||[]).map((e:any)=>e.label) }, console_errors: errors.filter(e => !e.includes('ERR_CONNECTION_REFUSED')), expected_probe_refusals: errors.filter(e => e.includes('ERR_CONNECTION_REFUSED')).length }, null, 1));
   console.log('---BODY---\n' + body);
 })().catch(e => { console.error(e); process.exitCode = 1; });

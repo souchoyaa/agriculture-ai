@@ -52,5 +52,6 @@
   "map.label.prior_present": "Reporte anterior: roya observada",
   "map.label.prior_clear": "Reporte anterior: sin roya",
   "map.label.scouting_point": "Punto prioritario {rank}",
-  "uncertainty.specific_low_certainty": "Se reportó un signo específico de la roya del café, pero con poca certeza (puntuación de evidencia {score}). Confírmelo en más hojas antes de actuar."
+  "uncertainty.specific_low_certainty": "Se reportó un signo específico de la roya del café, pero con poca certeza (puntuación de evidencia {score}). Confírmelo en más hojas antes de actuar.",
+  "review.reason.specific_low_certainty": "Se reportó un signo específico con poca certeza; un experto debería confirmarlo antes de tomar decisiones."
 }
