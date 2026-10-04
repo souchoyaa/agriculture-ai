@@ -514,3 +514,24 @@ class EdgeCaseInputs(unittest.TestCase):
             if rng.random() < 0.6:
                 obs["location"] = {"latitude": rng.uniform(-90, 90), "longitude": rng.choice([180, -180, rng.uniform(-180, 180)])}
             run(obs)  # validates against the analysis schema
+
+
+class FrontendVocabulary(unittest.TestCase):
+    """Labels the committed frontend (f0456c2) sends for farmer reports."""
+
+    def farmer(self, *labels, confidence=0.8):
+        return observation(data_mode="live", provenance={"adapter": "farmer-report", "source": "farmer"},
+                           signals=[{"label": l, "confidence": confidence, "origin": "farmer_report"} for l in labels])
+
+    def test_leaf_drop_alias_counts_once_with_canonical(self):
+        both = run(self.farmer("leaf_drop", "premature_leaf_drop"))
+        one = run(self.farmer("premature_leaf_drop"))
+        self.assertEqual(both["condition"]["confidence"], one["condition"]["confidence"])
+        self.assertEqual(both["evidence"][0]["canonical_label"], "premature_leaf_drop")
+        self.assertEqual(both["evidence"][0]["origin"], "farmer_report")
+
+    def test_nonspecific_farmer_labels_do_not_raise_score(self):
+        base = run(self.farmer("rust_like_leaf_marks"))
+        extra = run(self.farmer("rust_like_leaf_marks", "leaf_yellowing", "insect_damage", "dark_berry_lesions"))
+        self.assertEqual(base["condition"]["confidence"], extra["condition"]["confidence"])
+        self.assertEqual(extra["data_mode"], "live")

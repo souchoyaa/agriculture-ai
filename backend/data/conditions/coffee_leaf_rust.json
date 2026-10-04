@@ -264,5 +264,9 @@
       "rocole_2019"
     ],
     "note": "Leaf-level severity of the photographed leaf, not plot incidence."
-  }
+  },
+  "aliases": {
+    "leaf_drop": "premature_leaf_drop"
+  },
+  "aliases_note": "Synonyms used by client vocabularies (frontend farmer report). Unmapped labels stay unrecognised and cannot raise the score."
 }

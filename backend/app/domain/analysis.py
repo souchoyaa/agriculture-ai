@@ -21,17 +21,22 @@ def evidence_score(signals: list[dict], condition: dict) -> tuple[float, list[di
     A repeated label is the same symptom, not independent evidence: only its highest-confidence entry
     counts; other entries are kept in the evidence list with `duplicate: true` and no contribution.
     """
-    known = condition["signals"]
+    known, aliases = condition["signals"], condition.get("aliases", {})
+    canonical = lambda raw: aliases.get(raw.strip().lower(), raw.strip().lower())
     best = {}
     for index, signal in enumerate(signals):
-        label = signal["label"].strip().lower()
+        label = canonical(signal["label"])
         if label not in best or signal["confidence"] > signals[best[label]]["confidence"]:
             best[label] = index
     rows, remaining, specific = [], 1.0, False
     for index, signal in enumerate(signals):
-        label = signal["label"].strip().lower()
+        label = canonical(signal["label"])
         spec = known.get(label)
         row = {"label": signal["label"], "confidence": signal["confidence"], "recognized": spec is not None}
+        if label != signal["label"]:
+            row["canonical_label"] = label
+        if signal.get("origin"):
+            row["origin"] = signal["origin"]
         if best[label] != index:
             row.update(duplicate=True, contribution=0.0)
         elif spec:
