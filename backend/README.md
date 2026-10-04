@@ -7,7 +7,7 @@ FastAPI + uv. Domain logic in `app/domain/` (no HTTP), VLM boundary in `app/adap
 cd backend
 export UV_CACHE_DIR="$PWD/.cache/uv" UV_PYTHON_INSTALL_DIR="$PWD/.cache/python"
 uv sync --python 3.12
-uv run python -m unittest discover -s tests          # 64 tests, offline (verified 2026-10-04 04:30Z)
+uv run python -m unittest discover -s tests          # 65 tests, offline (verified 2026-10-04 04:36Z)
 uv run python scripts/demo.py                        # all scenarios end-to-end, writes docs/backend/examples/*.geojson|svg
 AGRI_FIXED_NOW=2026-10-04T00:00:00Z uv run uvicorn app.main:app --host 127.0.0.1 --port 8000
 uv run python scripts/demo.py --base-url http://127.0.0.1:8000   # same journey over real HTTP
@@ -18,7 +18,7 @@ CORS for a web build on another origin: `AGRI_CORS_ORIGINS=http://localhost:8091
 Without `AGRI_FIXED_NOW` the real clock is used, so the committed weather cache (fetched 2026-10-03T23:46Z) is reported `stale` — intended.
 
 ## Integration status
-Integration branch `integration` (worktrees/integration) `b353a66`+ = frontend `02a3de9` (fe-004) + backend `7377b45`: backend 64 tests, frontend `npm run check` (15/15 domain), frontend strict `tests/http-smoke.ts` and `docs/backend/integration/journey.ts` (phone 390 px + desktop 1440 px) in headless Chrome against the real backend all pass, 0 console errors (strict smoke). Evidence, exact commands and screenshots: `docs/backend/integration/README.md`.
+Integration branch `integration` (worktrees/integration) `a30e824` = frontend `884389c` (fe-005) + backend `77193e7`: backend 65 tests, frontend `npm run check` (15/15 domain), frontend strict `tests/http-smoke.ts` and `docs/backend/integration/journey.ts` (phone 390 px + desktop 1440 px) in headless Chrome against the real backend all pass, 0 console errors (strict smoke). Evidence, exact commands and screenshots: `docs/backend/integration/README.md`.
 
 ## Coverage
 | Crop | Condition | Signals understood | Locales |
