@@ -132,10 +132,28 @@ class EnvironmentAndCache(unittest.TestCase):
         self.assertEqual(result["map"]["status"], "available", "map does not need weather")
         self.assertFalse(result["map"]["wind"]["used"])
 
-    def test_live_failure_falls_back_to_cache(self):
-        with mock.patch.object(weather.urllib.request, "urlopen", side_effect=OSError("offline")):
-            series, notes = weather.get_weather(-1.95, 30.06, NOW, allow_network=True)
+    def test_live_failure_falls_back_to_stale_cache(self):
+        later = NOW + timedelta(days=1)  # cache is stale, so a live refresh is attempted
+        with mock.patch.object(weather.urllib.request, "urlopen", side_effect=OSError("offline")) as urlopen:
+            series, notes = weather.get_weather(-1.95, 30.06, later, allow_network=True)
+        urlopen.assert_called_once()
         self.assertEqual(series.origin, "cached")
+        self.assertEqual(series.freshness(later), "stale")
+        self.assertIn("live_weather_failed:OSError", notes)
+
+    def test_live_mode_reuses_fresh_same_point_cache_without_request(self):
+        with mock.patch.object(weather.urllib.request, "urlopen") as urlopen:
+            series, notes = weather.get_weather(-1.95, 30.06, NOW, allow_network=True)
+        urlopen.assert_not_called()
+        self.assertEqual(series.origin, "cached")
+        self.assertIn("fresh_cache_reused_no_request", notes)
+
+    def test_live_mode_fetches_for_a_different_nearby_point(self):
+        # ~10 km away: within the 15 km cache radius, but not the same point, so live data is preferred.
+        with mock.patch.object(weather.urllib.request, "urlopen", side_effect=OSError("offline")) as urlopen:
+            series, notes = weather.get_weather(-1.95, 30.15, NOW, allow_network=True)
+        urlopen.assert_called_once()
+        self.assertEqual(series.origin, "cached", "falls back to the nearby cache when the fetch fails")
         self.assertIn("live_weather_failed:OSError", notes)
 
     def test_corrupt_cache_ignored(self):

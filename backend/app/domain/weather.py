@@ -17,6 +17,7 @@ OPEN_METEO = "https://api.open-meteo.com/v1/forecast"
 HOURLY = "temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m"
 MAX_CACHE_DISTANCE_KM = 15.0
 FRESH_HOURS = 6.0
+SAME_POINT_KM = 2.0  # live mode: a fresh cache this close counts as the same point (Open-Meteo grids are ~1-11 km)
 
 
 def parse_time(value: str) -> datetime:
@@ -118,16 +119,23 @@ def fetch_live(lat: float, lon: float, now: datetime, timeout: float = 8.0) -> W
 
 
 def get_weather(lat: float, lon: float, now: datetime, allow_network: bool | None = None) -> tuple[WeatherSeries | None, list[str]]:
-    """Return (series or None, notes). Never raises for network/cache problems."""
+    """Return (series or None, notes). Never raises for network/cache problems.
+
+    With network allowed: a fresh cache for (nearly) the same point is reused without a request;
+    otherwise fetch live and cache it; if that fails, fall back to any cache within 15 km (possibly stale).
+    """
     notes = []
     if allow_network is None:
         allow_network = os.environ.get("AGRI_WEATHER_LIVE") == "1"
+    series = load_cached(lat, lon)
     if allow_network:
+        if series and series.freshness(now) == "fresh" and series.distance_km <= SAME_POINT_KM:
+            notes.append("fresh_cache_reused_no_request")
+            return series, notes
         try:
             return fetch_live(lat, lon, now), notes
         except Exception as error:  # network is optional; degrade to cache
             notes.append(f"live_weather_failed:{type(error).__name__}")
-    series = load_cached(lat, lon)
     if series is None:
         notes.append("no_cached_weather_within_15km")
     return series, notes
