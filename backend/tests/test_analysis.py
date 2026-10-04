@@ -561,3 +561,13 @@ class UncertaintyWording(unittest.TestCase):
         self.assertNotIn("not specific enough", result["condition"]["uncertainty"])
         self.assertIn("not specific enough", run(observation())["condition"]["uncertainty"])
         self.assertEqual([r["id"] for r in result["review"]["reasons"]], ["specific_low_certainty"])
+
+
+class FarmerFacingCopy(unittest.TestCase):
+    def test_climatology_caveat_is_plain_and_localized(self):
+        en = run(observation())["weather_risk"]["climatology"]
+        fr = run(observation(locale="fr"))["weather_risk"]["climatology"]
+        for text in (en["caveat"], fr["caveat"]):
+            self.assertNotIn("_", text, "no internal field names in farmer-facing text")
+        self.assertNotEqual(en["caveat"], fr["caveat"])
+        self.assertIn("cross_source_check", en["technical_note"])

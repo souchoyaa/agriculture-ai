@@ -53,5 +53,6 @@
   "map.label.prior_clear": "Reporte anterior: sin roya",
   "map.label.scouting_point": "Punto prioritario {rank}",
   "uncertainty.specific_low_certainty": "Se reportó un signo específico de la roya del café, pero con poca certeza (puntuación de evidencia {score}). Confírmelo en más hojas antes de actuar.",
-  "review.reason.specific_low_certainty": "Se reportó un signo específico con poca certeza; un experto debería confirmarlo antes de tomar decisiones."
+  "review.reason.specific_low_certainty": "Se reportó un signo específico con poca certeza; un experto debería confirmarlo antes de tomar decisiones.",
+  "risk.climatology_caveat": "La referencia de largo plazo usa un conjunto de datos meteorológicos distinto al del periodo actual, así que la comparación es solo orientativa."
 }

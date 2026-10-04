@@ -198,6 +198,7 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
                                    wm, complete_dates, assessment["favourable_day_fraction"])
     if baseline["status"] == "available":
         baseline["summary"] = t(f"risk.relation.{baseline['relation']}")
+        baseline["caveat"] = t("risk.climatology_caveat")
         used_sources |= set(baseline["baseline_source"]["source_ids"])
     result["weather_risk"] = {
         **assessment,

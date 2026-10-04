@@ -839,8 +839,9 @@
     ],
     "note": "Small sample; ERA5 lags ~5 days so only early overlap days exist. Not a bias correction."
    },
-   "caveat": "Baseline is ERA5 reanalysis; the current window is operational model/forecast data. Their wetness differs (see cross_source_check); treat the relation as indicative only.",
-   "summary": "This is more often favourable than usual for these dates here (2015-2024 reanalysis)."
+   "technical_note": "Baseline is ERA5 reanalysis; the current window is operational model/forecast data. Their wetness differs (see cross_source_check); treat the relation as indicative only.",
+   "summary": "This is more often favourable than usual for these dates here (2015-2024 reanalysis).",
+   "caveat": "The long-term baseline uses a different weather dataset than the current period, so this comparison is only indicative."
   },
   "limitations": [
    "Leaf wetness approximated from relative humidity/precipitation of gridded model data; canopy conditions differ.",
