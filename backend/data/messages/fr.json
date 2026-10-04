@@ -51,5 +51,6 @@
   "map.label.current": "Plante signalée (cette observation)",
   "map.label.prior_present": "Signalement antérieur : rouille observée",
   "map.label.prior_clear": "Signalement antérieur : pas de rouille",
-  "map.label.scouting_point": "Point prioritaire {rank}"
+  "map.label.scouting_point": "Point prioritaire {rank}",
+  "uncertainty.specific_low_certainty": "Un signe spécifique de la rouille orangée a été signalé, mais avec peu de certitude (score de preuve {score}). Confirmez-le sur d'autres feuilles avant d'agir."
 }

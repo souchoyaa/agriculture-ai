@@ -149,7 +149,9 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
                  and (specific or not em["supported_requires_specific_signal"]))
     status = "supported" if supported else "needs_review"
     would_support = score >= em["supported_at_or_above"] and (specific or not em["supported_requires_specific_signal"])
-    uncertainty_key = "uncertainty.abstain" if abstained else ("uncertainty.supported" if would_support else "uncertainty.needs_review")
+    specific_reported = any(row.get("specific") and not row.get("duplicate") for row in evidence)
+    uncertainty_key = ("uncertainty.abstain" if abstained else "uncertainty.supported" if would_support
+                       else "uncertainty.specific_low_certainty" if specific_reported else "uncertainty.needs_review")
     uncertainty = t(uncertainty_key, score=f"{score:.2f}")
     listed = [d for d in competing if d["confidence"] >= 0.3]
     for d in listed:
