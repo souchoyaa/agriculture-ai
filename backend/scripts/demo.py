@@ -13,7 +13,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-os.environ.setdefault("AGRI_FIXED_NOW", "2026-10-04T00:00:00Z")
+from scripts.generate_fixtures import DEMO_NOW
+
+os.environ.setdefault("AGRI_FIXED_NOW", DEMO_NOW.isoformat())
 from app.contracts import SHARED, validate  # noqa: E402
 
 OUT = ROOT.parent / "docs" / "backend" / "examples"
@@ -75,7 +77,7 @@ def main():
     print(f"{'scenario':24} {'status':13} {'condition':18} {'score':>5} {'env':11} {'weather':9} {'map':11} {'locale':7} review")
     for name, path in scenarios.items():
         # stale_weather is defined by analysis time, not by the observation: run 3.5 days after the cache fetch.
-        os.environ["AGRI_FIXED_NOW"] = "2026-10-07T12:00:00Z" if name == "stale_weather" else "2026-10-04T00:00:00Z"
+        os.environ["AGRI_FIXED_NOW"] = "2026-10-07T12:00:00Z" if name == "stale_weather" else DEMO_NOW.isoformat()
         if name == "stale_weather" and args.base_url:
             continue  # a remote server's clock cannot be changed from here
         result = post(args.base_url, json.loads(path.read_text()))

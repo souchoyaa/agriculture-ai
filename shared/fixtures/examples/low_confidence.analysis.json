@@ -1,12 +1,12 @@
 {
  "contract_version": "0.1.0",
- "id": "analysis-75ee25b6b26c2858",
+ "id": "analysis-f4a05ac4628d3190",
  "observation_id": "demo-coffee-001-weak",
  "data_mode": "demo",
- "generated_at": "2026-10-04T00:00:00Z",
+ "generated_at": "2026-10-04T04:59:00Z",
  "environment": {
   "status": "fresh",
-  "as_of": "2026-10-03T23:46:00Z",
+  "as_of": "2026-10-04T04:45:47.168074Z",
   "temperature_c": 24.0,
   "relative_humidity_pct": 53.4,
   "rainfall_mm": 0.0,
@@ -219,7 +219,8 @@
    {
     "component": "observation",
     "origin": "demo",
-    "adapter": "mock-vlm"
+    "adapter": "mock-vlm",
+    "source": "synthetic fixture; no model inference"
    },
    {
     "component": "evidence_model",
@@ -282,23 +283,13 @@
   "pathogen": "Hemileia vastatrix"
  },
  "weather_risk": {
-  "status": "available",
+  "status": "partial",
   "class": "moderate",
-  "favourable_day_fraction": 0.381,
-  "favourable_days": 8,
-  "assessed_days": 21,
+  "favourable_day_fraction": 0.25,
+  "favourable_days": 5,
+  "assessed_days": 20,
   "expected_days": 21,
   "days": [
-   {
-    "hours": 24,
-    "complete": true,
-    "longest_wet_spell_h": 6,
-    "spell_temperature_factor": 0.99,
-    "favourable": true,
-    "date": "2026-09-19",
-    "period": "history",
-    "data_kind": "model_past"
-   },
    {
     "hours": 24,
     "complete": true,
@@ -437,14 +428,14 @@
     "favourable": false,
     "date": "2026-10-03",
     "period": "reference_and_after",
-    "data_kind": "includes_forecast"
+    "data_kind": "model_past"
    },
    {
     "hours": 24,
     "complete": true,
-    "longest_wet_spell_h": 9,
-    "spell_temperature_factor": 0.62,
-    "favourable": true,
+    "longest_wet_spell_h": 3,
+    "spell_temperature_factor": 0.44,
+    "favourable": false,
     "date": "2026-10-04",
     "period": "reference_and_after",
     "data_kind": "includes_forecast"
@@ -452,7 +443,7 @@
    {
     "hours": 24,
     "complete": true,
-    "longest_wet_spell_h": 3,
+    "longest_wet_spell_h": 5,
     "spell_temperature_factor": 0.49,
     "favourable": false,
     "date": "2026-10-05",
@@ -462,8 +453,8 @@
    {
     "hours": 24,
     "complete": true,
-    "longest_wet_spell_h": 4,
-    "spell_temperature_factor": 0.41,
+    "longest_wet_spell_h": 5,
+    "spell_temperature_factor": 0.48,
     "favourable": false,
     "date": "2026-10-06",
     "period": "reference_and_after",
@@ -472,9 +463,9 @@
    {
     "hours": 24,
     "complete": true,
-    "longest_wet_spell_h": 16,
-    "spell_temperature_factor": 0.82,
-    "favourable": true,
+    "longest_wet_spell_h": 4,
+    "spell_temperature_factor": 0.83,
+    "favourable": false,
     "date": "2026-10-07",
     "period": "reference_and_after",
     "data_kind": "includes_forecast"
@@ -482,8 +473,8 @@
    {
     "hours": 24,
     "complete": true,
-    "longest_wet_spell_h": 16,
-    "spell_temperature_factor": 0.74,
+    "longest_wet_spell_h": 24,
+    "spell_temperature_factor": 0.69,
     "favourable": true,
     "date": "2026-10-08",
     "period": "reference_and_after",
@@ -492,8 +483,8 @@
    {
     "hours": 24,
     "complete": true,
-    "longest_wet_spell_h": 14,
-    "spell_temperature_factor": 0.85,
+    "longest_wet_spell_h": 24,
+    "spell_temperature_factor": 0.74,
     "favourable": true,
     "date": "2026-10-09",
     "period": "reference_and_after",
@@ -561,26 +552,26 @@
   "climatology": {
    "status": "available",
    "possible_source_bias": "operational_more_favourable",
-   "relation": "above_usual",
-   "current_fraction": 0.381,
-   "baseline_median": 0.166,
-   "baseline_p25": 0.107,
-   "baseline_p75": 0.369,
-   "baseline_min": 0.048,
-   "baseline_max": 0.476,
-   "years_at_or_below_current": 9,
+   "relation": "typical",
+   "current_fraction": 0.25,
+   "baseline_median": 0.15,
+   "baseline_p25": 0.113,
+   "baseline_p75": 0.388,
+   "baseline_min": 0.05,
+   "baseline_max": 0.45,
+   "years_at_or_below_current": 6,
    "baseline_years": 10,
    "per_year": {
-    "2015": 0.143,
-    "2016": 0.381,
-    "2017": 0.19,
-    "2018": 0.048,
-    "2019": 0.381,
-    "2020": 0.143,
-    "2021": 0.095,
-    "2022": 0.048,
-    "2023": 0.476,
-    "2024": 0.333
+    "2015": 0.15,
+    "2016": 0.4,
+    "2017": 0.15,
+    "2018": 0.05,
+    "2019": 0.4,
+    "2020": 0.15,
+    "2021": 0.1,
+    "2022": 0.05,
+    "2023": 0.45,
+    "2024": 0.35
    },
    "baseline_source": {
     "source_ids": [
@@ -678,7 +669,7 @@
     "note": "Small sample; ERA5 lags ~5 days so only early overlap days exist. Not a bias correction."
    },
    "technical_note": "Baseline is ERA5 reanalysis; the current window is operational model/forecast data. Their wetness differs (see cross_source_check); treat the relation as indicative only.",
-   "summary": "This is more often favourable than usual for these dates here (2015-2024 reanalysis).",
+   "summary": "This is within the usual range for these dates here (2015-2024 reanalysis).",
    "caveat": "The long-term baseline uses a different weather dataset than the current period, so this comparison is only indicative."
   },
   "limitations": [

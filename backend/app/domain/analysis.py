@@ -282,7 +282,8 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
         used_sources |= set(note["source_ids"])
     result["sources"] = knowledge.cite(used_sources)
     result["provenance"]["components"] = [
-        {"component": "observation", "origin": observation["data_mode"], "adapter": observation["provenance"]["adapter"]},
+        {"component": "observation", "origin": observation["data_mode"], "adapter": observation["provenance"]["adapter"],
+         **({"source": observation["provenance"]["source"]} if "source" in observation["provenance"] else {})},
         {"component": "evidence_model", "origin": "agent_authored_heuristic", "expert_reviewed": False, "calibrated": False},
         {"component": "weather", "origin": series.origin if series else "unavailable", "provider": series.provider if series else None},
         {"component": "weather_risk", "origin": "literature_parameterised_heuristic", "calibrated": False},

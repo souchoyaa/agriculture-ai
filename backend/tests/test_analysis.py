@@ -351,7 +351,8 @@ class Reproducibility(unittest.TestCase):
 
 class Http(unittest.TestCase):
     def setUp(self):
-        patcher = mock.patch.dict(os.environ, {"AGRI_FIXED_NOW": "2026-10-04T00:00:00Z"})
+        from scripts.generate_fixtures import DEMO_NOW
+        patcher = mock.patch.dict(os.environ, {"AGRI_FIXED_NOW": DEMO_NOW.isoformat()})
         patcher.start()
         self.addCleanup(patcher.stop)
         self.client = TestClient(app)
@@ -360,6 +361,16 @@ class Http(unittest.TestCase):
         response = self.client.post("/v1/analyses", json=read("fixtures/observation.json"))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), read("fixtures/analysis.json"))
+
+    def test_observation_source_preserved_in_analysis_provenance(self):
+        obs = observation()
+        obs["data_mode"] = "live"
+        obs["provenance"] = {"adapter": "farmer-report", "source": "symptom checklist; example field location, not verified as your farm"}
+        response = self.client.post("/v1/analyses", json=obs)
+        self.assertEqual(response.status_code, 200)
+        component = next(c for c in response.json()["provenance"]["components"] if c["component"] == "observation")
+        self.assertEqual(component["origin"], "live")
+        self.assertEqual(component["source"], obs["provenance"]["source"])
 
     def test_invalid_observation_envelope(self):
         bad = observation()

@@ -1,9 +1,9 @@
 {
  "contract_version": "0.1.0",
- "id": "analysis-97c1c76c0a6887ec",
+ "id": "analysis-41a7745f1af18e57",
  "observation_id": "demo-coffee-001-nolocation",
  "data_mode": "demo",
- "generated_at": "2026-10-04T00:00:00Z",
+ "generated_at": "2026-10-04T04:59:00Z",
  "environment": {
   "status": "unavailable",
   "as_of": null,
@@ -255,7 +255,8 @@
    {
     "component": "observation",
     "origin": "demo",
-    "adapter": "mock-vlm"
+    "adapter": "mock-vlm",
+    "source": "synthetic fixture; no model inference"
    },
    {
     "component": "evidence_model",
