@@ -59,3 +59,12 @@ Still failing / open (sent to frontend): (1) banner "Server answers are demo dat
 - Merge conflicted only in shared/ and docs/interfaces.md (frontend carried backend 77193e7 copies); resolved to backend 2990100 (backend-owned, newer). `git diff backend -- shared docs/interfaces.md backend` empty after merge.
 - backend: Ran 67 tests, OK (skipped=1); frontend: npm ci + npm run check 16/16; expo export OK.
 - strict tests/http-smoke.ts PASS; journey.ts phone 390 + desktop 1440 (int-e5b30e9-w*): POST 200, live, 0 console errors. Rwandan recommendations (count_spots_threshold, open_canopy_spacing_pruning) render; "Guidance sources come from: Hawaiʻi, USA, Rwanda." `regional_context` not yet displayed by frontend (additive, requested).
+
+## 2026-10-04 ~07:35Z (interactive session): integration 4fbf1e5 = 376c98b content + backend a89bf5b — CLEAN, browser-verified
+- backend branch a89bf5b adopts integration's backend/shared from 376c98b (ace7fad real weather refresh fetched 2026-10-04T04:45:47Z, frozen fixture time 04:59Z, provenance source preserved); prior local WIP kept on `backup/backend-wip-weather-refresh-0445`. `git diff 376c98b 4fbf1e5` empty.
+- backend worktree: Ran 71 tests OK (0 skipped, raw ERA5 present); integration: Ran 71 OK (skipped=1); generate_fixtures --check: 17 fixtures consistent.
+- integration frontend: npm ci + npm run check → tsc + adapters + 17/17 domain checks; expo export OK.
+- Real clock (no AGRI_FIXED_NOW), backend :8790 (AGRI_CORS_ORIGINS=http://localhost:8091), export :8091; both stopped by PID afterwards.
+- strict tests/http-smoke.ts PASS; journey.ts phone 390 + desktop 1440 (int-4fbf1e5-w*): POST 200, data_mode live, SERVER ESTIMATE, orange_powder_leaf_underside, environment fresh (cache age 3 h), 0 console errors, 0 refusals.
+- Rendered and checked in UI text: example-field location disclosure; regional recommendations with "approximate Rwanda area … 2012 sources" scope note; Rwanda survey context; localized local checks; "Model weather data (not a weather station), fetched 3 h before analysis"; map "not the chance of infection". Map screenshot: int-4fbf1e5-phone-http-map.png.
+- Not verified: native device; French/Spanish browser journey (localization covered by unit tests only); weather after 10:45 Zurich will read `stale` on the real clock (intended).
