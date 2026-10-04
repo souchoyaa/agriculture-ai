@@ -11,7 +11,7 @@ Role-owned notes. Contract 0.1.0. See README.md in this folder for the journey a
 - Computed-key object rest destructuring (`const { [id]: _, ...rest } = obj`) misbehaved in the web bundle (busy flag never cleared); use clone + delete.
 
 ## TODO / next
-- Copy native photos into app document storage (expo-file-system) so they survive cache clearing.
+- Done: native photos copied to document storage (verify on a device).
 - When backend publishes sourced guidance, environment or map features, verify rendering against real payloads (renderer covered by unit checks only).
 - Proposed contract extension (not required): a persisted observation endpoint so "synced" can become real.
 - Native device verification (Expo Go) of camera, storage and back-button behaviour.
