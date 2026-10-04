@@ -18,7 +18,7 @@ CORS for a web build on another origin: `AGRI_CORS_ORIGINS=http://localhost:8091
 Without `AGRI_FIXED_NOW` the real clock is used. The real weather cache was fetched 2026-10-04T04:45:47Z; it is fresh for six hours after that fetch, then explicitly stale. The frozen fixture analysis time is 2026-10-04T04:59:00Z.
 
 ## Integration status
-Integration branch `integration` contains backend 42f4dd7 and frontend source from aacd963 (source integration 7acfbdb), plus the monitor-completed weather/fixture refresh. Independent checks: backend 71 tests (one optional raw-ERA5 test skipped), frontend TypeScript/adapters and 17 domain tests, production web export. Earlier combined milestones passed strict real-backend browser smoke and phone/desktop journeys with zero console errors; evidence is in `docs/backend/integration/README.md`. The newest source/data refresh still awaits another full browser journey after Claude resumes. Existing screenshots were preserved.
+Integration branch `integration` `4fbf1e5` (= monitor commit 376c98b + backend a89bf5b; frontend source aacd963) includes the real weather refresh (fetched 2026-10-04T04:45:47Z). Checks: backend 71 tests (one optional raw-ERA5 test skipped there), frontend TypeScript/adapters and 17/17 domain tests, production web export, strict real-backend browser smoke, and phone (390 px) + desktop (1440 px) journeys on the real clock with zero console errors (2026-10-04 ~07:35Z). Evidence: `docs/backend/integration/README.md`. Not verified: native device, non-English browser journey.
 
 ## Coverage
 | Crop | Condition | Signals understood | Locales |
