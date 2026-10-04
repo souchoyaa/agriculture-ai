@@ -62,21 +62,50 @@ class WeatherSeries:
         return [h for h in self.hours if start <= h.time < end]
 
 
+def _value(column, i):
+    """Numeric value at index i, or None for missing/short/non-numeric columns."""
+    if not isinstance(column, list) or i >= len(column):
+        return None
+    v = column[i]
+    return float(v) if isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) else None
+
+
 def _from_payload(payload: dict, origin: str, lat: float, lon: float) -> WeatherSeries:
-    hourly = payload["hourly"]
-    hours = [
-        Hour(parse_time(t), *(hourly[k][i] for k in HOURLY.split(",")))
-        for i, t in enumerate(hourly["time"])
-    ]
+    """Build a series from a cache/live payload. Raises ValueError for unusable structure (caller degrades).
+
+    Tolerates partial data: missing variables or short columns become None for those hours;
+    unparsable timestamps are skipped. A payload without any usable hourly time axis is unusable.
+    """
+    if not isinstance(payload, dict):
+        raise ValueError("payload is not an object")
+    hourly = payload.get("hourly")
+    times = hourly.get("time") if isinstance(hourly, dict) else None
+    if not isinstance(times, list) or not times:
+        raise ValueError("missing hourly time axis")
+    try:
+        fetched_at = parse_time(str(payload["fetched_at"]))
+        req_lat, req_lon = float(payload["request"]["latitude"]), float(payload["request"]["longitude"])
+    except (KeyError, TypeError, ValueError) as error:
+        raise ValueError(f"missing fetched_at/request: {error}") from error
+    columns = [hourly.get(k) for k in HOURLY.split(",")]
+    hours = []
+    for i, t in enumerate(times):
+        try:
+            when = parse_time(str(t))
+        except ValueError:
+            continue
+        hours.append(Hour(when, *(_value(c, i) for c in columns)))
+    if not hours:
+        raise ValueError("no parsable hourly timestamps")
     return WeatherSeries(
         hours=hours,
-        fetched_at=parse_time(payload["fetched_at"]),
+        fetched_at=fetched_at,
         origin=origin,
-        provider=payload["provider"],
-        license=payload["license"],
+        provider=str(payload.get("provider", "unknown")),
+        license=str(payload.get("license", "unknown")),
         source_id="open_meteo",
-        distance_km=round(distance_km(lat, lon, payload["request"]["latitude"], payload["request"]["longitude"]), 2),
-        note=payload.get("notes", ""),
+        distance_km=round(distance_km(lat, lon, req_lat, req_lon), 2),
+        note=str(payload.get("notes", "")),
     )
 
 
@@ -85,17 +114,18 @@ def cache_path(lat: float, lon: float) -> Path:
 
 
 def load_cached(lat: float, lon: float) -> WeatherSeries | None:
+    """Nearest usable cache entry within MAX_CACHE_DISTANCE_KM; corrupt or partial-but-unusable files are skipped."""
     best = None
     for path in sorted(CACHE_DIR.glob("open-meteo_*.json")):
         try:
-            payload = json.loads(path.read_text())
-            request = payload["request"]
-            d = distance_km(lat, lon, request["latitude"], request["longitude"])
-        except (OSError, ValueError, KeyError):
-            continue  # corrupt cache entry: ignore rather than fail the analysis
-        if d <= MAX_CACHE_DISTANCE_KM and (best is None or d < best[0] or (d == best[0] and payload["fetched_at"] > best[1]["fetched_at"])):
-            best = (d, payload)
-    return _from_payload(best[1], "cached", lat, lon) if best else None
+            series = _from_payload(json.loads(path.read_text()), "cached", lat, lon)
+        except (OSError, ValueError):
+            continue  # corrupt or structurally unusable cache entry: ignore rather than fail the analysis
+        if series.distance_km <= MAX_CACHE_DISTANCE_KM and (
+                best is None or series.distance_km < best.distance_km
+                or (series.distance_km == best.distance_km and series.fetched_at > best.fetched_at)):
+            best = series
+    return best
 
 
 def fetch_live(lat: float, lon: float, now: datetime, timeout: float = 8.0) -> WeatherSeries:
