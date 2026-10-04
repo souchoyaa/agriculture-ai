@@ -69,21 +69,6 @@
    ]
   },
   {
-   "id": "count_spots_threshold",
-   "text": "Count rust spots on a sample of leaves. Rwandan extension guidance (2012) considers control when there are about two spots per leaf; discuss with your extension officer before acting.",
-   "source_ids": [
-    "rab_plantwise_rw014_2012"
-   ]
-  },
-  {
-   "id": "open_canopy_spacing_pruning",
-   "text": "Keep recommended tree spacing and prune to open the bush. In a 2012 Rwandan farm survey, pruned, mulched and fertilised farms had less rust, and intercropped farms more (an association, not proof of cause).",
-   "source_ids": [
-    "rab_plantwise_rw014_2012",
-    "bigirimana_2012_ajar"
-   ]
-  },
-  {
    "id": "consult_extension_before_fungicide",
    "text": "Before any fungicide use, consult your local extension officer; follow the product label exactly.",
    "source_ids": [

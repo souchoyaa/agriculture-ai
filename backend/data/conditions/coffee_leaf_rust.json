@@ -177,14 +177,18 @@
       "id": "count_spots_threshold",
       "source_ids": [
         "rab_plantwise_rw014_2012"
-      ]
+      ],
+      "region": "rwanda_approx",
+      "source_year": 2012
     },
     {
       "id": "open_canopy_spacing_pruning",
       "source_ids": [
         "rab_plantwise_rw014_2012",
         "bigirimana_2012_ajar"
-      ]
+      ],
+      "region": "rwanda_approx",
+      "source_year": 2012
     },
     {
       "id": "consult_extension_before_fungicide",
@@ -291,16 +295,23 @@
     {
       "id": "rwanda_survey_context",
       "region": "Rwanda",
+      "source_ids": [
+        "bigirimana_2012_ajar"
+      ],
+      "region_id": "rwanda_approx",
+      "source_year": 2012
+    }
+  ],
+  "regions": {
+    "rwanda_approx": {
       "bbox": [
         28.85,
         -2.85,
         30.9,
         -1.05
       ],
-      "source_ids": [
-        "bigirimana_2012_ajar"
-      ],
-      "note": "Approximate national bounding box (lon_min, lat_min, lon_max, lat_max); includes small areas of neighbouring countries."
+      "match": "approximate_bounding_box",
+      "note": "Approximate Rwanda bounding box (lon_min, lat_min, lon_max, lat_max); includes parts of neighbouring countries (DRC, Burundi, Uganda, Tanzania). A match selects Rwanda-region context; it is not a country determination."
     }
-  ]
+  }
 }
