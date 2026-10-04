@@ -49,3 +49,8 @@ Still failing / open (sent to frontend): (1) banner "Server answers are demo dat
 - backend: Ran 64 tests, OK (skipped=1); frontend: npm run check 15/15 domain; expo export OK.
 - frontend strict tests/http-smoke.ts (fails on any requestfailed, HTTP ≥ 400 or console error): PASS vs :8790/:8091.
 - journey.ts phone 390 + desktop 1440 (screenshots int-02a3de9-w*): POST 200, data_mode live, SERVER ESTIMATE, orange_powder_leaf_underside; **0 console errors, 0 connection refusals**.
+
+## 2026-10-04 04:36Z: integration a30e824 = frontend 884389c (fe-005) + backend 77193e7 — CLEAN
+- backend: Ran 65 tests, OK (skipped=1); frontend: npm ci (adds expo-file-system) + npm run check 15/15; expo export OK. Frontend runs against backend's current shared/ fixtures (newer than its own import) without failures.
+- strict tests/http-smoke.ts PASS; journey.ts phone 390 + desktop 1440 (int-a30e824-w*): POST 200, live, SERVER ESTIMATE, 0 console errors, 0 refusals.
+- Backend change from fe-005 note: weather_risk.climatology.caveat is now plain localized farmer text; developer detail moved to technical_note.
