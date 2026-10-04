@@ -290,6 +290,7 @@ def build_map(observation, condition, sm, series, observed_at, abstained, t) -> 
                 for c in cells]
     features += [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [p["longitude"], p["latitude"]]},
                   "properties": {"kind": "reported_observation", "present": p is location or bool(p.get("present")),
+                                 "label": t("map.label.current" if p is location else ("map.label.prior_present" if p.get("present") else "map.label.prior_clear")),
                                  "observation_id": observation["id"] if p is location else p.get("id"), "current": p is location}}
                  for p in [location] + priors]
     points = []
@@ -302,7 +303,7 @@ def build_map(observation, condition, sm, series, observed_at, abstained, t) -> 
                  "location": {"latitude": round(lat, 7), "longitude": round(lon, 7)}, "distance_m": distance, "source_ids": []}
         points.append(point)
         features.append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [round(lon, 7), round(lat, 7)]},
-                         "properties": {"kind": "scouting_point", "rank": rank, "priority": cell["priority"], "scouting_id": point["id"]}})
+                         "properties": {"kind": "scouting_point", "rank": rank, "label": t("map.label.scouting_point", rank=rank), "priority": cell["priority"], "scouting_id": point["id"]}})
     return {
         "status": "available", "type": "FeatureCollection", "features": features,
         "limitations": t("map.limitations"),

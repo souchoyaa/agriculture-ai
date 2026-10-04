@@ -47,5 +47,9 @@
   "differential.coffee_red_spider_mite": "Daño de arañita roja",
   "uncertainty.differential": "También hay señales de otro problema ({names}); un revisor debe distinguirlos.",
   "uncertainty.healthy": "La imagen también parece una hoja sana.",
-  "review.reason.differential": "Puede haber otra condición con signos similares; un experto puede distinguirlas."
+  "review.reason.differential": "Puede haber otra condición con signos similares; un experto puede distinguirlas.",
+  "map.label.current": "Planta reportada (esta observación)",
+  "map.label.prior_present": "Reporte anterior: roya observada",
+  "map.label.prior_clear": "Reporte anterior: sin roya",
+  "map.label.scouting_point": "Punto prioritario {rank}"
 }

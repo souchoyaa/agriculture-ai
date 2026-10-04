@@ -47,5 +47,9 @@
   "differential.coffee_red_spider_mite": "Red spider mite damage",
   "uncertainty.differential": "Signals of another problem ({names}) are also present; a reviewer should distinguish them.",
   "uncertainty.healthy": "The image also looks like a healthy leaf.",
-  "review.reason.differential": "Another condition with similar signs may be present; an expert can tell them apart."
+  "review.reason.differential": "Another condition with similar signs may be present; an expert can tell them apart.",
+  "map.label.current": "Reported plant (this observation)",
+  "map.label.prior_present": "Earlier report: rust seen",
+  "map.label.prior_clear": "Earlier report: no rust seen",
+  "map.label.scouting_point": "Priority point {rank}"
 }

@@ -47,5 +47,9 @@
   "differential.coffee_red_spider_mite": "Dégâts d'acarien rouge",
   "uncertainty.differential": "Des signaux d'un autre problème ({names}) sont aussi présents ; un examinateur doit les distinguer.",
   "uncertainty.healthy": "L'image ressemble aussi à une feuille saine.",
-  "review.reason.differential": "Un autre problème aux signes similaires peut être présent ; un expert peut les distinguer."
+  "review.reason.differential": "Un autre problème aux signes similaires peut être présent ; un expert peut les distinguer.",
+  "map.label.current": "Plante signalée (cette observation)",
+  "map.label.prior_present": "Signalement antérieur : rouille observée",
+  "map.label.prior_clear": "Signalement antérieur : pas de rouille",
+  "map.label.scouting_point": "Point prioritaire {rank}"
 }

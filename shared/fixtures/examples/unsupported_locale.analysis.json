@@ -5207,6 +5207,7 @@
     "properties": {
      "kind": "reported_observation",
      "present": true,
+     "label": "Reported plant (this observation)",
      "observation_id": "demo-coffee-001-rw",
      "current": true
     }
@@ -5223,6 +5224,7 @@
     "properties": {
      "kind": "scouting_point",
      "rank": 1,
+     "label": "Priority point 1",
      "priority": 1.0,
      "scouting_id": "scout_point_1"
     }
@@ -5239,6 +5241,7 @@
     "properties": {
      "kind": "scouting_point",
      "rank": 2,
+     "label": "Priority point 2",
      "priority": 0.5483,
      "scouting_id": "scout_point_2"
     }
@@ -5255,6 +5258,7 @@
     "properties": {
      "kind": "scouting_point",
      "rank": 3,
+     "label": "Priority point 3",
      "priority": 0.4348,
      "scouting_id": "scout_point_3"
     }
@@ -5271,6 +5275,7 @@
     "properties": {
      "kind": "scouting_point",
      "rank": 4,
+     "label": "Priority point 4",
      "priority": 0.3679,
      "scouting_id": "scout_point_4"
     }
@@ -5287,6 +5292,7 @@
     "properties": {
      "kind": "scouting_point",
      "rank": 5,
+     "label": "Priority point 5",
      "priority": 0.3679,
      "scouting_id": "scout_point_5"
     }
