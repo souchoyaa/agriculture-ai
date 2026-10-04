@@ -205,7 +205,7 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
       const outcome = await runAutomaticCheck({ id, observedAt: record.createdAt, field, image: record.photoUri, locale: current.current.settings.locale,
         history: current.current.records, analyseAnyway, plantLocation }, deps, step => { patchRecord(id, r => ({ ...r, pipelineStep: step })); });
       const p = outcome.perception;
-      const perception = { model: p.raw.model, displayName: local || using.kind === 'http' ? VISION_MODEL.displayName : 'Demo example (no model)', fineTuned: local || using.kind === 'http' ? VISION_MODEL.fineTuned : false,
+      const perception = { model: p.raw.model, displayName: local || using.kind === 'http' ? p.displayName ?? VISION_MODEL.displayName : 'Demo example (no model)', fineTuned: local || using.kind === 'http' ? p.fineTuned ?? VISION_MODEL.fineTuned : false,
         device: p.device, ms: p.ms, labels: p.raw.labels, subject: p.subject };
       if (outcome.kind === 'follow_up') await patchRecord(id, r => ({ ...r, perception, analysis: { kind: 'follow_up', reason: outcome.followUp, at: new Date().toISOString() } }));
       else {

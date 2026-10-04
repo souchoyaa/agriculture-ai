@@ -33,6 +33,29 @@ export const VISION_MODEL: VisionModelConfig = {
   approxDownloadMB: 772,
 };
 
+/** Team fine-tune (GGUF, llama.cpp only — Transformers.js cannot load it). Served by a local
+ * `llama-server` (see docs/models/fine-tuned-coffee-leaf.md); when unreachable the app falls back to VISION_MODEL. */
+export const FINE_TUNED_VISION = {
+  id: 'nathanrchn/coffee-leaf-lfm2.5-vl-450m-GGUF',
+  file: 'coffee-lfm-tools-Q5_K_M.gguf',
+  displayName: 'Coffee-leaf LFM2.5-VL 450M (team fine-tune, GGUF Q5_K_M via llama.cpp)',
+  url: 'http://127.0.0.1:8090',
+  // Exact pass-1 contract (app_contract.md §2–3).
+  system: 'You check photos of coffee leaves for a farmer. Reply with exactly one JSON object and nothing else.',
+  user: 'Check this leaf.',
+  grammar: [
+    'root   ::= "{\\"usable\\": " ( yes | no ) "}"',
+    'yes    ::= "true, \\"reason\\": \\"ok\\", \\"condition\\": \\"" cond "\\""',
+    'no     ::= "false, \\"reason\\": \\"" reason "\\", \\"condition\\": \\"none\\""',
+    'cond   ::= "healthy" | "rust" | "cercospora" | "phoma" | "miner"',
+    'reason ::= "blurry" | "too_dark" | "too_far" | "not_coffee_leaf"',
+  ].join('\n'),
+  /** First token of each condition label → app label (dataset vocabulary of backend data/vlm_label_map.json). */
+  firstTokens: { healthy: 'healthy', rust: 'rust', cer: 'cercospora', ph: 'phoma', min: 'leaf_miner' } as Record<string, string>,
+  tau: 0.3537,       // tau(0.90) from validation: below → low confidence
+  maxSidePx: 512,
+};
+
 export const TRANSLATION_MODEL: TranslationModelConfig = {
   id: 'Xenova/nllb-200-distilled-600M',
   revision: 'main',

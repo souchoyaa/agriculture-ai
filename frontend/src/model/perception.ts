@@ -2,6 +2,7 @@
 // Model-specific prompting lives here and in the worker only; nothing downstream depends on it.
 import { VISION_MODEL } from './config';
 import { WorkerClient, type Progress } from '../runtime/workerClient';
+import { fineTunedAvailable, perceiveFineTuned } from './fineTuned';
 
 export * from './probes';
 import { interpretProbes, PROBES, SYSTEM, type Answer, type PerceptionResult } from './probes';
@@ -19,6 +20,8 @@ export function visionCached(): boolean {
 }
 
 export async function perceive(image: string | Blob): Promise<PerceptionResult> {
+  // Team fine-tune first when its local llama.cpp server is up; otherwise the in-browser public checkpoint.
+  if (await fineTunedAvailable()) return perceiveFineTuned(image);
   const { device } = await loadVision();
   if (VISION_MODEL.strategy === 'labels') throw new Error('labels strategy: implement the fine-tuned output parser here');
   const r = await client.request<{ answers: Answer[]; ms: number }>({ type: 'probe', image, questions: PROBES, system: SYSTEM }, 180000);

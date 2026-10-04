@@ -12,6 +12,8 @@ export interface PerceptionResult {
   /** One short request for better evidence, only when needed. */
   followUp?: 'not_a_plant' | 'closer_leaf';
   device: string; ms: number;
+  /** Set when a model other than VISION_MODEL produced this result (e.g. the fine-tuned server). */
+  displayName?: string; fineTuned?: boolean;
 }
 
 export const SYSTEM = 'You are a careful agricultural image inspector. Answer with the letter of the best option only.';

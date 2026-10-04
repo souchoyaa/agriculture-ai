@@ -21,7 +21,8 @@ async function check(page: Page, label: string) {
   await page.getByText('What the model saw').waitFor({ timeout: 300000 });
   const seconds = ((Date.now() - t0) / 1000).toFixed(1);
   const body = await page.locator('body').innerText();
-  for (const expected of [/Rust-like orange powder/, /Where to look next/, /Is the weather favourable/, /not fine-tuned/]) if (!expected.test(body)) throw new Error(`${label}: missing ${expected}`);
+  for (const expected of [/Rust-like orange powder/, /Where to look next/, /Is the weather favourable/, /not fine-tuned|team fine-tune/]) if (!expected.test(body)) throw new Error(`${label}: missing ${expected}`);
+  console.log(`${label}: ${body.match(/[^\n]*(fine-tune)[^\n]*/)?.[0] ?? "public checkpoint"}`);
   await page.screenshot({ path: path.join(OUT, `photo-${label}-result.png`) });
   return seconds;
 }
