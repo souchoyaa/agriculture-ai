@@ -18,7 +18,7 @@ CORS for a web build on another origin: `AGRI_CORS_ORIGINS=http://localhost:8091
 Without `AGRI_FIXED_NOW` the real clock is used, so the committed weather cache (fetched 2026-10-03T23:46Z) is reported `stale` — intended.
 
 ## Integration status
-Integration branch `integration` (worktrees/integration) `a30e824` = frontend `884389c` (fe-005) + backend `77193e7`: backend 65 tests, frontend `npm run check` (15/15 domain), frontend strict `tests/http-smoke.ts` and `docs/backend/integration/journey.ts` (phone 390 px + desktop 1440 px) in headless Chrome against the real backend all pass, 0 console errors (strict smoke). Evidence, exact commands and screenshots: `docs/backend/integration/README.md`.
+Integration branch `integration` (worktrees/integration) `e5b30e9` = frontend `ecdfd88` (fe-007) + backend `2990100`: backend 67 tests, frontend `npm run check` (16/16 domain), frontend strict `tests/http-smoke.ts` and `docs/backend/integration/journey.ts` (phone 390 px + desktop 1440 px) in headless Chrome against the real backend all pass, 0 console errors (strict smoke). Evidence, exact commands and screenshots: `docs/backend/integration/README.md`.
 
 ## Coverage
 | Crop | Condition | Signals understood | Locales |
