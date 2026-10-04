@@ -58,5 +58,8 @@
   "recommendation.count_spots_threshold": "Cuente las manchas de roya en una muestra de hojas. La guía de extensión de Ruanda (2012) considera el control con unas dos manchas por hoja; consulte a su técnico de extensión antes de actuar.",
   "recommendation.open_canopy_spacing_pruning": "Mantenga la distancia de siembra recomendada y pode para abrir el arbusto. En un estudio de fincas de Ruanda de 2012, las fincas podadas, con acolchado y fertilizadas tenían menos roya, y las intercaladas más (una asociación, no una prueba de causa).",
   "regional.rwanda_survey_context": "Ruanda (estudio de 2012 en 307 fincas, estación seca): roya en todas las provincias, peor en la Provincia Oriental; menos roya en fincas por encima de unos 1800 m y más por debajo de unos 1400 m; todas las variedades comerciales cultivadas entonces eran susceptibles.",
-  "regional.match_note.rwanda_approx": "Se muestra porque la ubicación cae en una zona aproximada de Ruanda (un recuadro que también cubre zonas fronterizas de países vecinos); basado en fuentes de 2012."
+  "regional.match_note.rwanda_approx": "Se muestra porque la ubicación cae en una zona aproximada de Ruanda (un recuadro que también cubre zonas fronterizas de países vecinos); basado en fuentes de 2012.",
+  "local_check.pesticide_registration_labels": "Registro y etiquetas de plaguicidas",
+  "local_check.official_reporting_obligations": "Obligaciones oficiales de notificación",
+  "local_check.local_resistant_cultivars": "Variedades resistentes recomendadas localmente"
 }
