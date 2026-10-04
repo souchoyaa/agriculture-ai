@@ -7,16 +7,16 @@ import { followUpDue, signalStrength, type ObservationRecord } from '../domain/m
 import { formatDate, formatDateTime, type MessageId } from '../i18n';
 import type { Nav } from '../navigation';
 import { useStore } from '../state/store';
-import { Body, Button, Card, Choice, H1, H2, Row, StrengthMeter, Tag } from '../ui/components';
+import { Body, Button, Card, Choice, H1, H2, Icon, Row, StrengthMeter, Tag } from '../ui/components';
 import { color, radius, space, type } from '../ui/theme';
 import { RiskMap } from './RiskMap';
 import { EvidenceList, RegionalContext, ReviewCard, ScopeCard, SourcesList, WeatherCard } from './ResultSections';
 
-const STATUS_GLYPH: Record<Analysis['status'], { glyph: string; fg: string; bg: string }> = {
-  needs_review: { glyph: '▲', fg: color.clay, bg: color.claySoft },
-  supported: { glyph: '●', fg: color.leaf, bg: color.okSoft },
-  unsupported: { glyph: '⊘', fg: color.stone, bg: color.stoneSoft },
-  unavailable: { glyph: '–', fg: color.stone, bg: color.stoneSoft },
+const STATUS_GLYPH: Record<Analysis['status'], { icon: string; fg: string; bg: string }> = {
+  needs_review: { icon: 'alert', fg: color.clay, bg: color.claySoft },
+  supported: { icon: 'check-decagram', fg: color.clay, bg: color.claySoft },
+  unsupported: { icon: 'cancel', fg: color.stone, bg: color.stoneSoft },
+  unavailable: { icon: 'minus-circle-outline', fg: color.stone, bg: color.stoneSoft },
 };
 
 export function ResultScreen({ nav, recordId }: { nav: Nav; recordId: string }) {
@@ -33,6 +33,7 @@ export function ResultScreen({ nav, recordId }: { nav: Nav; recordId: string }) 
       </View>
       {record.observation.location && (field?.demo || String(record.observation.provenance.source ?? '').includes('example field location'))
         ? <Card tone="warn"><Body>{t('location.example')}</Body></Card> : null}
+      {record.saveFailed ? <SaveFailed /> : null}
       {record.analysis.kind === 'done'
         ? <AnalysisView record={record} analysis={record.analysis.analysis} via={record.analysis.via} nav={nav} />
         : <PendingView record={record} />}
@@ -52,7 +53,7 @@ function PendingView({ record }: { record: ObservationRecord }) {
     <Card tone={a.kind === 'failed' && !a.retryable ? 'alert' : 'warn'}>
       <H2 glyph="⏳">{t('pending.title')}</H2>
       <Text accessibilityLiveRegion="polite" style={type.body}>{working ? t('pending.analysing') : msg}</Text>
-      <Tag tone="info" icon="cellphone" label={t('history.onPhone')} />
+      {record.saveFailed ? null : <Tag tone="info" icon="cellphone" label={t('history.onPhone')} />}
       {a.kind === 'failed' ? <Button label={working ? t('pending.retrying') : t('pending.retry')} icon="↻" disabled={working} onPress={() => retry(record.id)}
         hint={api.kind === 'mock' ? t('mode.mock.detail') : undefined} /> : null}
     </Card>
@@ -85,7 +86,7 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
       <Card style={{ borderColor: status.fg, borderWidth: 2.5 }}>
         <Row wrap>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: space(1.5), backgroundColor: status.bg, borderRadius: 999, paddingHorizontal: space(3), paddingVertical: space(1), borderWidth: 1.5, borderColor: status.fg }}>
-            <Text aria-hidden style={{ color: status.fg, fontWeight: '900' }}>{status.glyph}</Text>
+            <Icon name={status.icon} size={16} color={status.fg} />
             <Text style={{ color: status.fg, fontWeight: '800', fontSize: 15 }}>{t(`result.status.${analysis.status}` as MessageId)}</Text>
           </View>
         </Row>
@@ -227,6 +228,21 @@ function Details({ analysis, record, via }: { analysis: Analysis; record: Observ
           <Text selectable style={type.body}>{v}</Text>
         </View>
       )) : null}
+    </Card>
+  );
+}
+
+/** Honest persistence state: the check is only in memory because the device write failed. */
+function SaveFailed() {
+  const { t, retrySave } = useStore();
+  const [state, setState] = useState<'idle' | 'trying' | 'failed'>('idle');
+  return (
+    <Card tone="alert">
+      <H2 glyph="alert-circle-outline">{t('save.failed.title')}</H2>
+      <Body>{t('save.failed.body')}</Body>
+      <Button icon="content-save-outline" label={state === 'trying' ? t('pending.retrying') : t('save.failed.retry')} disabled={state === 'trying'}
+        onPress={async () => { setState('trying'); setState((await retrySave()) ? 'idle' : 'failed'); }} />
+      {state === 'failed' ? <Text accessibilityRole="alert" style={type.body}>{t('save.failed.again')}</Text> : null}
     </Card>
   );
 }

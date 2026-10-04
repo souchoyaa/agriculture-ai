@@ -68,7 +68,9 @@ export async function loadState(store: KeyValueStore, seedApi: Api): Promise<{ s
 }
 
 export async function saveState(store: KeyValueStore, state: PersistedState): Promise<void> {
-  await store.setItem(STORAGE_KEY, JSON.stringify(state));
+  // saveFailed is transient UI state about the write itself; never persist it.
+  const records = state.records.map(r => { if (!r.saveFailed) return r; const { saveFailed: _f, ...rest } = r; return rest; });
+  await store.setItem(STORAGE_KEY, JSON.stringify({ ...state, records }));
 }
 
 export function retryable(record: ObservationRecord): boolean {

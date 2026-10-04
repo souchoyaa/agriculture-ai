@@ -22,6 +22,7 @@ interface Store {
   setFieldLocation(fieldId: string, location?: { value: FieldLocation; source: 'gps' | 'manual' }): Promise<void>;
   saveCheck(input: NewCheck): Promise<ObservationRecord>;
   retry(recordId: string): Promise<void>;
+  retrySave(): Promise<boolean>;
   toggleScouting(recordId: string, scoutingId: string): void;
   setFollowUp(recordId: string, days: number | undefined): void;
   updateSettings(patch: Partial<Settings>): void;
@@ -49,7 +50,7 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
   const current = useRef(state);
   const gate = useRef(new ConnectionGate());
   const activeApi = useRef<Api>(mockApi);
-  const writes = useRef(Promise.resolve());
+  const writes = useRef<Promise<void>>(Promise.resolve());
 
   const api = useMemo<Api>(() => state.settings.source === 'http' ? apiForUrl(state.settings.baseUrl) : mockApi, [state.settings.source, state.settings.baseUrl]);
   const t = useMemo(() => translator(state.settings.locale), [state.settings.locale]);
@@ -60,8 +61,19 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
     const next = update(current.current);
     current.current = next;
     setState(next);
-    const write = writes.current.then(() => saveState(storage, next)).then(() => setStorageError(undefined), e => setStorageError(String(e?.message ?? e)));
-    writes.current = write;
+    // Resolves true only once the state is durably written; false when the write failed.
+    const write = writes.current.then(() => saveState(storage, next)).then(
+      () => {
+        setStorageError(undefined);
+        // Everything in memory up to `next` is now on disk: clear transient "not saved" flags.
+        if (current.current.records.some(r => r.saveFailed)) {
+          const cleared = { ...current.current, records: current.current.records.map(r => r.saveFailed && next.records.some(n => n.id === r.id) ? { ...r, saveFailed: undefined } : r) };
+          current.current = cleared; setState(cleared);
+        }
+        return true;
+      },
+      e => { setStorageError(String(e?.message ?? e)); return false; });
+    writes.current = write.then(() => undefined);
     return write;
   }, [storage]);
 
@@ -154,10 +166,12 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
         catch { photoStorage = 'picker'; }   // report still saved; UI warns the photo may disappear
       }
       const record: ObservationRecord = { id, fieldId: field.id, createdAt: now.toISOString(), observation, symptoms: input.symptoms, certainty: input.certainty, evidence: input.evidence, photoUri, photoStorage, note: input.note?.trim() || undefined, analysis: { kind: 'waiting' }, completedScouting: [] };
-      await commit(s => ({ ...s, records: [record, ...s.records] }));   // durable local save first
+      const durable = await commit(s => ({ ...s, records: [record, ...s.records] }));   // local save first
+      if (!durable) await patchRecord(record.id, r => ({ ...r, saveFailed: true }));     // keep honest: not on disk yet
       analyse(record, api);                                               // then request analysis
       return record;
     },
+    async retrySave() { return commit(st => ({ ...st })); },
     async retry(recordId) {
       const record = current.current.records.find(r => r.id === recordId);
       if (record) await analyse(record, api);

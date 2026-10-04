@@ -273,6 +273,18 @@ test('field location entry: validation, comma decimals, rounding to ~100 m, prov
   assert(!('location' in none)); assert.doesNotMatch(none.provenance.source, /GPS|manual/);
 });
 
+test('supported rust evidence never yields "no issue flagged" (bug A regression)', async () => {
+  const supported = JSON.parse(readFileSync(path.resolve(__dirname, '../../shared/fixtures/examples/supported_with_history.analysis.json'), 'utf8')) as Analysis;
+  assert.equal(supported.status, 'supported');
+  const { records } = await seedState(mockApi);
+  const rec: ObservationRecord = { ...records[0], analysis: { kind: 'done', analysis: supported, via: 'http' } };
+  const att = fieldAttention([rec], new Date(Date.parse(rec.createdAt) + 3600e3));
+  assert.equal(att.level, 'act');
+  assert.equal(att.reason, 'condition_supported');
+  const healthy = { ...supported, condition: { ...supported.condition, id: 'healthy', abstained: false } };
+  assert.equal(fieldAttention([{ ...rec, analysis: { kind: 'done', analysis: healthy, via: 'http' } }], new Date(Date.parse(rec.createdAt) + 3600e3)).level, 'ok');
+});
+
 (async () => {
   let failed = 0;
   for (const [name, fn] of tests) {

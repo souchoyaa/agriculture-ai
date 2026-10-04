@@ -32,7 +32,7 @@ function RecordRow({ record, nav, showField }: { record: ObservationRecord; nav:
         <Row wrap>
           {statusTag}
           {a.kind === 'done' && (a.via === 'mock' || a.analysis.data_mode === 'demo') ? <Tag tone="warn" icon="flask-outline" label={t('common.demo')} /> : null}
-          <Tag tone="info" icon="cellphone" label={t('history.onPhone')} />
+          {record.saveFailed ? <Tag tone="alert" icon="alert-circle-outline" label={t('save.failed.tag')} /> : <Tag tone="info" icon="cellphone" label={t('history.onPhone')} />}
           {due ? <Tag tone={due.getTime() <= Date.now() ? 'alert' : 'stone'} label={(due.getTime() <= Date.now() ? t('history.followUpDue') : t('history.followUpOn', { date: formatDate(due.toISOString(), locale) }))} /> : null}
           {record.photoUri ? <Tag icon="camera-outline" label="" /> : null}
         </Row>

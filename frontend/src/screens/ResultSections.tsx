@@ -4,10 +4,10 @@ import type { Analysis } from '../api';
 import type { ObservationRecord } from '../domain/model';
 import { formatDate, formatDateTime, type MessageId, type Translate } from '../i18n';
 import { useStore } from '../state/store';
-import { Body, Button, Card, H2, Row, Tag } from '../ui/components';
+import { Body, Button, Card, H2, Icon, Row, Tag } from '../ui/components';
 import { color, radius, space, type } from '../ui/theme';
 
-const CLASS_STYLE = { low: { glyph: '○', fg: color.leaf, bg: color.okSoft }, moderate: { glyph: '◐', fg: '#7A5600', bg: color.turmericSoft }, high: { glyph: '●', fg: color.clay, bg: color.claySoft } } as const;
+const CLASS_STYLE = { low: { icon: 'gauge-low', fg: color.leaf, bg: color.okSoft }, moderate: { icon: 'gauge', fg: color.turmericInk, bg: color.turmericSoft }, high: { icon: 'gauge-full', fg: color.clay, bg: color.claySoft } } as const;
 
 function Disclosure({ title, children }: { title: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -36,7 +36,7 @@ export function WeatherCard({ env, risk }: { env: Analysis['environment']; risk?
       {risk && risk.status !== 'unavailable' && cls ? (
         <View style={{ gap: space(2) }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: space(2), alignSelf: 'flex-start', backgroundColor: CLASS_STYLE[cls].bg, borderColor: CLASS_STYLE[cls].fg, borderWidth: 1.5, borderRadius: 999, paddingHorizontal: space(3), paddingVertical: space(1) }}>
-            <Text aria-hidden style={{ color: CLASS_STYLE[cls].fg, fontSize: 18, fontWeight: '900' }}>{CLASS_STYLE[cls].glyph}</Text>
+            <Icon name={CLASS_STYLE[cls].icon} size={18} color={CLASS_STYLE[cls].fg} />
             <Text style={{ color: CLASS_STYLE[cls].fg, fontWeight: '800', fontSize: 16 }}>{t(`result.weather.class.${cls}` as MessageId)}</Text>
           </View>
           {risk.summary ? <Body>{risk.summary}</Body> : null}

@@ -28,6 +28,8 @@ export interface ObservationRecord {
   analysis: AnalysisState;
   followUpDays?: number;         // local reminder intent; no push notification
   completedScouting: string[];   // scouting ids the farmer ticked off
+  /** Set when the durable local write failed; the record exists only in memory until a retry succeeds. */
+  saveFailed?: boolean;
 }
 
 /** Symptom ids map 1:1 to canonical signal labels (backend coffee signal vocabulary; insect_damage is passed through as unrecognised). */
@@ -82,6 +84,12 @@ export function buildObservation(args: {
 
 export type Attention = 'act' | 'check' | 'ok' | 'unknown';
 
+const NO_CONDITION_IDS = new Set(['healthy', 'undetermined', 'unknown', 'none']);
+/** True when the analysis names an actual condition (not abstained, healthy or unknown). */
+export function conditionPresent(a: Analysis): boolean {
+  return !a.condition.abstained && !NO_CONDITION_IDS.has(a.condition.id);
+}
+
 /**
  * Attention is a presentation summary of the latest backend status plus record age.
  * It is not a risk model: it never upgrades/downgrades scientific conclusions.
@@ -94,6 +102,8 @@ export function fieldAttention(records: ObservationRecord[], now: Date, staleDay
   if (a.kind === 'waiting' || a.kind === 'failed') return { level: 'check', latest, reason: 'analysis_pending' };
   if (a.kind === 'not_requested') return { level: 'check', latest, reason: 'analysis_pending' };
   if (a.analysis.status === 'needs_review') return { level: 'act', latest, reason: 'needs_review' };
+  // A supported finding of a named condition is a reason to act, never "no issue".
+  if (a.analysis.status === 'supported' && conditionPresent(a.analysis)) return { level: 'act', latest, reason: 'condition_supported' };
   if (latest.followUpDays !== undefined && ageDays >= latest.followUpDays) return { level: 'check', latest, reason: 'follow_up_due' };
   if (ageDays > staleDays) return { level: 'check', latest, reason: 'check_overdue' };
   if (a.analysis.status === 'unsupported' || a.analysis.status === 'unavailable') return { level: 'check', latest, reason: a.analysis.status };
