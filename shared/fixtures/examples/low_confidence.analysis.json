@@ -57,7 +57,8 @@
    "kind": "peer_reviewed",
    "used_for": [
     "germination_temperature_primary_reference"
-   ]
+   ],
+   "region": "Laboratory"
   },
   {
    "id": "hdoa_npa_20_03_2021",
@@ -78,7 +79,8 @@
     "sanitation",
     "do_not_move_material",
     "photograph_both_surfaces"
-   ]
+   ],
+   "region": "Hawaiʻi, USA"
   },
   {
    "id": "marino_2026_frontiers",
@@ -98,7 +100,8 @@
     "latent_shortest_18_28",
     "dispersal_wind_splash"
    ],
-   "note": "Review statements citing De Jong et al. 1987 (doi:10.1007/BF01998091) and Kushalappa et al. 1983; primary papers not read directly."
+   "note": "Review statements citing De Jong et al. 1987 (doi:10.1007/BF01998091) and Kushalappa et al. 1983; primary papers not read directly.",
+   "region": "Puerto Rico (review of global literature)"
   },
   {
    "id": "open_meteo",
@@ -112,7 +115,8 @@
    "kind": "data",
    "used_for": [
     "weather_history_forecast"
-   ]
+   ],
+   "region": "Global"
   },
   {
    "id": "talhinhas_2017_mpp",
@@ -129,7 +133,8 @@
     "urediniospore_inoculum",
     "chlorotic_spots_then_orange_uredinia",
     "resistant_cultivars"
-   ]
+   ],
+   "region": "Global"
   }
  ],
  "evidence": [
@@ -165,7 +170,8 @@
    },
    {
     "component": "evidence_model",
-    "origin": "expert_heuristic",
+    "origin": "agent_authored_heuristic",
+    "expert_reviewed": false,
     "calibrated": false
    },
    {
@@ -495,12 +501,29 @@
     "hdoa_npa_20_03_2021"
    ],
    "note": "Characteristic lesions appear 4-6 weeks after infection."
-  }
+  },
+  "limitations": [
+   "Leaf wetness approximated from relative humidity/precipitation of gridded model data; canopy conditions differ.",
+   "Saturates in persistently humid zones (>0.9 favourable days in ERA5 for Chinchiná, Colombia, in both epidemic and non-epidemic years): 'high' means weather is not limiting, not that an epidemic is likely.",
+   "Ignores inoculum, host susceptibility, shade, fruit load and management."
+  ],
+  "validation": "Consistency check only (docs/backend/model.md); not validated against incidence data."
  },
  "map": {
   "status": "unavailable",
   "type": "FeatureCollection",
   "features": [],
   "limitations": "No suspected condition; scouting priority not computed."
+ },
+ "guidance_scope": {
+  "applicability": "Biology (free water, temperature range, latency, dispersal, lower-canopy onset) is pathogen-level and applies across regions. Practical guidance is drawn mainly from Hawaiʻi extension publications; only generic measures (inspection, sanitation, movement limits, re-scouting, consulting extension, resistant cultivars) are retained. Hawaiʻi-specific regulatory reporting, product lists and contacts are deliberately omitted.",
+  "local_check_required": [
+   "pesticide registration and labels",
+   "official reporting obligations",
+   "locally recommended resistant cultivars"
+  ],
+  "regions_of_guidance_sources": [
+   "Hawaiʻi, USA"
+  ]
  }
 }

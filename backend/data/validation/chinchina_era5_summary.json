@@ -1,0 +1,147 @@
+{
+ "site": {
+  "name": "Chinchiná, Caldas, Colombia",
+  "latitude": 4.99,
+  "longitude": -75.6
+ },
+ "source_ids": [
+  "open_meteo_archive_era5",
+  "avelino_2015_food_security"
+ ],
+ "purpose": "Qualitative consistency check of agent-authored weather heuristic; not validation against incidence.",
+ "literature_reference": "Avelino et al. 2015: 2008-2011 vs 1991-1994 in Chinchiná, Tmin +0.1 °C, Tmax -0.5 °C (station data).",
+ "periods": {
+  "low_incidence_1991_1994": {
+   "data": {
+    "url": "https://archive-api.open-meteo.com/v1/archive?latitude=4.99&longitude=-75.6&start_date=1991-01-01&end_date=1994-12-31&hourly=temperature_2m%2Crelative_humidity_2m%2Cprecipitation&timezone=UTC",
+    "accessed_at": "2026-10-04T00:08:18.166146+00:00",
+    "license": "CC BY 4.0 (Open-Meteo.com; ERA5/ERA5-Land reanalysis, Copernicus)",
+    "grid_latitude": 5.026362,
+    "grid_longitude": -75.60596,
+    "elevation_m": 1274.0,
+    "hours": 35064
+   },
+   "overall": {
+    "days": 1460,
+    "mean_tmin_c": 14.28,
+    "mean_tmax_c": 23.52,
+    "mean_diurnal_amplitude_c": 9.24,
+    "favourable_day_fraction": 0.952,
+    "mean_longest_wet_spell_h": 20.8
+   },
+   "by_year": {
+    "1991": {
+     "days": 365,
+     "mean_tmin_c": 14.52,
+     "mean_tmax_c": 23.5,
+     "mean_diurnal_amplitude_c": 8.97,
+     "favourable_day_fraction": 0.945,
+     "mean_longest_wet_spell_h": 20.3
+    },
+    "1992": {
+     "days": 366,
+     "mean_tmin_c": 14.21,
+     "mean_tmax_c": 23.73,
+     "mean_diurnal_amplitude_c": 9.52,
+     "favourable_day_fraction": 0.937,
+     "mean_longest_wet_spell_h": 20.1
+    },
+    "1993": {
+     "days": 365,
+     "mean_tmin_c": 14.19,
+     "mean_tmax_c": 23.45,
+     "mean_diurnal_amplitude_c": 9.27,
+     "favourable_day_fraction": 0.959,
+     "mean_longest_wet_spell_h": 21.3
+    },
+    "1994": {
+     "days": 364,
+     "mean_tmin_c": 14.19,
+     "mean_tmax_c": 23.38,
+     "mean_diurnal_amplitude_c": 9.19,
+     "favourable_day_fraction": 0.967,
+     "mean_longest_wet_spell_h": 21.5
+    }
+   },
+   "missing_hour_values": 0
+  },
+  "epidemic_2008_2011": {
+   "data": {
+    "url": "https://archive-api.open-meteo.com/v1/archive?latitude=4.99&longitude=-75.6&start_date=2008-01-01&end_date=2011-12-31&hourly=temperature_2m%2Crelative_humidity_2m%2Cprecipitation&timezone=UTC",
+    "accessed_at": "2026-10-04T00:08:18.726308+00:00",
+    "license": "CC BY 4.0 (Open-Meteo.com; ERA5/ERA5-Land reanalysis, Copernicus)",
+    "grid_latitude": 5.026362,
+    "grid_longitude": -75.60596,
+    "elevation_m": 1274.0,
+    "hours": 35064
+   },
+   "overall": {
+    "days": 1460,
+    "mean_tmin_c": 14.27,
+    "mean_tmax_c": 23.68,
+    "mean_diurnal_amplitude_c": 9.41,
+    "favourable_day_fraction": 0.936,
+    "mean_longest_wet_spell_h": 21.1
+   },
+   "by_year": {
+    "2008": {
+     "days": 366,
+     "mean_tmin_c": 13.95,
+     "mean_tmax_c": 23.46,
+     "mean_diurnal_amplitude_c": 9.51,
+     "favourable_day_fraction": 0.937,
+     "mean_longest_wet_spell_h": 21.5
+    },
+    "2009": {
+     "days": 365,
+     "mean_tmin_c": 14.3,
+     "mean_tmax_c": 24.01,
+     "mean_diurnal_amplitude_c": 9.71,
+     "favourable_day_fraction": 0.942,
+     "mean_longest_wet_spell_h": 20.6
+    },
+    "2010": {
+     "days": 365,
+     "mean_tmin_c": 14.56,
+     "mean_tmax_c": 23.93,
+     "mean_diurnal_amplitude_c": 9.38,
+     "favourable_day_fraction": 0.921,
+     "mean_longest_wet_spell_h": 20.8
+    },
+    "2011": {
+     "days": 364,
+     "mean_tmin_c": 14.28,
+     "mean_tmax_c": 23.31,
+     "mean_diurnal_amplitude_c": 9.04,
+     "favourable_day_fraction": 0.942,
+     "mean_longest_wet_spell_h": 21.3
+    }
+   },
+   "missing_hour_values": 0
+  }
+ },
+ "sensitivity_wet_rh_pct": {
+  "90": {
+   "low_incidence_1991_1994": 0.952,
+   "epidemic_2008_2011": 0.936
+  },
+  "95": {
+   "low_incidence_1991_1994": 0.932,
+   "epidemic_2008_2011": 0.921
+  },
+  "98": {
+   "low_incidence_1991_1994": 0.931,
+   "epidemic_2008_2011": 0.925
+  },
+  "rain_only": {
+   "low_incidence_1991_1994": 0.942,
+   "epidemic_2008_2011": 0.934
+  }
+ },
+ "comparison_epidemic_minus_low": {
+  "tmin_c": -0.01,
+  "tmax_c": 0.16,
+  "diurnal_amplitude_c": 0.17,
+  "favourable_day_fraction": -0.016
+ }
+}

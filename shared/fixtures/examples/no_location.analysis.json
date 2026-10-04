@@ -106,7 +106,8 @@
    "used_for": [
     "reduced_thermal_amplitude_shorter_latency",
     "early_warning_resistant_cultivars"
-   ]
+   ],
+   "region": "Colombia, Central America"
   },
   {
    "id": "ctahr_pd118_2021",
@@ -124,7 +125,8 @@
     "label_is_law",
     "consult_extension_before_fungicide",
     "spore_survival_six_weeks"
-   ]
+   ],
+   "region": "Hawaiʻi, USA"
   },
   {
    "id": "hdoa_field_guide_2020",
@@ -141,7 +143,8 @@
     "lower_canopy_first",
     "photograph_both_surfaces",
     "flag_area"
-   ]
+   ],
+   "region": "Hawaiʻi, USA"
   },
   {
    "id": "hdoa_npa_20_03_2021",
@@ -162,7 +165,8 @@
     "sanitation",
     "do_not_move_material",
     "photograph_both_surfaces"
-   ]
+   ],
+   "region": "Hawaiʻi, USA"
   },
   {
    "id": "talhinhas_2017_mpp",
@@ -179,7 +183,8 @@
     "urediniospore_inoculum",
     "chlorotic_spots_then_orange_uredinia",
     "resistant_cultivars"
-   ]
+   ],
+   "region": "Global"
   }
  ],
  "evidence": [
@@ -209,7 +214,8 @@
    },
    {
     "component": "evidence_model",
-    "origin": "expert_heuristic",
+    "origin": "agent_authored_heuristic",
+    "expert_reviewed": false,
     "calibrated": false
    },
    {
@@ -330,12 +336,29 @@
     "hdoa_npa_20_03_2021"
    ],
    "note": "Characteristic lesions appear 4-6 weeks after infection."
-  }
+  },
+  "limitations": [
+   "Leaf wetness approximated from relative humidity/precipitation of gridded model data; canopy conditions differ.",
+   "Saturates in persistently humid zones (>0.9 favourable days in ERA5 for Chinchiná, Colombia, in both epidemic and non-epidemic years): 'high' means weather is not limiting, not that an epidemic is likely.",
+   "Ignores inoculum, host susceptibility, shade, fruit load and management."
+  ],
+  "validation": "Consistency check only (docs/backend/model.md); not validated against incidence data."
  },
  "map": {
   "status": "unavailable",
   "type": "FeatureCollection",
   "features": [],
   "limitations": "No location supplied; map and scouting points unavailable."
+ },
+ "guidance_scope": {
+  "applicability": "Biology (free water, temperature range, latency, dispersal, lower-canopy onset) is pathogen-level and applies across regions. Practical guidance is drawn mainly from Hawaiʻi extension publications; only generic measures (inspection, sanitation, movement limits, re-scouting, consulting extension, resistant cultivars) are retained. Hawaiʻi-specific regulatory reporting, product lists and contacts are deliberately omitted.",
+  "local_check_required": [
+   "pesticide registration and labels",
+   "official reporting obligations",
+   "locally recommended resistant cultivars"
+  ],
+  "regions_of_guidance_sources": [
+   "Hawaiʻi, USA"
+  ]
  }
 }

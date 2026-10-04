@@ -26,3 +26,15 @@ All parameters live in `backend/data/conditions/coffee_leaf_rust.json` with `sou
 
 ## Measured performance
 Full test suite (43 tests incl. HTTP) ≈ 0.4 s on Apple Silicon; one analysis ≈ few ms; demo fixture ≈ 86 KB JSON (121 polygon cells). Python service only — not evidence of on-device mobile deployment.
+
+## Real-data consistency check: Chinchiná, Colombia (ERA5 via Open-Meteo)
+Commands: `uv run python scripts/fetch_data.py era5-chinchina` (≈2.2 MB raw, git-ignored, with .meta.json URL/access/licence) then `uv run python scripts/validate_chinchina.py` → `backend/data/validation/chinchina_era5_summary.json` (committed). Grid 4.99 N, −75.60 E, ERA5 grid elevation 1274 m; 2 × 35 064 hours, 0 missing values.
+
+| Period (local days) | mean Tmin | mean Tmax | diurnal amplitude | favourable-day fraction |
+| --- | --- | --- | --- | --- |
+| 1991–1994 (low incidence) | 14.28 °C | 23.52 °C | 9.24 °C | 0.952 |
+| 2008–2011 (epidemic) | 14.27 °C | 23.68 °C | 9.41 °C | 0.936 |
+
+Sensitivity of favourable fraction to the RH wetness proxy (low / epidemic): RH≥90 0.952/0.936; ≥95 0.932/0.921; ≥98 0.931/0.925; rain-only 0.942/0.934.
+
+**Findings (honest):** (1) ERA5 at 0.1–0.25° does not reproduce the station-observed reduced thermal amplitude reported by Avelino et al. 2015 (+0.1/−0.5 °C); here the difference is −0.01/+0.16 °C. (2) The favourable-day heuristic saturates (> 0.9) in this humid coffee zone under every wetness proxy, including rain-only (reanalysis drizzle), so it cannot discriminate epidemic from non-epidemic years — consistent with Avelino's conclusion that those epidemics were driven by management/economics plus subtle temperature shifts. Consequence: in humid highlands the class will usually read "high"; it says weather does not limit infection, not that an epidemic is likely. No parameters were tuned on these two periods (n = 2 would overfit). Next step: compare against local climatology (anomaly) and use canopy/station data where available.

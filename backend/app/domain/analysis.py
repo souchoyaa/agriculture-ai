@@ -134,6 +134,12 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
         "interpretation": "Infection-favourable weather suitability class; not a probability of infection or disease.",
         "parameters": {k: wm[k] for k in ("temperature_c", "min_wet_hours", "wet_rh_pct", "wet_precip_mm", "min_temp_factor", "classes")},
         "latent_period_days": wm["latent_period_days"],
+        "limitations": [
+            "Leaf wetness approximated from relative humidity/precipitation of gridded model data; canopy conditions differ.",
+            "Saturates in persistently humid zones (>0.9 favourable days in ERA5 for Chinchiná, Colombia, in both epidemic and non-epidemic years): 'high' means weather is not limiting, not that an epidemic is likely.",
+            "Ignores inoculum, host susceptibility, shade, fruit load and management.",
+        ],
+        "validation": "Consistency check only (docs/backend/model.md); not validated against incidence data.",
     }
     if series:
         used_sources |= {series.source_id, *wm["temperature_c"]["source_ids"], *wm["min_wet_hours"]["source_ids"]}
@@ -172,9 +178,10 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
                         "requires_user_authorization": True, "auto_contact": False}
 
     result["sources"] = knowledge.cite(used_sources)
+    result["guidance_scope"] = condition["guidance_scope"]
     result["provenance"]["components"] = [
         {"component": "observation", "origin": observation["data_mode"], "adapter": observation["provenance"]["adapter"]},
-        {"component": "evidence_model", "origin": "expert_heuristic", "calibrated": False},
+        {"component": "evidence_model", "origin": "agent_authored_heuristic", "expert_reviewed": False, "calibrated": False},
         {"component": "weather", "origin": series.origin if series else "unavailable", "provider": series.provider if series else None},
         {"component": "weather_risk", "origin": "literature_parameterised_heuristic", "calibrated": False},
         {"component": "scouting_map", "origin": "layout_heuristic", "calibrated": False},

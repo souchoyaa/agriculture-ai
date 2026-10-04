@@ -362,3 +362,35 @@ class Http(unittest.TestCase):
         self.assertEqual(conditions["supported_crops"], ["coffee"])
         self.assertEqual(conditions["locales"], ["en", "es", "fr"])
         self.assertTrue(self.client.get("/v1/sources").json()["sources"])
+
+
+class AcquiredData(unittest.TestCase):
+    """Checks on committed summaries of real downloaded data (raw files are git-ignored)."""
+    summary_path = Path(__file__).resolve().parents[1] / "data" / "validation" / "chinchina_era5_summary.json"
+
+    def test_chinchina_summary_matches_documented_findings(self):
+        summary = json.loads(self.summary_path.read_text())
+        for period in summary["periods"].values():
+            self.assertEqual(period["data"]["hours"], 35064)
+            self.assertEqual(period["missing_hour_values"], 0)
+            self.assertGreater(period["overall"]["favourable_day_fraction"], 0.9, "documented saturation")
+        self.assertIn("CC BY 4.0", next(iter(summary["periods"].values()))["data"]["license"])
+
+    def test_summary_reproducible_from_raw_when_present(self):
+        raw = Path(__file__).resolve().parents[1] / "data" / "raw"
+        if not list(raw.glob("open-meteo-archive_chinchina_*.json")):
+            self.skipTest("raw ERA5 not downloaded (scripts/fetch_data.py era5-chinchina)")
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("vc", Path(__file__).resolve().parents[1] / "scripts" / "validate_chinchina.py")
+        vc = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(vc)
+        hours, _ = vc.load(vc.PERIODS["epidemic_2008_2011"])
+        overall = vc.summarize(hours, CLR["weather_model"])["overall"]
+        expected = json.loads(self.summary_path.read_text())["periods"]["epidemic_2008_2011"]["overall"]
+        self.assertEqual(overall, expected)
+
+    def test_demo_weather_cache_is_real_and_labelled(self):
+        series, _ = weather.get_weather(-1.95, 30.06, NOW, allow_network=False)
+        self.assertEqual(len(series.hours), 504)
+        self.assertIn("not station observations", series.note)
+        self.assertEqual(series.license, "CC BY 4.0 (Open-Meteo.com)")
