@@ -63,7 +63,7 @@ async function journey(page: Page, prefix: string) {
   await page.getByRole('tab', { name: 'Settings' }).click();
   await page.getByRole('radio', { name: /^Server/ }).click();
   await page.getByRole('textbox', { name: 'Server address' }).fill('http://127.0.0.1:9');
-  await page.getByRole('button', { name: 'Test connection' }).click();
+  await page.getByRole('button', { name: 'Test connection', exact: true }).click();
   await page.getByText(/Could not connect/).waitFor();
   await shot(page, `${prefix}-07-settings-unreachable`);
   await page.getByRole('tab', { name: 'New check' }).click();

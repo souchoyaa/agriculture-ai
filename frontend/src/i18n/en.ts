@@ -244,6 +244,7 @@ export const en = {
   'result.fromReport': 'Based on your symptom report, not on a photo.',
   'result.env.fetched': 'Model weather data (not a weather station), fetched {age} h before analysis{cached}.',
   'result.env.cached': ' · saved copy',
+  'mode.http.unverified': 'Not checked yet. Open Settings and tap Test connection.',
   'common.loading': 'Loading…',
   'common.close': 'Close',
   'common.yes': 'Yes',
