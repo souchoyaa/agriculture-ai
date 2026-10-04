@@ -4,7 +4,7 @@ Authoritative shapes: shared/contracts/*.schema.json; examples: shared/fixtures/
 
 | Operation | Input | Output |
 | --- | --- | --- |
-| GET /v1/health | none | status, contract_version, data_mode |
+| GET /v1/health | none | status, contract_version, data_mode (service weather default: cached|live — NOT a label for analyses), data_mode_scope, capabilities {image_inference, weather, calibration, persistence} |
 | POST /v1/analyses | canonical observation JSON | canonical analysis JSON, 200 |
 
 POST is stateless and does not save or sync observations. Retries may recompute; IDs identify observations, not persisted records. No bootstrap authentication; local development only. Content-Type application/json. MockAPI implements the same analyze operation with fixed fixture output; both adapters echo observation_id and report unsupported non-coffee crops. Real inference and weather are unavailable. Even HTTP responses remain data_mode=demo until backend implements real/cached sourced analysis.

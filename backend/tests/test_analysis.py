@@ -535,3 +535,12 @@ class FrontendVocabulary(unittest.TestCase):
         extra = run(self.farmer("rust_like_leaf_marks", "leaf_yellowing", "insect_damage", "dark_berry_lesions"))
         self.assertEqual(base["condition"]["confidence"], extra["condition"]["confidence"])
         self.assertEqual(extra["data_mode"], "live")
+
+
+class HealthSemantics(unittest.TestCase):
+    def test_health_is_capability_not_analysis_label(self):
+        body = TestClient(app).get("/v1/health").json()
+        self.assertIn(body["data_mode"], ("cached", "live"))
+        self.assertIn("Liquid model unavailable", body["capabilities"]["image_inference"])
+        self.assertTrue(body["capabilities"]["calibration"].startswith("none"))
+        self.assertIn("each analysis", body["data_mode_scope"])

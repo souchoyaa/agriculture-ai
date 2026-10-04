@@ -22,3 +22,4 @@ Bootstrap `frontend/src/api.ts` derived types via `typeof analysis.json`; its li
 - Additional conditions (e.g. coffee berry disease) only after review of sources.
 - Elevation/shade covariates for within-farm suitability (needs DEM/farm boundary).
 - Evidence: repeated signal labels (case/space-normalized) count once at their highest confidence; duplicates listed with `duplicate: true`, contribution 0 (steering 6268b401/68209b2b).
+- **Health vs analysis data mode** (steering d95fc414): /v1/health.data_mode is the service weather default (cached/live) with explicit capabilities (no Liquid inference, no calibration, no persistence); each analysis carries its own data_mode (mirrors observation: demo fixture vs live farmer report) plus provenance.components for mixed origins.

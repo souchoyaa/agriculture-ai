@@ -33,8 +33,20 @@ app.add_middleware(CORSMiddleware, allow_origins=os.environ.get("AGRI_CORS_ORIGI
 
 @app.get("/v1/health")
 def health():
-    return {"status": "ok", "contract_version": CONTRACT_VERSION, "data_mode": "demo",
-            "weather_live": os.environ.get("AGRI_WEATHER_LIVE") == "1", "fixed_now": os.environ.get("AGRI_FIXED_NOW")}
+    """Service capability, not a label for analyses: every analysis carries its own data_mode and provenance.components."""
+    live = os.environ.get("AGRI_WEATHER_LIVE") == "1"
+    return {
+        "status": "ok", "contract_version": CONTRACT_VERSION,
+        "data_mode": "live" if live else "cached",
+        "data_mode_scope": "service weather default only; use each analysis' data_mode and provenance.components",
+        "capabilities": {
+            "image_inference": "none: mock VLM adapter accepts canonical observations; Liquid model unavailable",
+            "weather": "live Open-Meteo with cache fallback" if live else "offline cache (model data, see environment.age_hours)",
+            "calibration": "none: evidence scores, weather classes and map priorities are uncalibrated heuristics",
+            "persistence": "none: stateless, observations are not stored",
+        },
+        "weather_live": live, "fixed_now": os.environ.get("AGRI_FIXED_NOW"),
+    }
 
 
 @app.get("/v1/conditions")
