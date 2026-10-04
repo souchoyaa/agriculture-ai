@@ -223,6 +223,11 @@
     "regions_of_guidance_sources": [
       "Hawaiʻi, USA",
       "Rwanda"
+    ],
+    "local_check_ids": [
+      "pesticide_registration_labels",
+      "official_reporting_obligations",
+      "local_resistant_cultivars"
     ]
   },
   "differentials": {

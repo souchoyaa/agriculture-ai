@@ -5441,14 +5441,29 @@
  "guidance_scope": {
   "applicability": "Biology (free water, temperature range, latency, dispersal, lower-canopy onset) is pathogen-level and applies across regions. Practical guidance is drawn mainly from Hawaiʻi extension publications; only generic measures (inspection, sanitation, movement limits, re-scouting, consulting extension, resistant cultivars) are retained. Hawaiʻi-specific regulatory reporting, product lists and contacts are deliberately omitted. Rwanda-specific guidance (RAB/Plantwise 2012) and a Rwandan farm survey (Bigirimana et al. 2012) were added; product names and doses in the RAB factsheet are intentionally not reproduced.",
   "local_check_required": [
-   "pesticide registration and labels",
-   "official reporting obligations",
-   "locally recommended resistant cultivars"
+   "Pesticide registration and labels",
+   "Official reporting obligations",
+   "Locally recommended resistant varieties"
   ],
   "regions_of_guidance_sources": [
    "Hawaiʻi, USA",
    "Rwanda"
-  ]
+  ],
+  "local_checks": [
+   {
+    "id": "pesticide_registration_labels",
+    "text": "Pesticide registration and labels"
+   },
+   {
+    "id": "official_reporting_obligations",
+    "text": "Official reporting obligations"
+   },
+   {
+    "id": "local_resistant_cultivars",
+    "text": "Locally recommended resistant varieties"
+   }
+  ],
+  "applicability_locale": "en"
  },
  "regional_context": [
   {

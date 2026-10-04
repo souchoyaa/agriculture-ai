@@ -268,7 +268,11 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
     result["review"] = {"suggested": bool(reasons), "reasons": [{"id": r, "text": t(f"review.reason.{r}")} for r in reasons],
                         "requires_user_authorization": True, "auto_contact": False}
 
-    result["guidance_scope"] = condition["guidance_scope"]
+    scope = {k: v for k, v in condition["guidance_scope"].items() if k != "local_check_ids"}
+    scope["local_checks"] = [{"id": cid, "text": t(f"local_check.{cid}")} for cid in condition["guidance_scope"]["local_check_ids"]]
+    scope["local_check_required"] = [c["text"] for c in scope["local_checks"]]  # localized; ids in local_checks
+    scope["applicability_locale"] = "en"  # technical note, not translated
+    result["guidance_scope"] = scope
     result["regional_context"] = [
         {"id": note["id"], "region": note["region"], "text": t(f"regional.{note['id']}"), "source_ids": note["source_ids"],
          "regional_scope": regional_scope(note["region_id"], note["source_year"])}

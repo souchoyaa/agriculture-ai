@@ -609,3 +609,12 @@ class RegionalScoping(unittest.TestCase):
         context = run(observation())["regional_context"][0]
         self.assertEqual(context["regional_scope"]["match"], "approximate_bounding_box")
         self.assertIn("2012", context["text"])
+
+
+class GuidanceScopeLocalization(unittest.TestCase):
+    def test_local_checks_localized_with_stable_ids(self):
+        en, fr = run(observation())["guidance_scope"], run(observation(locale="fr"))["guidance_scope"]
+        self.assertEqual([c["id"] for c in en["local_checks"]], [c["id"] for c in fr["local_checks"]])
+        self.assertNotEqual(en["local_check_required"], fr["local_check_required"])
+        self.assertEqual(fr["local_check_required"], [c["text"] for c in fr["local_checks"]])
+        self.assertEqual(fr["applicability_locale"], "en")
