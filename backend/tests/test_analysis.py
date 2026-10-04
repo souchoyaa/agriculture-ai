@@ -544,3 +544,10 @@ class HealthSemantics(unittest.TestCase):
         self.assertIn("Liquid model unavailable", body["capabilities"]["image_inference"])
         self.assertTrue(body["capabilities"]["calibration"].startswith("none"))
         self.assertIn("each analysis", body["data_mode_scope"])
+
+
+class Transport(unittest.TestCase):
+    def test_gzip_when_accepted(self):
+        response = TestClient(app).post("/v1/analyses", json=observation(), headers={"Accept-Encoding": "gzip"})
+        self.assertEqual(response.headers.get("content-encoding"), "gzip")
+        validate("analysis", response.json())
