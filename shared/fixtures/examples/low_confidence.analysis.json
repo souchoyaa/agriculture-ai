@@ -1,0 +1,685 @@
+{
+ "contract_version": "0.1.0",
+ "id": "analysis-75ee25b6b26c2858",
+ "observation_id": "demo-coffee-001-weak",
+ "data_mode": "demo",
+ "generated_at": "2026-10-04T00:00:00Z",
+ "environment": {
+  "status": "fresh",
+  "as_of": "2026-10-03T23:46:00Z",
+  "temperature_c": 24.0,
+  "relative_humidity_pct": 53.4,
+  "rainfall_mm": 0.0,
+  "period_hours": 24,
+  "period_end": "2026-10-03T08:00:00Z",
+  "aggregation": "temperature/humidity mean and rainfall total over the 24 h before observed_at",
+  "covered_hours": 24,
+  "notes": [],
+  "origin": "cached",
+  "provider": "open-meteo",
+  "source_id": "open_meteo",
+  "age_hours": 0.2,
+  "grid_distance_km": 0.0,
+  "data_kind": "model output (not station observations)"
+ },
+ "scouting": [
+  {
+   "id": "photograph_both_leaf_surfaces",
+   "text": "Photograph the whole plant and both the upper and lower surface of suspect leaves.",
+   "source_ids": [
+    "hdoa_npa_20_03_2021"
+   ]
+  }
+ ],
+ "recommendations": [
+  {
+   "id": "retake_photo",
+   "text": "Take a clearer photo of the leaf underside in daylight and analyse again.",
+   "source_ids": []
+  },
+  {
+   "id": "seek_local_review",
+   "text": "Ask a local agricultural officer to review the photos before acting.",
+   "source_ids": []
+  }
+ ],
+ "sources": [
+  {
+   "id": "de_jong_1987_njpp",
+   "title": "Temperature requirements for germination, germ tube growth and appressorium formation of urediospores of Hemileia vastatrix",
+   "authors": "de Jong, E. J.; Eskes, A. B.; Hoogstraten, J. G. J.; Zadoks, J. C.",
+   "publisher": "Netherlands Journal of Plant Pathology 93:61-71",
+   "published": "1987-03",
+   "doi": "10.1007/BF01998091",
+   "url": "https://doi.org/10.1007/BF01998091",
+   "accessed_at": "2026-10-03T23:44:00Z",
+   "license": "Publisher terms; metadata verified via Crossref, full text not accessed",
+   "kind": "peer_reviewed",
+   "used_for": [
+    "germination_temperature_primary_reference"
+   ],
+   "region": "Laboratory"
+  },
+  {
+   "id": "hdoa_npa_20_03_2021",
+   "title": "New Pest Advisory No. 20-03: Coffee Leaf Rust, Hemileia vastatrix (revised January 2021)",
+   "authors": "Ocenar, J.; Kawabata, A.",
+   "publisher": "Hawai'i Department of Agriculture, Plant Pest Control Branch",
+   "published": "2021-01",
+   "url": "https://dab.hawaii.gov/pi/files/2021/01/NPA-20-03-Coffee-leaf-rust1-21.pdf",
+   "accessed_at": "2026-10-03T23:44:00Z",
+   "license": "Government extension publication; cite, do not redistribute modified copies",
+   "kind": "extension",
+   "used_for": [
+    "symptoms",
+    "biology_free_water",
+    "infection_24_48h_wetness",
+    "lesions_4_6_weeks",
+    "dispersal_wind_rain_contact",
+    "sanitation",
+    "do_not_move_material",
+    "photograph_both_surfaces"
+   ],
+   "region": "Hawaiʻi, USA"
+  },
+  {
+   "id": "hersbach_2020_era5",
+   "title": "The ERA5 global reanalysis",
+   "authors": "Hersbach, H.; Bell, B.; Berrisford, P.; et al.",
+   "publisher": "Quarterly Journal of the Royal Meteorological Society 146:1999-2049",
+   "published": "2020-06-15",
+   "doi": "10.1002/qj.3803",
+   "url": "https://doi.org/10.1002/qj.3803",
+   "accessed_at": "2026-10-04T00:10:00Z",
+   "license": "CC BY 4.0",
+   "kind": "peer_reviewed",
+   "region": "Global",
+   "used_for": [
+    "reanalysis_dataset_description"
+   ]
+  },
+  {
+   "id": "marino_2026_frontiers",
+   "title": "Dynamics of coffee leaf rust (Hemileia vastatrix) in Puerto Rico: associations with season, cultivar, altitude, and hyperparasites",
+   "authors": "Mariño, Y. A.; Buitrago, D. P.; Serrato-Díaz, L. M.; Almonte-Javier, E.; Negrón Moreno, S. E.; Bayman, P.",
+   "publisher": "Frontiers in Plant Science",
+   "published": "2026",
+   "doi": "10.3389/fpls.2026.1768440",
+   "url": "https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2026.1768440/full",
+   "accessed_at": "2026-10-03T23:48:00Z",
+   "license": "Open access (Frontiers, CC BY)",
+   "kind": "peer_reviewed_secondary",
+   "used_for": [
+    "germination_temperature_bounds_12_5_32_5",
+    "germination_optimum_21_23",
+    "wetness_6_24h",
+    "latent_shortest_18_28",
+    "dispersal_wind_splash"
+   ],
+   "note": "Review statements citing De Jong et al. 1987 (doi:10.1007/BF01998091) and Kushalappa et al. 1983; primary papers not read directly.",
+   "region": "Puerto Rico (review of global literature)"
+  },
+  {
+   "id": "open_meteo",
+   "title": "Open-Meteo Weather Forecast API (hourly temperature_2m, relative_humidity_2m, precipitation, wind)",
+   "authors": "Open-Meteo.com",
+   "publisher": "Open-Meteo",
+   "published": "2026",
+   "url": "https://open-meteo.com/en/docs",
+   "accessed_at": "2026-10-03T23:46:00Z",
+   "license": "CC BY 4.0",
+   "kind": "data",
+   "used_for": [
+    "weather_history_forecast"
+   ],
+   "region": "Global"
+  },
+  {
+   "id": "open_meteo_archive_era5",
+   "title": "Open-Meteo Historical Weather API (ERA5 / ERA5-Land reanalysis), hourly temperature_2m, relative_humidity_2m, precipitation",
+   "authors": "Open-Meteo.com; Copernicus Climate Change Service",
+   "publisher": "Open-Meteo",
+   "published": "2026",
+   "url": "https://open-meteo.com/en/docs/historical-weather-api",
+   "accessed_at": "2026-10-04T00:08:00Z",
+   "license": "CC BY 4.0",
+   "kind": "data",
+   "region": "Global",
+   "used_for": [
+    "chinchina_consistency_check"
+   ]
+  },
+  {
+   "id": "talhinhas_2017_mpp",
+   "title": "The coffee leaf rust pathogen Hemileia vastatrix: one and a half centuries around the tropics",
+   "authors": "Talhinhas, P.; Batista, D.; Diniz, I.; Vieira, A.; Silva, D. N.; Loureiro, A.; et al.",
+   "publisher": "Molecular Plant Pathology 18(8):1039-1051",
+   "published": "2017",
+   "doi": "10.1111/mpp.12512",
+   "url": "https://doi.org/10.1111/mpp.12512",
+   "accessed_at": "2026-10-03T23:44:00Z",
+   "license": "Publisher terms; cite only",
+   "kind": "peer_reviewed",
+   "used_for": [
+    "urediniospore_inoculum",
+    "chlorotic_spots_then_orange_uredinia",
+    "resistant_cultivars"
+   ],
+   "region": "Global"
+  }
+ ],
+ "evidence": [
+  {
+   "label": "yellow_spots_upper_leaf",
+   "confidence": 0.3,
+   "recognized": true,
+   "weight": 0.4,
+   "specific": false,
+   "contribution": 0.12,
+   "source_ids": [
+    "hdoa_npa_20_03_2021",
+    "talhinhas_2017_mpp"
+   ]
+  },
+  {
+   "label": "unknown_texture",
+   "confidence": 0.9,
+   "recognized": false
+  }
+ ],
+ "provenance": {
+  "adapter": "agri-backend",
+  "source": "rule-based analysis over adapter observation",
+  "observation_adapter": "mock-vlm",
+  "observation_source": "synthetic fixture; no model inference",
+  "knowledge_version": "clr-2026-10-04",
+  "components": [
+   {
+    "component": "observation",
+    "origin": "demo",
+    "adapter": "mock-vlm"
+   },
+   {
+    "component": "evidence_model",
+    "origin": "agent_authored_heuristic",
+    "expert_reviewed": false,
+    "calibrated": false
+   },
+   {
+    "component": "weather",
+    "origin": "cached",
+    "provider": "open-meteo"
+   },
+   {
+    "component": "weather_risk",
+    "origin": "literature_parameterised_heuristic",
+    "calibrated": false
+   },
+   {
+    "component": "scouting_map",
+    "origin": "layout_heuristic",
+    "calibrated": false
+   },
+   {
+    "component": "guidance",
+    "origin": "curated_extension_sources",
+    "expert_reviewed": false
+   }
+  ]
+ },
+ "offline": {
+  "cached": true,
+  "stale": false,
+  "sync_status": "local_only"
+ },
+ "localization": {
+  "requested": "en",
+  "used": "en",
+  "fallback": false,
+  "catalog_status": "source_language",
+  "reviewed_by_native_speaker": false
+ },
+ "review": {
+  "suggested": false,
+  "reasons": [],
+  "requires_user_authorization": true,
+  "auto_contact": false
+ },
+ "status": "needs_review",
+ "condition": {
+  "id": "undetermined",
+  "label": "Condition not determined",
+  "confidence": 0.12,
+  "confidence_kind": "uncalibrated evidence score from image signals; not a probability of infection",
+  "uncertainty": "Signals are too weak or unrecognised to suggest a condition (evidence score 0.12). No diagnosis is offered.",
+  "abstained": true,
+  "differentials": [],
+  "support_blocked_by_differential": false,
+  "severity": null,
+  "candidate_id": "coffee_leaf_rust",
+  "pathogen": "Hemileia vastatrix"
+ },
+ "weather_risk": {
+  "status": "available",
+  "class": "moderate",
+  "favourable_day_fraction": 0.381,
+  "favourable_days": 8,
+  "assessed_days": 21,
+  "expected_days": 21,
+  "days": [
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 6,
+    "spell_temperature_factor": 0.99,
+    "favourable": true,
+    "date": "2026-09-19",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 4,
+    "spell_temperature_factor": 0.57,
+    "favourable": false,
+    "date": "2026-09-20",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 3,
+    "spell_temperature_factor": 0.77,
+    "favourable": false,
+    "date": "2026-09-21",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 5,
+    "spell_temperature_factor": 0.61,
+    "favourable": false,
+    "date": "2026-09-22",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 7,
+    "spell_temperature_factor": 0.75,
+    "favourable": true,
+    "date": "2026-09-23",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 5,
+    "spell_temperature_factor": 0.51,
+    "favourable": false,
+    "date": "2026-09-24",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 7,
+    "spell_temperature_factor": 0.76,
+    "favourable": true,
+    "date": "2026-09-25",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 5,
+    "spell_temperature_factor": 0.79,
+    "favourable": false,
+    "date": "2026-09-26",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 5,
+    "spell_temperature_factor": 0.64,
+    "favourable": false,
+    "date": "2026-09-27",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 2,
+    "spell_temperature_factor": 0.8,
+    "favourable": false,
+    "date": "2026-09-28",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 6,
+    "spell_temperature_factor": 0.68,
+    "favourable": true,
+    "date": "2026-09-29",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 3,
+    "spell_temperature_factor": 0.5,
+    "favourable": false,
+    "date": "2026-09-30",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 0,
+    "spell_temperature_factor": 0.0,
+    "favourable": false,
+    "date": "2026-10-01",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 0,
+    "spell_temperature_factor": 0.0,
+    "favourable": false,
+    "date": "2026-10-02",
+    "period": "history",
+    "data_kind": "model_past"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 1,
+    "spell_temperature_factor": 0.56,
+    "favourable": false,
+    "date": "2026-10-03",
+    "period": "reference_and_after",
+    "data_kind": "includes_forecast"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 9,
+    "spell_temperature_factor": 0.62,
+    "favourable": true,
+    "date": "2026-10-04",
+    "period": "reference_and_after",
+    "data_kind": "includes_forecast"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 3,
+    "spell_temperature_factor": 0.49,
+    "favourable": false,
+    "date": "2026-10-05",
+    "period": "reference_and_after",
+    "data_kind": "includes_forecast"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 4,
+    "spell_temperature_factor": 0.41,
+    "favourable": false,
+    "date": "2026-10-06",
+    "period": "reference_and_after",
+    "data_kind": "includes_forecast"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 16,
+    "spell_temperature_factor": 0.82,
+    "favourable": true,
+    "date": "2026-10-07",
+    "period": "reference_and_after",
+    "data_kind": "includes_forecast"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 16,
+    "spell_temperature_factor": 0.74,
+    "favourable": true,
+    "date": "2026-10-08",
+    "period": "reference_and_after",
+    "data_kind": "includes_forecast"
+   },
+   {
+    "hours": 24,
+    "complete": true,
+    "longest_wet_spell_h": 14,
+    "spell_temperature_factor": 0.85,
+    "favourable": true,
+    "date": "2026-10-09",
+    "period": "reference_and_after",
+    "data_kind": "includes_forecast"
+   }
+  ],
+  "condition_id": "coffee_leaf_rust",
+  "summary": "Recent or forecast weather was sometimes favourable for rust infection.",
+  "reference_time": "2026-10-03T08:00:00Z",
+  "history_days": 14,
+  "forecast_days": 7,
+  "method": "Hourly infection-favourability heuristic: wet hour (RH >= wet_rh_pct or precipitation >= wet_precip_mm) weighted by a trapezoidal temperature factor; a day is favourable when it contains a wet spell >= min_wet_hours with mean temperature factor >= min_temp_factor.",
+  "calibrated": false,
+  "interpretation": "Infection-favourable weather suitability class; not a probability of infection or disease.",
+  "parameters": {
+   "temperature_c": {
+    "zero_below": 12.5,
+    "optimum_low": 21.0,
+    "optimum_high": 23.0,
+    "zero_above": 32.5,
+    "source_ids": [
+     "marino_2026_frontiers",
+     "de_jong_1987_njpp"
+    ],
+    "note": "Germination bounds/optimum from review citing De Jong et al. 1987; linear ramps between bounds are an assumption."
+   },
+   "min_wet_hours": {
+    "value": 6,
+    "source_ids": [
+     "marino_2026_frontiers"
+    ],
+    "note": "Lower end of the 6-24 h wetness reported for germination."
+   },
+   "wet_rh_pct": {
+    "value": 90,
+    "source_ids": [],
+    "note": "Assumption: RH >= 90% used as a leaf-wetness proxy; no leaf-wetness sensor data. Uncalibrated."
+   },
+   "wet_precip_mm": {
+    "value": 0.1,
+    "source_ids": [
+     "hdoa_npa_20_03_2021"
+    ],
+    "note": "Free water from rain is required for germination; threshold is an assumption."
+   },
+   "min_temp_factor": {
+    "value": 0.5,
+    "source_ids": [],
+    "note": "Assumption."
+   },
+   "classes": {
+    "low_below": 0.2,
+    "high_at_or_above": 0.5,
+    "note": "Class thresholds on fraction of favourable days are uncalibrated assumptions."
+   }
+  },
+  "latent_period_days": {
+   "min": 28,
+   "max": 42,
+   "source_ids": [
+    "hdoa_npa_20_03_2021"
+   ],
+   "note": "Characteristic lesions appear 4-6 weeks after infection."
+  },
+  "climatology": {
+   "status": "available",
+   "possible_source_bias": "operational_more_favourable",
+   "relation": "above_usual",
+   "current_fraction": 0.381,
+   "baseline_median": 0.166,
+   "baseline_p25": 0.107,
+   "baseline_p75": 0.369,
+   "baseline_min": 0.048,
+   "baseline_max": 0.476,
+   "years_at_or_below_current": 9,
+   "baseline_years": 10,
+   "per_year": {
+    "2015": 0.143,
+    "2016": 0.381,
+    "2017": 0.19,
+    "2018": 0.048,
+    "2019": 0.381,
+    "2020": 0.143,
+    "2021": 0.095,
+    "2022": 0.048,
+    "2023": 0.476,
+    "2024": 0.333
+   },
+   "baseline_source": {
+    "source_ids": [
+     "open_meteo_archive_era5",
+     "hersbach_2020_era5"
+    ],
+    "url": "https://archive-api.open-meteo.com/v1/archive?latitude=-1.95&longitude=30.06&start_date=2015-01-01&end_date=2024-12-31&models=era5&hourly=temperature_2m%2Crelative_humidity_2m%2Cprecipitation&timezone=UTC",
+    "accessed_at": "2026-10-04T00:14:06.928314+00:00",
+    "license": "CC BY 4.0 (Open-Meteo.com; ERA5, Copernicus)",
+    "years": [
+     "2015",
+     "2016",
+     "2017",
+     "2018",
+     "2019",
+     "2020",
+     "2021",
+     "2022",
+     "2023",
+     "2024"
+    ],
+    "missing_temperature_hours": 0,
+    "incomplete_days": 0
+   },
+   "cross_source_check": {
+    "days": 9,
+    "agreement": 7,
+    "era5_favourable_days": 1,
+    "operational_favourable_days": 3,
+    "rows": [
+     {
+      "date": "2026-09-19",
+      "era5_favourable": false,
+      "operational_favourable": true,
+      "era5_mean_rh": 66,
+      "operational_mean_rh": 67.0
+     },
+     {
+      "date": "2026-09-20",
+      "era5_favourable": false,
+      "operational_favourable": false,
+      "era5_mean_rh": 60.5,
+      "operational_mean_rh": 58.9
+     },
+     {
+      "date": "2026-09-21",
+      "era5_favourable": false,
+      "operational_favourable": false,
+      "era5_mean_rh": 60.1,
+      "operational_mean_rh": 58.8
+     },
+     {
+      "date": "2026-09-22",
+      "era5_favourable": false,
+      "operational_favourable": false,
+      "era5_mean_rh": 70.6,
+      "operational_mean_rh": 68.5
+     },
+     {
+      "date": "2026-09-23",
+      "era5_favourable": true,
+      "operational_favourable": true,
+      "era5_mean_rh": 81.5,
+      "operational_mean_rh": 69.4
+     },
+     {
+      "date": "2026-09-24",
+      "era5_favourable": false,
+      "operational_favourable": false,
+      "era5_mean_rh": 70.7,
+      "operational_mean_rh": 71.1
+     },
+     {
+      "date": "2026-09-25",
+      "era5_favourable": false,
+      "operational_favourable": true,
+      "era5_mean_rh": 66.2,
+      "operational_mean_rh": 75.0
+     },
+     {
+      "date": "2026-09-26",
+      "era5_favourable": false,
+      "operational_favourable": false,
+      "era5_mean_rh": 74.5,
+      "operational_mean_rh": 72.3
+     },
+     {
+      "date": "2026-09-27",
+      "era5_favourable": false,
+      "operational_favourable": false,
+      "era5_mean_rh": 68.8,
+      "operational_mean_rh": 66.9
+     }
+    ],
+    "note": "Small sample; ERA5 lags ~5 days so only early overlap days exist. Not a bias correction."
+   },
+   "caveat": "Baseline is ERA5 reanalysis; the current window is operational model/forecast data. Their wetness differs (see cross_source_check); treat the relation as indicative only.",
+   "summary": "This is more often favourable than usual for these dates here (2015-2024 reanalysis)."
+  },
+  "limitations": [
+   "Leaf wetness approximated from relative humidity/precipitation of gridded model data; canopy conditions differ.",
+   "Saturates in persistently humid zones (>0.9 favourable days in ERA5 for Chinchiná, Colombia, in both epidemic and non-epidemic years): 'high' means weather is not limiting, not that an epidemic is likely.",
+   "Ignores inoculum, host susceptibility, shade, fruit load and management."
+  ],
+  "validation": "Consistency check only (docs/backend/model.md); not validated against incidence data."
+ },
+ "map": {
+  "status": "unavailable",
+  "type": "FeatureCollection",
+  "features": [],
+  "limitations": "No suspected condition; scouting priority not computed."
+ },
+ "guidance_scope": {
+  "applicability": "Biology (free water, temperature range, latency, dispersal, lower-canopy onset) is pathogen-level and applies across regions. Practical guidance is drawn mainly from Hawaiʻi extension publications; only generic measures (inspection, sanitation, movement limits, re-scouting, consulting extension, resistant cultivars) are retained. Hawaiʻi-specific regulatory reporting, product lists and contacts are deliberately omitted.",
+  "local_check_required": [
+   "pesticide registration and labels",
+   "official reporting obligations",
+   "locally recommended resistant cultivars"
+  ],
+  "regions_of_guidance_sources": [
+   "Hawaiʻi, USA"
+  ]
+ }
+}

@@ -1,7 +1,7 @@
 {
  "contract_version": "0.1.0",
- "id": "analysis-dbd415beedc858b4",
- "observation_id": "demo-coffee-001",
+ "id": "analysis-583a7a5f3ea9899e",
+ "observation_id": "demo-coffee-001-rw",
  "data_mode": "demo",
  "generated_at": "2026-10-04T00:00:00Z",
  "environment": {
@@ -398,9 +398,9 @@
   "sync_status": "local_only"
  },
  "localization": {
-  "requested": "en",
+  "requested": "rw",
   "used": "en",
-  "fallback": false,
+  "fallback": true,
   "catalog_status": "source_language",
   "reviewed_by_native_speaker": false
  },
@@ -5208,7 +5208,7 @@
      "kind": "reported_observation",
      "present": true,
      "label": "Reported plant (this observation)",
-     "observation_id": "demo-coffee-001",
+     "observation_id": "demo-coffee-001-rw",
      "current": true
     }
    },

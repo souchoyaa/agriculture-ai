@@ -8,6 +8,7 @@ import { useStore } from '../state/store';
 import { Body, Button, Card, Choice, H1, H2, Row, StrengthMeter, Tag } from '../ui/components';
 import { color, radius, space, type } from '../ui/theme';
 import { RiskMap } from './RiskMap';
+import { EvidenceList, ReviewCard, ScopeCard, SourcesList, WeatherCard } from './ResultSections';
 
 const STATUS_GLYPH: Record<Analysis['status'], { glyph: string; fg: string; bg: string }> = {
   needs_review: { glyph: '▲', fg: color.clay, bg: color.claySoft },
@@ -59,15 +60,19 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
   const locale = state.settings.locale;
   const status = STATUS_GLYPH[analysis.status] ?? STATUS_GLYPH.unavailable;
   const strength = signalStrength(analysis.condition.confidence);
-  const field = state.fields.find(f => f.id === record.fieldId);
   const sourceById = new Map(analysis.sources.map(s => [s.id, s]));
   const due = followUpDue(record, new Date());
   const isDemo = analysis.data_mode === 'demo' || via === 'mock';
+  // Ranked, located scouting points are listed with the map when it is available.
+  const doNext = analysis.map.status === 'available' ? analysis.scouting.filter(s => typeof s.rank !== 'number') : analysis.scouting;
 
   return (
     <View style={{ gap: space(4) }}>
       <View accessibilityRole="alert" style={{ backgroundColor: isDemo ? color.turmeric : color.skySoft, borderRadius: radius.sm, padding: space(3), borderWidth: 2, borderColor: isDemo ? '#8A6A00' : color.sky }}>
         <Text style={[type.label, { color: color.ink, fontSize: 14 }]}>{isDemo ? t('result.demoStamp') : t('result.liveStamp')}</Text>
+        {via === 'mock' ? <Text style={[type.small, { color: color.ink, marginTop: 2 }]}>{t('result.mockExample')}</Text>
+          : !isDemo ? <Text style={[type.small, { color: color.ink, marginTop: 2 }]}>{t('result.estimateUncalibrated')}</Text> : null}
+        {record.observation.provenance.adapter === 'farmer-report' ? <Text style={[type.small, { color: color.ink, marginTop: 2 }]}>{t('result.fromReport')}</Text> : null}
       </View>
 
       <Card style={{ borderColor: status.fg, borderWidth: 2.5 }}>
@@ -78,8 +83,23 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
           </View>
         </Row>
         <Text accessibilityRole="header" style={type.display}>{analysis.condition.label}</Text>
+        {analysis.condition.pathogen && !analysis.condition.abstained ? <Text style={[type.small, { fontStyle: 'italic' }]}>{analysis.condition.pathogen}</Text> : null}
+        {analysis.condition.abstained && analysis.status !== 'unsupported' ? <Body style={{ fontWeight: '700' }}>{t('result.abstained')}</Body> : null}
         <Body>{analysis.condition.uncertainty}</Body>
-        {locale !== 'en' ? <Body soft>ⓘ {t('lang.contentEnglish')}</Body> : null}
+        {analysis.condition.differentials?.length ? (
+          <View style={{ gap: space(1), backgroundColor: color.turmericSoft, borderRadius: radius.sm, padding: space(3) }}>
+            <Text style={type.label}>{t('result.differentials').toUpperCase()}</Text>
+            {analysis.condition.differentials.map(d => <Body key={d.condition_id}>• {d.label}</Body>)}
+            {analysis.condition.support_blocked_by_differential ? <Body soft>{t('result.blocked')}</Body> : null}
+          </View>
+        ) : null}
+        {analysis.condition.severity && typeof analysis.condition.severity.affected_leaf_area_pct === 'number' ? (
+          <View style={{ gap: 2 }}>
+            <Body>{t('result.severity', { pct: analysis.condition.severity.affected_leaf_area_pct, level: analysis.condition.severity.level ?? '—' })}</Body>
+            {analysis.condition.severity.scope ? <Body soft>{analysis.condition.severity.scope}</Body> : null}
+          </View>
+        ) : null}
+        <LocalizationNote analysis={analysis} locale={locale} />
         {analysis.status === 'unsupported' ? <Body>{t('result.unsupported')}</Body> : null}
       </Card>
 
@@ -88,12 +108,13 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
           <H2 glyph="◔">{t('result.howSure')}</H2>
           <StrengthMeter level={strength} label={t(`result.strength.${strength}`)} />
           <Body soft>{t('result.notProbability', { score: analysis.condition.confidence.toFixed(2) })}</Body>
+          <EvidenceList evidence={analysis.evidence} />
         </Card>
       ) : null}
 
       <Card>
         <H2 glyph="☑">{t('result.doNext')}</H2>
-        {analysis.scouting.length ? analysis.scouting.map(s => (
+        {doNext.length ? doNext.map(s => (
           <Choice key={s.id} label={s.text} selected={record.completedScouting.includes(s.id)} onPress={() => toggleScouting(record.id, s.id)} />
         )) : <Body soft>{t('result.noScouting')}</Body>}
         {analysis.status === 'needs_review' || analysis.status === 'unavailable' ? <Body>{t('result.moreInfo')}</Body> : null}
@@ -115,10 +136,13 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
             </View>
           );
         }) : <Body soft>{t('result.noGuidance')}</Body>}
+        <ScopeCard scope={analysis.guidance_scope} />
+        <SourcesList sources={analysis.sources} />
       </Card>
 
-      <EnvironmentCard env={analysis.environment} />
-      <RiskMap map={analysis.map} fieldLocation={field?.location} />
+      <ReviewCard analysis={analysis} record={record} />
+      <RiskMap map={analysis.map} scouting={analysis.scouting} />
+      <WeatherCard env={analysis.environment} risk={analysis.weather_risk} />
 
       <Card>
         <H2 glyph="↻">{t('result.followUp')}</H2>
@@ -134,27 +158,15 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
   );
 }
 
-function EnvironmentCard({ env }: { env: Analysis['environment'] }) {
-  const { t, state } = useStore();
-  const v = (n: number | null, unit: string) => n === null ? t('result.env.missing') : `${n} ${unit}`;
-  return (
-    <Card tone={env.status === 'stale' ? 'warn' : undefined}>
-      <H2 glyph="☁">{t('result.env')}</H2>
-      {env.status === 'unavailable' ? <Body>{t('result.env.unavailable')}</Body> : (
-        <>
-          <Body>{env.status === 'stale' ? `⚠ ${t('result.env.stale', { date: formatDateTime(env.as_of, state.settings.locale) })}` : t('result.env.fresh', { date: formatDateTime(env.as_of, state.settings.locale) })}</Body>
-          <Row wrap style={{ gap: space(3) }}>
-            {[[t('result.env.temp'), v(env.temperature_c, '°C')], [t('result.env.humidity'), v(env.relative_humidity_pct, '%')], [t('result.env.rain'), v(env.rainfall_mm, 'mm')]].map(([k, val]) => (
-              <View key={k} style={{ minWidth: 120, flexGrow: 1, padding: space(3), borderRadius: radius.sm, backgroundColor: color.paper }}>
-                <Text style={type.label}>{k.toUpperCase()}</Text>
-                <Text style={type.title}>{val}</Text>
-              </View>
-            ))}
-          </Row>
-        </>
-      )}
-    </Card>
-  );
+function LocalizationNote({ analysis, locale }: { analysis: Analysis; locale: string }) {
+  const { t } = useStore();
+  const loc = analysis.localization;
+  if (loc) {
+    if (loc.fallback || (locale !== 'en' && loc.used === 'en')) return <Body soft>ⓘ {t('result.loc.fallback')}</Body>;
+    if (loc.used && loc.used !== 'en' && loc.reviewed_by_native_speaker === false) return <Body soft>ⓘ {t('result.loc.unreviewed')}</Body>;
+    return null;
+  }
+  return locale !== 'en' ? <Body soft>ⓘ {t('lang.contentEnglish')}</Body> : null;
 }
 
 function ReportView({ record }: { record: ObservationRecord }) {

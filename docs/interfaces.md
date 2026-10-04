@@ -4,7 +4,7 @@ Authoritative shapes: shared/contracts/*.schema.json; examples: shared/fixtures/
 
 | Operation | Input | Output |
 | --- | --- | --- |
-| GET /v1/health | none | status, contract_version, data_mode |
+| GET /v1/health | none | status, contract_version, data_mode (service weather default: cached|live — NOT a label for analyses), data_mode_scope, capabilities {image_inference, weather, calibration, persistence} |
 | POST /v1/analyses | canonical observation JSON | canonical analysis JSON, 200 |
 
 POST is stateless and does not save or sync observations. Retries may recompute; IDs identify observations, not persisted records. No bootstrap authentication; local development only. Content-Type application/json. MockAPI implements the same analyze operation with fixed fixture output; both adapters echo observation_id and report unsupported non-coffee crops. Real inference and weather are unavailable. Even HTTP responses remain data_mode=demo until backend implements real/cached sourced analysis.
@@ -16,3 +16,11 @@ UTC/offset ISO 8601 timestamps; observed_at is capture time, generated_at is ana
 Data mode demo/live/cached describes origin; provenance names adapter and source. Environment freshness is fresh/stale/unavailable independently of origin. offline.cached/stale describe response cache state; sync_status local_only/pending/synced/failed describes observation synchronization, not inference quality. Demo is cached/stale/local_only. HTTP connectivity does not imply fresh data or persistence. Mock response clones fixtures; HTTP returns server analysis. No persistent cache/queue exists yet.
 
 Analysis status supported/needs_review/unsupported/unavailable; uncertainty is explicit. Missing service output uses unavailable rather than zero risk. condition confidence is in [0,1] but must not be described as a calibrated probability. Map status available/unavailable/unsupported and limitations remain visible. Scouting/recommendations use stable IDs plus display text; recommendations reference sources by ID. Real sources must include title, URL, accessed_at; backend may add author/publication/license fields. Bootstrap sources are empty and demo guidance is not vetted. Guidance never implies authorization to send/share.
+
+## Backend additions (additive, still 0.1.0; commit after e961d03)
+Optional observation input `prior_observations[]` ({id?, observed_at?, condition_id, present, latitude, longitude}) — device-held history, never stored by backend.
+Analysis adds: `condition.{abstained, candidate_id, confidence_kind, pathogen}`; `evidence[]`; `environment.{period_hours, period_end, origin, provider, source_id, age_hours, grid_distance_km, notes}`; `weather_risk` {status available/partial/unavailable, class low/moderate/high/null, favourable_day_fraction, days[], parameters, calibrated:false}; `map` cells (`properties.kind = scouting_priority_cell`, `priority` 0–1), `reported_observation` and `scouting_point` features plus `value_kind`, `calibrated`, `wind`; scouting items `rank`, `priority`, `location`, `distance_m`, `source_ids`; `review` {suggested, reasons[], requires_user_authorization:true, auto_contact:false}; `localization` {requested, used, fallback, reviewed_by_native_speaker}; `provenance.components[]`. Sources include `license`, `kind`, `doi` where available.
+Extra endpoints: GET /v1/conditions (coverage, locales), GET /v1/sources. `AGRI_FIXED_NOW` pins time for reproducible demos; `AGRI_WEATHER_LIVE=1` enables live Open-Meteo with cache fallback.
+Examples for every state: shared/fixtures/examples/*.json (incl. differential_severity).
+`condition.differentials[]` {signal, condition_id, label (localized), confidence}, `condition.support_blocked_by_differential`, `condition.severity` {affected_leaf_area_pct, level 0-4} | null; observation signals may carry optional `affected_leaf_area_pct`.
+`weather_risk.climatology` (additive): {status, relation above_usual/typical/below_usual, current_fraction, baseline_median/p25/p75, per_year, summary (localized), possible_source_bias, caveat}.

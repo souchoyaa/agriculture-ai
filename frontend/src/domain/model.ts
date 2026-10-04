@@ -26,12 +26,13 @@ export interface ObservationRecord {
   completedScouting: string[];   // scouting ids the farmer ticked off
 }
 
-/** Symptom ids map 1:1 to canonical signal labels sent to the backend. */
+/** Symptom ids map 1:1 to canonical signal labels (backend coffee signal vocabulary; insect_damage is passed through as unrecognised). */
 export const SYMPTOMS = [
-  { id: 'rust_like_leaf_marks', glyph: '◍' },
-  { id: 'leaf_yellowing', glyph: '◐' },
-  { id: 'leaf_drop', glyph: '↓' },
-  { id: 'dark_berry_lesions', glyph: '●' },
+  { id: 'orange_powder_leaf_underside', glyph: '◍' },
+  { id: 'yellow_spots_upper_leaf', glyph: '◐' },
+  { id: 'brown_dry_lesion_centres', glyph: '◉' },
+  { id: 'lesions_lower_canopy_first', glyph: '⤓' },
+  { id: 'premature_leaf_drop', glyph: '↓' },
   { id: 'insect_damage', glyph: '✱' },
   { id: 'none_visible', glyph: '○' },
 ] as const;

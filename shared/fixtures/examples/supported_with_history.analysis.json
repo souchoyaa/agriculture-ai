@@ -1,7 +1,7 @@
 {
  "contract_version": "0.1.0",
- "id": "analysis-dbd415beedc858b4",
- "observation_id": "demo-coffee-001",
+ "id": "analysis-59054dfb041f1624",
+ "observation_id": "demo-coffee-001-history",
  "data_mode": "demo",
  "generated_at": "2026-10-04T00:00:00Z",
  "environment": {
@@ -56,7 +56,7 @@
    "id": "scout_point_1",
    "text": "Priority point 1: the reported plant and its immediate neighbours.",
    "rank": 1,
-   "priority": 1.0,
+   "priority": 0.8462,
    "location": {
     "latitude": -1.95,
     "longitude": 30.06
@@ -66,33 +66,21 @@
   },
   {
    "id": "scout_point_2",
-   "text": "Priority point 2: about 45 m south-west of the reported plant.",
+   "text": "Priority point 2: about 57 m north-east of the reported plant.",
    "rank": 2,
-   "priority": 0.5483,
+   "priority": 0.7882,
    "location": {
-    "latitude": -1.9501799,
-    "longitude": 30.0596401
+    "latitude": -1.9496403,
+    "longitude": 30.0603599
    },
-   "distance_m": 45,
+   "distance_m": 57,
    "source_ids": []
   },
   {
    "id": "scout_point_3",
-   "text": "Priority point 3: about 40 m south of the reported plant.",
+   "text": "Priority point 3: about 40 m east of the reported plant.",
    "rank": 3,
-   "priority": 0.4348,
-   "location": {
-    "latitude": -1.9503597,
-    "longitude": 30.06
-   },
-   "distance_m": 40,
-   "source_ids": []
-  },
-  {
-   "id": "scout_point_4",
-   "text": "Priority point 4: about 40 m east of the reported plant.",
-   "rank": 4,
-   "priority": 0.3679,
+   "priority": 0.4878,
    "location": {
     "latitude": -1.95,
     "longitude": 30.0603599
@@ -101,13 +89,25 @@
    "source_ids": []
   },
   {
-   "id": "scout_point_5",
-   "text": "Priority point 5: about 40 m north of the reported plant.",
-   "rank": 5,
-   "priority": 0.3679,
+   "id": "scout_point_4",
+   "text": "Priority point 4: about 89 m north-east of the reported plant.",
+   "rank": 4,
+   "priority": 0.398,
    "location": {
     "latitude": -1.9496403,
-    "longitude": 30.06
+    "longitude": 30.0607199
+   },
+   "distance_m": 89,
+   "source_ids": []
+  },
+  {
+   "id": "scout_point_5",
+   "text": "Priority point 5: about 40 m west of the reported plant.",
+   "rank": 5,
+   "priority": 0.373,
+   "location": {
+    "latitude": -1.95,
+    "longitude": 30.0596401
    },
    "distance_m": 40,
    "source_ids": []
@@ -341,14 +341,28 @@
  ],
  "evidence": [
   {
-   "label": "rust_like_leaf_marks",
-   "confidence": 0.65,
+   "label": "orange_powder_leaf_underside",
+   "confidence": 0.9,
    "recognized": true,
-   "weight": 0.65,
-   "specific": false,
-   "contribution": 0.423,
+   "weight": 0.85,
+   "specific": true,
+   "contribution": 0.765,
    "source_ids": [
-    "hdoa_field_guide_2020"
+    "hdoa_npa_20_03_2021",
+    "hdoa_field_guide_2020",
+    "talhinhas_2017_mpp"
+   ]
+  },
+  {
+   "label": "yellow_spots_upper_leaf",
+   "confidence": 0.8,
+   "recognized": true,
+   "weight": 0.4,
+   "specific": false,
+   "contribution": 0.32,
+   "source_ids": [
+    "hdoa_npa_20_03_2021",
+    "talhinhas_2017_mpp"
    ]
   }
  ],
@@ -408,20 +422,20 @@
   "suggested": true,
   "reasons": [
    {
-    "id": "needs_review",
-    "text": "Evidence is not specific; an expert should confirm before decisions."
+    "id": "supported",
+    "text": "Confirmation by an agricultural officer is advised before treatment decisions."
    }
   ],
   "requires_user_authorization": true,
   "auto_contact": false
  },
- "status": "needs_review",
+ "status": "supported",
  "condition": {
   "id": "coffee_leaf_rust",
   "label": "Possible coffee leaf rust",
-  "confidence": 0.423,
+  "confidence": 0.84,
   "confidence_kind": "uncalibrated evidence score from image signals; not a probability of infection",
-  "uncertainty": "Some signals resemble coffee leaf rust (evidence score 0.42), but they are not specific enough. Similar spots can have other causes.",
+  "uncertainty": "Image signals are consistent with coffee leaf rust (evidence score 0.84). This is not a laboratory-confirmed diagnosis.",
   "abstained": false,
   "differentials": [],
   "support_blocked_by_differential": false,
@@ -870,7 +884,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1669,
+     "priority": 0.159,
      "row": -5,
      "col": -5
     }
@@ -906,7 +920,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1835,
+     "priority": 0.1715,
      "row": -5,
      "col": -4
     }
@@ -942,7 +956,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1864,
+     "priority": 0.1709,
      "row": -5,
      "col": -3
     }
@@ -978,7 +992,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1744,
+     "priority": 0.1581,
      "row": -5,
      "col": -2
     }
@@ -1014,7 +1028,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1518,
+     "priority": 0.1379,
      "row": -5,
      "col": -1
     }
@@ -1050,7 +1064,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1246,
+     "priority": 0.115,
      "row": -5,
      "col": 0
     }
@@ -1086,7 +1100,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.098,
+     "priority": 0.0922,
      "row": -5,
      "col": 1
     }
@@ -1122,7 +1136,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0746,
+     "priority": 0.0715,
      "row": -5,
      "col": 2
     }
@@ -1158,7 +1172,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0556,
+     "priority": 0.054,
      "row": -5,
      "col": 3
     }
@@ -1194,7 +1208,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0407,
+     "priority": 0.04,
      "row": -5,
      "col": 4
     }
@@ -1230,7 +1244,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0291,
+     "priority": 0.0301,
      "row": -5,
      "col": 5
     }
@@ -1266,7 +1280,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2016,
+     "priority": 0.1884,
      "row": -4,
      "col": -5
     }
@@ -1302,7 +1316,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2388,
+     "priority": 0.2159,
      "row": -4,
      "col": -4
     }
@@ -1338,7 +1352,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.26,
+     "priority": 0.2261,
      "row": -4,
      "col": -3
     }
@@ -1374,7 +1388,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.256,
+     "priority": 0.2166,
      "row": -4,
      "col": -2
     }
@@ -1410,7 +1424,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2287,
+     "priority": 0.1947,
      "row": -4,
      "col": -1
     }
@@ -1446,7 +1460,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.189,
+     "priority": 0.1665,
      "row": -4,
      "col": 0
     }
@@ -1482,7 +1496,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.148,
+     "priority": 0.1354,
      "row": -4,
      "col": 1
     }
@@ -1518,7 +1532,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1117,
+     "priority": 0.1053,
      "row": -4,
      "col": 2
     }
@@ -1554,7 +1568,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0823,
+     "priority": 0.0792,
      "row": -4,
      "col": 3
     }
@@ -1626,7 +1640,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0407,
+     "priority": 0.0449,
      "row": -4,
      "col": 5
     }
@@ -1662,7 +1676,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2215,
+     "priority": 0.2031,
      "row": -3,
      "col": -5
     }
@@ -1698,7 +1712,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2852,
+     "priority": 0.248,
      "row": -3,
      "col": -4
     }
@@ -1734,7 +1748,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.3416,
+     "priority": 0.275,
      "row": -3,
      "col": -3
     }
@@ -1770,7 +1784,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.3658,
+     "priority": 0.2738,
      "row": -3,
      "col": -2
     }
@@ -1806,7 +1820,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.3427,
+     "priority": 0.2613,
      "row": -3,
      "col": -1
     }
@@ -1842,7 +1856,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2867,
+     "priority": 0.2374,
      "row": -3,
      "col": 0
     }
@@ -1878,7 +1892,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2229,
+     "priority": 0.1978,
      "row": -3,
      "col": 1
     }
@@ -1914,7 +1928,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1661,
+     "priority": 0.1543,
      "row": -3,
      "col": 2
     }
@@ -1950,7 +1964,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1199,
+     "priority": 0.1146,
      "row": -3,
      "col": 3
     }
@@ -1986,7 +2000,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0821,
+     "priority": 0.0885,
      "row": -3,
      "col": 4
     }
@@ -2022,7 +2036,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0542,
+     "priority": 0.0667,
      "row": -3,
      "col": 5
     }
@@ -2052,6 +2066,1266 @@
        [
         30.0590102,
         -1.9504497
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1971,
+     "row": -2,
+     "col": -5
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0591901,
+        -1.9504497
+       ],
+       [
+        30.0593701,
+        -1.9504497
+       ],
+       [
+        30.0593701,
+        -1.9502698
+       ],
+       [
+        30.0591901,
+        -1.9502698
+       ],
+       [
+        30.0591901,
+        -1.9504497
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.2544,
+     "row": -2,
+     "col": -4
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0593701,
+        -1.9504497
+       ],
+       [
+        30.0595501,
+        -1.9504497
+       ],
+       [
+        30.0595501,
+        -1.9502698
+       ],
+       [
+        30.0593701,
+        -1.9502698
+       ],
+       [
+        30.0593701,
+        -1.9504497
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.2994,
+     "row": -2,
+     "col": -3
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0595501,
+        -1.9504497
+       ],
+       [
+        30.05973,
+        -1.9504497
+       ],
+       [
+        30.05973,
+        -1.9502698
+       ],
+       [
+        30.0595501,
+        -1.9502698
+       ],
+       [
+        30.0595501,
+        -1.9504497
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.2955,
+     "row": -2,
+     "col": -2
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.05973,
+        -1.9504497
+       ],
+       [
+        30.05991,
+        -1.9504497
+       ],
+       [
+        30.05991,
+        -1.9502698
+       ],
+       [
+        30.05973,
+        -1.9502698
+       ],
+       [
+        30.05973,
+        -1.9504497
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.3317,
+     "row": -2,
+     "col": -1
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.05991,
+        -1.9504497
+       ],
+       [
+        30.06009,
+        -1.9504497
+       ],
+       [
+        30.06009,
+        -1.9502698
+       ],
+       [
+        30.05991,
+        -1.9502698
+       ],
+       [
+        30.05991,
+        -1.9504497
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.3418,
+     "row": -2,
+     "col": 0
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.06009,
+        -1.9504497
+       ],
+       [
+        30.06027,
+        -1.9504497
+       ],
+       [
+        30.06027,
+        -1.9502698
+       ],
+       [
+        30.06009,
+        -1.9502698
+       ],
+       [
+        30.06009,
+        -1.9504497
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.2906,
+     "row": -2,
+     "col": 1
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.06027,
+        -1.9504497
+       ],
+       [
+        30.0604499,
+        -1.9504497
+       ],
+       [
+        30.0604499,
+        -1.9502698
+       ],
+       [
+        30.06027,
+        -1.9502698
+       ],
+       [
+        30.06027,
+        -1.9504497
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.2238,
+     "row": -2,
+     "col": 2
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0604499,
+        -1.9504497
+       ],
+       [
+        30.0606299,
+        -1.9504497
+       ],
+       [
+        30.0606299,
+        -1.9502698
+       ],
+       [
+        30.0604499,
+        -1.9502698
+       ],
+       [
+        30.0604499,
+        -1.9504497
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1712,
+     "row": -2,
+     "col": 3
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0606299,
+        -1.9504497
+       ],
+       [
+        30.0608099,
+        -1.9504497
+       ],
+       [
+        30.0608099,
+        -1.9502698
+       ],
+       [
+        30.0606299,
+        -1.9502698
+       ],
+       [
+        30.0606299,
+        -1.9504497
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1322,
+     "row": -2,
+     "col": 4
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0608099,
+        -1.9504497
+       ],
+       [
+        30.0609898,
+        -1.9504497
+       ],
+       [
+        30.0609898,
+        -1.9502698
+       ],
+       [
+        30.0608099,
+        -1.9502698
+       ],
+       [
+        30.0608099,
+        -1.9504497
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.0986,
+     "row": -2,
+     "col": 5
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0590102,
+        -1.9502698
+       ],
+       [
+        30.0591901,
+        -1.9502698
+       ],
+       [
+        30.0591901,
+        -1.9500899
+       ],
+       [
+        30.0590102,
+        -1.9500899
+       ],
+       [
+        30.0590102,
+        -1.9502698
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1742,
+     "row": -1,
+     "col": -5
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0591901,
+        -1.9502698
+       ],
+       [
+        30.0593701,
+        -1.9502698
+       ],
+       [
+        30.0593701,
+        -1.9500899
+       ],
+       [
+        30.0591901,
+        -1.9500899
+       ],
+       [
+        30.0591901,
+        -1.9502698
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.2346,
+     "row": -1,
+     "col": -4
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0593701,
+        -1.9502698
+       ],
+       [
+        30.0595501,
+        -1.9502698
+       ],
+       [
+        30.0595501,
+        -1.9500899
+       ],
+       [
+        30.0593701,
+        -1.9500899
+       ],
+       [
+        30.0593701,
+        -1.9502698
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.2998,
+     "row": -1,
+     "col": -3
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0595501,
+        -1.9502698
+       ],
+       [
+        30.05973,
+        -1.9502698
+       ],
+       [
+        30.05973,
+        -1.9500899
+       ],
+       [
+        30.0595501,
+        -1.9500899
+       ],
+       [
+        30.0595501,
+        -1.9502698
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.3596,
+     "row": -1,
+     "col": -2
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.05973,
+        -1.9502698
+       ],
+       [
+        30.05991,
+        -1.9502698
+       ],
+       [
+        30.05991,
+        -1.9500899
+       ],
+       [
+        30.05973,
+        -1.9500899
+       ],
+       [
+        30.05973,
+        -1.9502698
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.481,
+     "row": -1,
+     "col": -1
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.05991,
+        -1.9502698
+       ],
+       [
+        30.06009,
+        -1.9502698
+       ],
+       [
+        30.06009,
+        -1.9500899
+       ],
+       [
+        30.05991,
+        -1.9500899
+       ],
+       [
+        30.05991,
+        -1.9502698
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.5251,
+     "row": -1,
+     "col": 0
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.06009,
+        -1.9502698
+       ],
+       [
+        30.06027,
+        -1.9502698
+       ],
+       [
+        30.06027,
+        -1.9500899
+       ],
+       [
+        30.06009,
+        -1.9500899
+       ],
+       [
+        30.06009,
+        -1.9502698
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.4307,
+     "row": -1,
+     "col": 1
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.06027,
+        -1.9502698
+       ],
+       [
+        30.0604499,
+        -1.9502698
+       ],
+       [
+        30.0604499,
+        -1.9500899
+       ],
+       [
+        30.06027,
+        -1.9500899
+       ],
+       [
+        30.06027,
+        -1.9502698
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.3183,
+     "row": -1,
+     "col": 2
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0604499,
+        -1.9502698
+       ],
+       [
+        30.0606299,
+        -1.9502698
+       ],
+       [
+        30.0606299,
+        -1.9500899
+       ],
+       [
+        30.0604499,
+        -1.9500899
+       ],
+       [
+        30.0604499,
+        -1.9502698
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.2585,
+     "row": -1,
+     "col": 3
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0606299,
+        -1.9502698
+       ],
+       [
+        30.0608099,
+        -1.9502698
+       ],
+       [
+        30.0608099,
+        -1.9500899
+       ],
+       [
+        30.0606299,
+        -1.9500899
+       ],
+       [
+        30.0606299,
+        -1.9502698
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1968,
+     "row": -1,
+     "col": 4
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0608099,
+        -1.9502698
+       ],
+       [
+        30.0609898,
+        -1.9502698
+       ],
+       [
+        30.0609898,
+        -1.9500899
+       ],
+       [
+        30.0608099,
+        -1.9500899
+       ],
+       [
+        30.0608099,
+        -1.9502698
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1432,
+     "row": -1,
+     "col": 5
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0590102,
+        -1.9500899
+       ],
+       [
+        30.0591901,
+        -1.9500899
+       ],
+       [
+        30.0591901,
+        -1.9499101
+       ],
+       [
+        30.0590102,
+        -1.9499101
+       ],
+       [
+        30.0590102,
+        -1.9500899
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.143,
+     "row": 0,
+     "col": -5
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0591901,
+        -1.9500899
+       ],
+       [
+        30.0593701,
+        -1.9500899
+       ],
+       [
+        30.0593701,
+        -1.9499101
+       ],
+       [
+        30.0591901,
+        -1.9499101
+       ],
+       [
+        30.0591901,
+        -1.9500899
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1982,
+     "row": 0,
+     "col": -4
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0593701,
+        -1.9500899
+       ],
+       [
+        30.0595501,
+        -1.9500899
+       ],
+       [
+        30.0595501,
+        -1.9499101
+       ],
+       [
+        30.0593701,
+        -1.9499101
+       ],
+       [
+        30.0593701,
+        -1.9500899
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.2705,
+     "row": 0,
+     "col": -3
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0595501,
+        -1.9500899
+       ],
+       [
+        30.05973,
+        -1.9500899
+       ],
+       [
+        30.05973,
+        -1.9499101
+       ],
+       [
+        30.0595501,
+        -1.9499101
+       ],
+       [
+        30.0595501,
+        -1.9500899
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.373,
+     "row": 0,
+     "col": -2
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.05973,
+        -1.9500899
+       ],
+       [
+        30.05991,
+        -1.9500899
+       ],
+       [
+        30.05991,
+        -1.9499101
+       ],
+       [
+        30.05973,
+        -1.9499101
+       ],
+       [
+        30.05973,
+        -1.9500899
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.5485,
+     "row": 0,
+     "col": -1
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.05991,
+        -1.9500899
+       ],
+       [
+        30.06009,
+        -1.9500899
+       ],
+       [
+        30.06009,
+        -1.9499101
+       ],
+       [
+        30.05991,
+        -1.9499101
+       ],
+       [
+        30.05991,
+        -1.9500899
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.8462,
+     "row": 0,
+     "col": 0
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.06009,
+        -1.9500899
+       ],
+       [
+        30.06027,
+        -1.9500899
+       ],
+       [
+        30.06027,
+        -1.9499101
+       ],
+       [
+        30.06009,
+        -1.9499101
+       ],
+       [
+        30.06009,
+        -1.9500899
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.5436,
+     "row": 0,
+     "col": 1
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.06027,
+        -1.9500899
+       ],
+       [
+        30.0604499,
+        -1.9500899
+       ],
+       [
+        30.0604499,
+        -1.9499101
+       ],
+       [
+        30.06027,
+        -1.9499101
+       ],
+       [
+        30.06027,
+        -1.9500899
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.4878,
+     "row": 0,
+     "col": 2
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0604499,
+        -1.9500899
+       ],
+       [
+        30.0606299,
+        -1.9500899
+       ],
+       [
+        30.0606299,
+        -1.9499101
+       ],
+       [
+        30.0604499,
+        -1.9499101
+       ],
+       [
+        30.0604499,
+        -1.9500899
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.3905,
+     "row": 0,
+     "col": 3
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0606299,
+        -1.9500899
+       ],
+       [
+        30.0608099,
+        -1.9500899
+       ],
+       [
+        30.0608099,
+        -1.9499101
+       ],
+       [
+        30.0606299,
+        -1.9499101
+       ],
+       [
+        30.0606299,
+        -1.9500899
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.2879,
+     "row": 0,
+     "col": 4
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0608099,
+        -1.9500899
+       ],
+       [
+        30.0609898,
+        -1.9500899
+       ],
+       [
+        30.0609898,
+        -1.9499101
+       ],
+       [
+        30.0608099,
+        -1.9499101
+       ],
+       [
+        30.0608099,
+        -1.9500899
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1947,
+     "row": 0,
+     "col": 5
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0590102,
+        -1.9499101
+       ],
+       [
+        30.0591901,
+        -1.9499101
+       ],
+       [
+        30.0591901,
+        -1.9497302
+       ],
+       [
+        30.0590102,
+        -1.9497302
+       ],
+       [
+        30.0590102,
+        -1.9499101
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1109,
+     "row": 1,
+     "col": -5
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0591901,
+        -1.9499101
+       ],
+       [
+        30.0593701,
+        -1.9499101
+       ],
+       [
+        30.0593701,
+        -1.9497302
+       ],
+       [
+        30.0591901,
+        -1.9497302
+       ],
+       [
+        30.0591901,
+        -1.9499101
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1557,
+     "row": 1,
+     "col": -4
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0593701,
+        -1.9499101
+       ],
+       [
+        30.0595501,
+        -1.9499101
+       ],
+       [
+        30.0595501,
+        -1.9497302
+       ],
+       [
+        30.0593701,
+        -1.9497302
+       ],
+       [
+        30.0593701,
+        -1.9499101
        ]
       ]
      ]
@@ -2059,1266 +3333,6 @@
     "properties": {
      "kind": "scouting_priority_cell",
      "priority": 0.2175,
-     "row": -2,
-     "col": -5
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0591901,
-        -1.9504497
-       ],
-       [
-        30.0593701,
-        -1.9504497
-       ],
-       [
-        30.0593701,
-        -1.9502698
-       ],
-       [
-        30.0591901,
-        -1.9502698
-       ],
-       [
-        30.0591901,
-        -1.9504497
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.3007,
-     "row": -2,
-     "col": -4
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0593701,
-        -1.9504497
-       ],
-       [
-        30.0595501,
-        -1.9504497
-       ],
-       [
-        30.0595501,
-        -1.9502698
-       ],
-       [
-        30.0593701,
-        -1.9502698
-       ],
-       [
-        30.0593701,
-        -1.9504497
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.4,
-     "row": -2,
-     "col": -3
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0595501,
-        -1.9504497
-       ],
-       [
-        30.05973,
-        -1.9504497
-       ],
-       [
-        30.05973,
-        -1.9502698
-       ],
-       [
-        30.0595501,
-        -1.9502698
-       ],
-       [
-        30.0595501,
-        -1.9504497
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.4887,
-     "row": -2,
-     "col": -2
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.05973,
-        -1.9504497
-       ],
-       [
-        30.05991,
-        -1.9504497
-       ],
-       [
-        30.05991,
-        -1.9502698
-       ],
-       [
-        30.05973,
-        -1.9502698
-       ],
-       [
-        30.05973,
-        -1.9504497
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.506,
-     "row": -2,
-     "col": -1
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.05991,
-        -1.9504497
-       ],
-       [
-        30.06009,
-        -1.9504497
-       ],
-       [
-        30.06009,
-        -1.9502698
-       ],
-       [
-        30.05991,
-        -1.9502698
-       ],
-       [
-        30.05991,
-        -1.9504497
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.4348,
-     "row": -2,
-     "col": 0
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.06009,
-        -1.9504497
-       ],
-       [
-        30.06027,
-        -1.9504497
-       ],
-       [
-        30.06027,
-        -1.9502698
-       ],
-       [
-        30.06009,
-        -1.9502698
-       ],
-       [
-        30.06009,
-        -1.9504497
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.3342,
-     "row": -2,
-     "col": 1
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.06027,
-        -1.9504497
-       ],
-       [
-        30.0604499,
-        -1.9504497
-       ],
-       [
-        30.0604499,
-        -1.9502698
-       ],
-       [
-        30.06027,
-        -1.9502698
-       ],
-       [
-        30.06027,
-        -1.9504497
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.2431,
-     "row": -2,
-     "col": 2
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0604499,
-        -1.9504497
-       ],
-       [
-        30.0606299,
-        -1.9504497
-       ],
-       [
-        30.0606299,
-        -1.9502698
-       ],
-       [
-        30.0604499,
-        -1.9502698
-       ],
-       [
-        30.0604499,
-        -1.9504497
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.1648,
-     "row": -2,
-     "col": 3
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0606299,
-        -1.9504497
-       ],
-       [
-        30.0608099,
-        -1.9504497
-       ],
-       [
-        30.0608099,
-        -1.9502698
-       ],
-       [
-        30.0606299,
-        -1.9502698
-       ],
-       [
-        30.0606299,
-        -1.9504497
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.1069,
-     "row": -2,
-     "col": 4
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0608099,
-        -1.9504497
-       ],
-       [
-        30.0609898,
-        -1.9504497
-       ],
-       [
-        30.0609898,
-        -1.9502698
-       ],
-       [
-        30.0608099,
-        -1.9502698
-       ],
-       [
-        30.0608099,
-        -1.9504497
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0677,
-     "row": -2,
-     "col": 5
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0590102,
-        -1.9502698
-       ],
-       [
-        30.0591901,
-        -1.9502698
-       ],
-       [
-        30.0591901,
-        -1.9500899
-       ],
-       [
-        30.0590102,
-        -1.9500899
-       ],
-       [
-        30.0590102,
-        -1.9502698
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.1917,
-     "row": -1,
-     "col": -5
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0591901,
-        -1.9502698
-       ],
-       [
-        30.0593701,
-        -1.9502698
-       ],
-       [
-        30.0593701,
-        -1.9500899
-       ],
-       [
-        30.0591901,
-        -1.9500899
-       ],
-       [
-        30.0591901,
-        -1.9502698
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.2756,
-     "row": -1,
-     "col": -4
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0593701,
-        -1.9502698
-       ],
-       [
-        30.0595501,
-        -1.9502698
-       ],
-       [
-        30.0595501,
-        -1.9500899
-       ],
-       [
-        30.0593701,
-        -1.9500899
-       ],
-       [
-        30.0593701,
-        -1.9502698
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.3931,
-     "row": -1,
-     "col": -3
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0595501,
-        -1.9502698
-       ],
-       [
-        30.05973,
-        -1.9502698
-       ],
-       [
-        30.05973,
-        -1.9500899
-       ],
-       [
-        30.0595501,
-        -1.9500899
-       ],
-       [
-        30.0595501,
-        -1.9502698
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.5483,
-     "row": -1,
-     "col": -2
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.05973,
-        -1.9502698
-       ],
-       [
-        30.05991,
-        -1.9502698
-       ],
-       [
-        30.05991,
-        -1.9500899
-       ],
-       [
-        30.05973,
-        -1.9500899
-       ],
-       [
-        30.05973,
-        -1.9502698
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.6991,
-     "row": -1,
-     "col": -1
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.05991,
-        -1.9502698
-       ],
-       [
-        30.06009,
-        -1.9502698
-       ],
-       [
-        30.06009,
-        -1.9500899
-       ],
-       [
-        30.05991,
-        -1.9500899
-       ],
-       [
-        30.05991,
-        -1.9502698
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.6594,
-     "row": -1,
-     "col": 0
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.06009,
-        -1.9502698
-       ],
-       [
-        30.06027,
-        -1.9502698
-       ],
-       [
-        30.06027,
-        -1.9500899
-       ],
-       [
-        30.06009,
-        -1.9500899
-       ],
-       [
-        30.06009,
-        -1.9502698
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.4931,
-     "row": -1,
-     "col": 1
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.06027,
-        -1.9502698
-       ],
-       [
-        30.0604499,
-        -1.9502698
-       ],
-       [
-        30.0604499,
-        -1.9500899
-       ],
-       [
-        30.06027,
-        -1.9500899
-       ],
-       [
-        30.06027,
-        -1.9502698
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.3269,
-     "row": -1,
-     "col": 2
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0604499,
-        -1.9502698
-       ],
-       [
-        30.0606299,
-        -1.9502698
-       ],
-       [
-        30.0606299,
-        -1.9500899
-       ],
-       [
-        30.0604499,
-        -1.9500899
-       ],
-       [
-        30.0604499,
-        -1.9502698
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.2057,
-     "row": -1,
-     "col": 3
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0606299,
-        -1.9502698
-       ],
-       [
-        30.0608099,
-        -1.9502698
-       ],
-       [
-        30.0608099,
-        -1.9500899
-       ],
-       [
-        30.0606299,
-        -1.9500899
-       ],
-       [
-        30.0606299,
-        -1.9502698
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.1273,
-     "row": -1,
-     "col": 4
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0608099,
-        -1.9502698
-       ],
-       [
-        30.0609898,
-        -1.9502698
-       ],
-       [
-        30.0609898,
-        -1.9500899
-       ],
-       [
-        30.0608099,
-        -1.9500899
-       ],
-       [
-        30.0608099,
-        -1.9502698
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0781,
-     "row": -1,
-     "col": 5
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0590102,
-        -1.9500899
-       ],
-       [
-        30.0591901,
-        -1.9500899
-       ],
-       [
-        30.0591901,
-        -1.9499101
-       ],
-       [
-        30.0590102,
-        -1.9499101
-       ],
-       [
-        30.0590102,
-        -1.9500899
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.155,
-     "row": 0,
-     "col": -5
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0591901,
-        -1.9500899
-       ],
-       [
-        30.0593701,
-        -1.9500899
-       ],
-       [
-        30.0593701,
-        -1.9499101
-       ],
-       [
-        30.0591901,
-        -1.9499101
-       ],
-       [
-        30.0591901,
-        -1.9500899
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.225,
-     "row": 0,
-     "col": -4
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0593701,
-        -1.9500899
-       ],
-       [
-        30.0595501,
-        -1.9500899
-       ],
-       [
-        30.0595501,
-        -1.9499101
-       ],
-       [
-        30.0593701,
-        -1.9499101
-       ],
-       [
-        30.0593701,
-        -1.9500899
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.3267,
-     "row": 0,
-     "col": -3
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0595501,
-        -1.9500899
-       ],
-       [
-        30.05973,
-        -1.9500899
-       ],
-       [
-        30.05973,
-        -1.9499101
-       ],
-       [
-        30.0595501,
-        -1.9499101
-       ],
-       [
-        30.0595501,
-        -1.9500899
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.4744,
-     "row": 0,
-     "col": -2
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.05973,
-        -1.9500899
-       ],
-       [
-        30.05991,
-        -1.9500899
-       ],
-       [
-        30.05991,
-        -1.9499101
-       ],
-       [
-        30.05973,
-        -1.9499101
-       ],
-       [
-        30.05973,
-        -1.9500899
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.6887,
-     "row": 0,
-     "col": -1
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.05991,
-        -1.9500899
-       ],
-       [
-        30.06009,
-        -1.9500899
-       ],
-       [
-        30.06009,
-        -1.9499101
-       ],
-       [
-        30.05991,
-        -1.9499101
-       ],
-       [
-        30.05991,
-        -1.9500899
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 1.0,
-     "row": 0,
-     "col": 0
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.06009,
-        -1.9500899
-       ],
-       [
-        30.06027,
-        -1.9500899
-       ],
-       [
-        30.06027,
-        -1.9499101
-       ],
-       [
-        30.06009,
-        -1.9499101
-       ],
-       [
-        30.06009,
-        -1.9500899
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.6065,
-     "row": 0,
-     "col": 1
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.06027,
-        -1.9500899
-       ],
-       [
-        30.0604499,
-        -1.9500899
-       ],
-       [
-        30.0604499,
-        -1.9499101
-       ],
-       [
-        30.06027,
-        -1.9499101
-       ],
-       [
-        30.06027,
-        -1.9500899
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.3679,
-     "row": 0,
-     "col": 2
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0604499,
-        -1.9500899
-       ],
-       [
-        30.0606299,
-        -1.9500899
-       ],
-       [
-        30.0606299,
-        -1.9499101
-       ],
-       [
-        30.0604499,
-        -1.9499101
-       ],
-       [
-        30.0604499,
-        -1.9500899
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.2231,
-     "row": 0,
-     "col": 3
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0606299,
-        -1.9500899
-       ],
-       [
-        30.0608099,
-        -1.9500899
-       ],
-       [
-        30.0608099,
-        -1.9499101
-       ],
-       [
-        30.0606299,
-        -1.9499101
-       ],
-       [
-        30.0606299,
-        -1.9500899
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.1353,
-     "row": 0,
-     "col": 4
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0608099,
-        -1.9500899
-       ],
-       [
-        30.0609898,
-        -1.9500899
-       ],
-       [
-        30.0609898,
-        -1.9499101
-       ],
-       [
-        30.0608099,
-        -1.9499101
-       ],
-       [
-        30.0608099,
-        -1.9500899
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0821,
-     "row": 0,
-     "col": 5
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0590102,
-        -1.9499101
-       ],
-       [
-        30.0591901,
-        -1.9499101
-       ],
-       [
-        30.0591901,
-        -1.9497302
-       ],
-       [
-        30.0590102,
-        -1.9497302
-       ],
-       [
-        30.0590102,
-        -1.9499101
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.1179,
-     "row": 1,
-     "col": -5
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0591901,
-        -1.9499101
-       ],
-       [
-        30.0593701,
-        -1.9499101
-       ],
-       [
-        30.0593701,
-        -1.9497302
-       ],
-       [
-        30.0591901,
-        -1.9497302
-       ],
-       [
-        30.0591901,
-        -1.9499101
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.1702,
-     "row": 1,
-     "col": -4
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0593701,
-        -1.9499101
-       ],
-       [
-        30.0595501,
-        -1.9499101
-       ],
-       [
-        30.0595501,
-        -1.9497302
-       ],
-       [
-        30.0593701,
-        -1.9497302
-       ],
-       [
-        30.0593701,
-        -1.9499101
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.245,
      "row": 1,
      "col": -3
     }
@@ -3354,7 +3368,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.3506,
+     "priority": 0.3049,
      "row": 1,
      "col": -2
     }
@@ -3390,7 +3404,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.4942,
+     "priority": 0.4317,
      "row": 1,
      "col": -1
     }
@@ -3426,7 +3440,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.6065,
+     "priority": 0.5436,
      "row": 1,
      "col": 0
     }
@@ -3462,7 +3476,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.4931,
+     "priority": 0.6403,
      "row": 1,
      "col": 1
     }
@@ -3498,7 +3512,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.3269,
+     "priority": 0.747,
      "row": 1,
      "col": 2
     }
@@ -3534,7 +3548,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2057,
+     "priority": 0.5786,
      "row": 1,
      "col": 3
     }
@@ -3570,7 +3584,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1273,
+     "priority": 0.3785,
      "row": 1,
      "col": 4
     }
@@ -3606,7 +3620,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0781,
+     "priority": 0.2364,
      "row": 1,
      "col": 5
     }
@@ -3642,7 +3656,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0861,
+     "priority": 0.0825,
      "row": 2,
      "col": -5
     }
@@ -3678,7 +3692,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1229,
+     "priority": 0.116,
      "row": 2,
      "col": -4
     }
@@ -3714,7 +3728,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1743,
+     "priority": 0.162,
      "row": 2,
      "col": -3
     }
@@ -3743,6 +3757,258 @@
        ],
        [
         30.0595501,
+        -1.9497302
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.2249,
+     "row": 2,
+     "col": -2
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.05973,
+        -1.9497302
+       ],
+       [
+        30.05991,
+        -1.9497302
+       ],
+       [
+        30.05991,
+        -1.9495503
+       ],
+       [
+        30.05973,
+        -1.9495503
+       ],
+       [
+        30.05973,
+        -1.9497302
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.3016,
+     "row": 2,
+     "col": -1
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.05991,
+        -1.9497302
+       ],
+       [
+        30.06009,
+        -1.9497302
+       ],
+       [
+        30.06009,
+        -1.9495503
+       ],
+       [
+        30.05991,
+        -1.9495503
+       ],
+       [
+        30.05991,
+        -1.9497302
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.3728,
+     "row": 2,
+     "col": 0
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.06009,
+        -1.9497302
+       ],
+       [
+        30.06027,
+        -1.9497302
+       ],
+       [
+        30.06027,
+        -1.9495503
+       ],
+       [
+        30.06009,
+        -1.9495503
+       ],
+       [
+        30.06009,
+        -1.9497302
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.5474,
+     "row": 2,
+     "col": 1
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.06027,
+        -1.9497302
+       ],
+       [
+        30.0604499,
+        -1.9497302
+       ],
+       [
+        30.0604499,
+        -1.9495503
+       ],
+       [
+        30.06027,
+        -1.9495503
+       ],
+       [
+        30.06027,
+        -1.9497302
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.7882,
+     "row": 2,
+     "col": 2
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0604499,
+        -1.9497302
+       ],
+       [
+        30.0606299,
+        -1.9497302
+       ],
+       [
+        30.0606299,
+        -1.9495503
+       ],
+       [
+        30.0604499,
+        -1.9495503
+       ],
+       [
+        30.0604499,
+        -1.9497302
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.6384,
+     "row": 2,
+     "col": 3
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0606299,
+        -1.9497302
+       ],
+       [
+        30.0608099,
+        -1.9497302
+       ],
+       [
+        30.0608099,
+        -1.9495503
+       ],
+       [
+        30.0606299,
+        -1.9495503
+       ],
+       [
+        30.0606299,
+        -1.9497302
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.398,
+     "row": 2,
+     "col": 4
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0608099,
+        -1.9497302
+       ],
+       [
+        30.0609898,
+        -1.9497302
+       ],
+       [
+        30.0609898,
+        -1.9495503
+       ],
+       [
+        30.0608099,
+        -1.9495503
+       ],
+       [
+        30.0608099,
         -1.9497302
        ]
       ]
@@ -3752,258 +4018,6 @@
      "kind": "scouting_priority_cell",
      "priority": 0.2442,
      "row": 2,
-     "col": -2
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.05973,
-        -1.9497302
-       ],
-       [
-        30.05991,
-        -1.9497302
-       ],
-       [
-        30.05991,
-        -1.9495503
-       ],
-       [
-        30.05973,
-        -1.9495503
-       ],
-       [
-        30.05973,
-        -1.9497302
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.3269,
-     "row": 2,
-     "col": -1
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.05991,
-        -1.9497302
-       ],
-       [
-        30.06009,
-        -1.9497302
-       ],
-       [
-        30.06009,
-        -1.9495503
-       ],
-       [
-        30.05991,
-        -1.9495503
-       ],
-       [
-        30.05991,
-        -1.9497302
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.3679,
-     "row": 2,
-     "col": 0
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.06009,
-        -1.9497302
-       ],
-       [
-        30.06027,
-        -1.9497302
-       ],
-       [
-        30.06027,
-        -1.9495503
-       ],
-       [
-        30.06009,
-        -1.9495503
-       ],
-       [
-        30.06009,
-        -1.9497302
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.3269,
-     "row": 2,
-     "col": 1
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.06027,
-        -1.9497302
-       ],
-       [
-        30.0604499,
-        -1.9497302
-       ],
-       [
-        30.0604499,
-        -1.9495503
-       ],
-       [
-        30.06027,
-        -1.9495503
-       ],
-       [
-        30.06027,
-        -1.9497302
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.2431,
-     "row": 2,
-     "col": 2
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0604499,
-        -1.9497302
-       ],
-       [
-        30.0606299,
-        -1.9497302
-       ],
-       [
-        30.0606299,
-        -1.9495503
-       ],
-       [
-        30.0604499,
-        -1.9495503
-       ],
-       [
-        30.0604499,
-        -1.9497302
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.1648,
-     "row": 2,
-     "col": 3
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0606299,
-        -1.9497302
-       ],
-       [
-        30.0608099,
-        -1.9497302
-       ],
-       [
-        30.0608099,
-        -1.9495503
-       ],
-       [
-        30.0606299,
-        -1.9495503
-       ],
-       [
-        30.0606299,
-        -1.9497302
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.1069,
-     "row": 2,
-     "col": 4
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0608099,
-        -1.9497302
-       ],
-       [
-        30.0609898,
-        -1.9497302
-       ],
-       [
-        30.0609898,
-        -1.9495503
-       ],
-       [
-        30.0608099,
-        -1.9495503
-       ],
-       [
-        30.0608099,
-        -1.9497302
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0677,
-     "row": 2,
      "col": 5
     }
    },
@@ -4038,7 +4052,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0612,
+     "priority": 0.0595,
      "row": 3,
      "col": -5
     }
@@ -4074,7 +4088,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0864,
+     "priority": 0.0832,
      "row": 3,
      "col": -4
     }
@@ -4110,7 +4124,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1207,
+     "priority": 0.1154,
      "row": 3,
      "col": -3
     }
@@ -4146,7 +4160,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1648,
+     "priority": 0.1569,
      "row": 3,
      "col": -2
     }
@@ -4182,7 +4196,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2057,
+     "priority": 0.196,
      "row": 3,
      "col": -1
     }
@@ -4218,7 +4232,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2231,
+     "priority": 0.2769,
      "row": 3,
      "col": 0
     }
@@ -4254,7 +4268,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.2057,
+     "priority": 0.3915,
      "row": 3,
      "col": 1
     }
@@ -4290,7 +4304,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1648,
+     "priority": 0.4959,
      "row": 3,
      "col": 2
     }
@@ -4326,7 +4340,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1199,
+     "priority": 0.4539,
      "row": 3,
      "col": 3
     }
@@ -4362,7 +4376,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0821,
+     "priority": 0.3252,
      "row": 3,
      "col": 4
     }
@@ -4398,7 +4412,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0542,
+     "priority": 0.2125,
      "row": 3,
      "col": 5
     }
@@ -4434,7 +4448,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0427,
+     "priority": 0.0419,
      "row": 4,
      "col": -5
     }
@@ -4470,7 +4484,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0596,
+     "priority": 0.0582,
      "row": 4,
      "col": -4
     }
@@ -4506,7 +4520,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0821,
+     "priority": 0.0799,
      "row": 4,
      "col": -3
     }
@@ -4542,7 +4556,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1069,
+     "priority": 0.1038,
      "row": 4,
      "col": -2
     }
@@ -4578,7 +4592,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1273,
+     "priority": 0.1392,
      "row": 4,
      "col": -1
     }
@@ -4614,7 +4628,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1353,
+     "priority": 0.1951,
      "row": 4,
      "col": 0
     }
@@ -4650,7 +4664,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1273,
+     "priority": 0.2622,
      "row": 4,
      "col": 1
     }
@@ -4686,7 +4700,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.1069,
+     "priority": 0.3047,
      "row": 4,
      "col": 2
     }
@@ -4722,7 +4736,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0821,
+     "priority": 0.2888,
      "row": 4,
      "col": 3
     }
@@ -4758,7 +4772,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0591,
+     "priority": 0.2287,
      "row": 4,
      "col": 4
     }
@@ -4794,7 +4808,7 @@
     },
     "properties": {
      "kind": "scouting_priority_cell",
-     "priority": 0.0407,
+     "priority": 0.1621,
      "row": 4,
      "col": 5
     }
@@ -4823,366 +4837,6 @@
        ],
        [
         30.0590102,
-        -1.9491906
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0295,
-     "row": 5,
-     "col": -5
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0591901,
-        -1.9491906
-       ],
-       [
-        30.0593701,
-        -1.9491906
-       ],
-       [
-        30.0593701,
-        -1.9490107
-       ],
-       [
-        30.0591901,
-        -1.9490107
-       ],
-       [
-        30.0591901,
-        -1.9491906
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0407,
-     "row": 5,
-     "col": -4
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0593701,
-        -1.9491906
-       ],
-       [
-        30.0595501,
-        -1.9491906
-       ],
-       [
-        30.0595501,
-        -1.9490107
-       ],
-       [
-        30.0593701,
-        -1.9490107
-       ],
-       [
-        30.0593701,
-        -1.9491906
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0542,
-     "row": 5,
-     "col": -3
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0595501,
-        -1.9491906
-       ],
-       [
-        30.05973,
-        -1.9491906
-       ],
-       [
-        30.05973,
-        -1.9490107
-       ],
-       [
-        30.0595501,
-        -1.9490107
-       ],
-       [
-        30.0595501,
-        -1.9491906
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0677,
-     "row": 5,
-     "col": -2
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.05973,
-        -1.9491906
-       ],
-       [
-        30.05991,
-        -1.9491906
-       ],
-       [
-        30.05991,
-        -1.9490107
-       ],
-       [
-        30.05973,
-        -1.9490107
-       ],
-       [
-        30.05973,
-        -1.9491906
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0781,
-     "row": 5,
-     "col": -1
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.05991,
-        -1.9491906
-       ],
-       [
-        30.06009,
-        -1.9491906
-       ],
-       [
-        30.06009,
-        -1.9490107
-       ],
-       [
-        30.05991,
-        -1.9490107
-       ],
-       [
-        30.05991,
-        -1.9491906
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0821,
-     "row": 5,
-     "col": 0
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.06009,
-        -1.9491906
-       ],
-       [
-        30.06027,
-        -1.9491906
-       ],
-       [
-        30.06027,
-        -1.9490107
-       ],
-       [
-        30.06009,
-        -1.9490107
-       ],
-       [
-        30.06009,
-        -1.9491906
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0781,
-     "row": 5,
-     "col": 1
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.06027,
-        -1.9491906
-       ],
-       [
-        30.0604499,
-        -1.9491906
-       ],
-       [
-        30.0604499,
-        -1.9490107
-       ],
-       [
-        30.06027,
-        -1.9490107
-       ],
-       [
-        30.06027,
-        -1.9491906
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0677,
-     "row": 5,
-     "col": 2
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0604499,
-        -1.9491906
-       ],
-       [
-        30.0606299,
-        -1.9491906
-       ],
-       [
-        30.0606299,
-        -1.9490107
-       ],
-       [
-        30.0604499,
-        -1.9490107
-       ],
-       [
-        30.0604499,
-        -1.9491906
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0542,
-     "row": 5,
-     "col": 3
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0606299,
-        -1.9491906
-       ],
-       [
-        30.0608099,
-        -1.9491906
-       ],
-       [
-        30.0608099,
-        -1.9490107
-       ],
-       [
-        30.0606299,
-        -1.9490107
-       ],
-       [
-        30.0606299,
-        -1.9491906
-       ]
-      ]
-     ]
-    },
-    "properties": {
-     "kind": "scouting_priority_cell",
-     "priority": 0.0407,
-     "row": 5,
-     "col": 4
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Polygon",
-     "coordinates": [
-      [
-       [
-        30.0608099,
-        -1.9491906
-       ],
-       [
-        30.0609898,
-        -1.9491906
-       ],
-       [
-        30.0609898,
-        -1.9490107
-       ],
-       [
-        30.0608099,
-        -1.9490107
-       ],
-       [
-        30.0608099,
         -1.9491906
        ]
       ]
@@ -5191,6 +4845,366 @@
     "properties": {
      "kind": "scouting_priority_cell",
      "priority": 0.0291,
+     "row": 5,
+     "col": -5
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0591901,
+        -1.9491906
+       ],
+       [
+        30.0593701,
+        -1.9491906
+       ],
+       [
+        30.0593701,
+        -1.9490107
+       ],
+       [
+        30.0591901,
+        -1.9490107
+       ],
+       [
+        30.0591901,
+        -1.9491906
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.0401,
+     "row": 5,
+     "col": -4
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0593701,
+        -1.9491906
+       ],
+       [
+        30.0595501,
+        -1.9491906
+       ],
+       [
+        30.0595501,
+        -1.9490107
+       ],
+       [
+        30.0593701,
+        -1.9490107
+       ],
+       [
+        30.0593701,
+        -1.9491906
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.0533,
+     "row": 5,
+     "col": -3
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0595501,
+        -1.9491906
+       ],
+       [
+        30.05973,
+        -1.9491906
+       ],
+       [
+        30.05973,
+        -1.9490107
+       ],
+       [
+        30.0595501,
+        -1.9490107
+       ],
+       [
+        30.0595501,
+        -1.9491906
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.0697,
+     "row": 5,
+     "col": -2
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.05973,
+        -1.9491906
+       ],
+       [
+        30.05991,
+        -1.9491906
+       ],
+       [
+        30.05991,
+        -1.9490107
+       ],
+       [
+        30.05973,
+        -1.9490107
+       ],
+       [
+        30.05973,
+        -1.9491906
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.0972,
+     "row": 5,
+     "col": -1
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.05991,
+        -1.9491906
+       ],
+       [
+        30.06009,
+        -1.9491906
+       ],
+       [
+        30.06009,
+        -1.9490107
+       ],
+       [
+        30.05991,
+        -1.9490107
+       ],
+       [
+        30.05991,
+        -1.9491906
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1328,
+     "row": 5,
+     "col": 0
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.06009,
+        -1.9491906
+       ],
+       [
+        30.06027,
+        -1.9491906
+       ],
+       [
+        30.06027,
+        -1.9490107
+       ],
+       [
+        30.06009,
+        -1.9490107
+       ],
+       [
+        30.06009,
+        -1.9491906
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1672,
+     "row": 5,
+     "col": 1
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.06027,
+        -1.9491906
+       ],
+       [
+        30.0604499,
+        -1.9491906
+       ],
+       [
+        30.0604499,
+        -1.9490107
+       ],
+       [
+        30.06027,
+        -1.9490107
+       ],
+       [
+        30.06027,
+        -1.9491906
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1862,
+     "row": 5,
+     "col": 2
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0604499,
+        -1.9491906
+       ],
+       [
+        30.0606299,
+        -1.9491906
+       ],
+       [
+        30.0606299,
+        -1.9490107
+       ],
+       [
+        30.0604499,
+        -1.9490107
+       ],
+       [
+        30.0604499,
+        -1.9491906
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1792,
+     "row": 5,
+     "col": 3
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0606299,
+        -1.9491906
+       ],
+       [
+        30.0608099,
+        -1.9491906
+       ],
+       [
+        30.0608099,
+        -1.9490107
+       ],
+       [
+        30.0606299,
+        -1.9490107
+       ],
+       [
+        30.0606299,
+        -1.9491906
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1504,
+     "row": 5,
+     "col": 4
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        30.0608099,
+        -1.9491906
+       ],
+       [
+        30.0609898,
+        -1.9491906
+       ],
+       [
+        30.0609898,
+        -1.9490107
+       ],
+       [
+        30.0608099,
+        -1.9490107
+       ],
+       [
+        30.0608099,
+        -1.9491906
+       ]
+      ]
+     ]
+    },
+    "properties": {
+     "kind": "scouting_priority_cell",
+     "priority": 0.1138,
      "row": 5,
      "col": 5
     }
@@ -5208,8 +5222,42 @@
      "kind": "reported_observation",
      "present": true,
      "label": "Reported plant (this observation)",
-     "observation_id": "demo-coffee-001",
+     "observation_id": "demo-coffee-001-history",
      "current": true
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Point",
+     "coordinates": [
+      30.0604,
+      -1.9497
+     ]
+    },
+    "properties": {
+     "kind": "reported_observation",
+     "present": true,
+     "label": "Earlier report: rust seen",
+     "observation_id": "prior-1",
+     "current": false
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Point",
+     "coordinates": [
+      30.0597,
+      -1.9503
+     ]
+    },
+    "properties": {
+     "kind": "reported_observation",
+     "present": false,
+     "label": "Earlier report: no rust seen",
+     "observation_id": "prior-2",
+     "current": false
     }
    },
    {
@@ -5225,7 +5273,7 @@
      "kind": "scouting_point",
      "rank": 1,
      "label": "Priority point 1",
-     "priority": 1.0,
+     "priority": 0.8462,
      "scouting_id": "scout_point_1"
     }
    },
@@ -5234,33 +5282,16 @@
     "geometry": {
      "type": "Point",
      "coordinates": [
-      30.0596401,
-      -1.9501799
+      30.0603599,
+      -1.9496403
      ]
     },
     "properties": {
      "kind": "scouting_point",
      "rank": 2,
      "label": "Priority point 2",
-     "priority": 0.5483,
+     "priority": 0.7882,
      "scouting_id": "scout_point_2"
-    }
-   },
-   {
-    "type": "Feature",
-    "geometry": {
-     "type": "Point",
-     "coordinates": [
-      30.06,
-      -1.9503597
-     ]
-    },
-    "properties": {
-     "kind": "scouting_point",
-     "rank": 3,
-     "label": "Priority point 3",
-     "priority": 0.4348,
-     "scouting_id": "scout_point_3"
     }
    },
    {
@@ -5274,9 +5305,26 @@
     },
     "properties": {
      "kind": "scouting_point",
+     "rank": 3,
+     "label": "Priority point 3",
+     "priority": 0.4878,
+     "scouting_id": "scout_point_3"
+    }
+   },
+   {
+    "type": "Feature",
+    "geometry": {
+     "type": "Point",
+     "coordinates": [
+      30.0607199,
+      -1.9496403
+     ]
+    },
+    "properties": {
+     "kind": "scouting_point",
      "rank": 4,
      "label": "Priority point 4",
-     "priority": 0.3679,
+     "priority": 0.398,
      "scouting_id": "scout_point_4"
     }
    },
@@ -5285,15 +5333,15 @@
     "geometry": {
      "type": "Point",
      "coordinates": [
-      30.06,
-      -1.9496403
+      30.0596401,
+      -1.95
      ]
     },
     "properties": {
      "kind": "scouting_point",
      "rank": 5,
      "label": "Priority point 5",
-     "priority": 0.3679,
+     "priority": 0.373,
      "scouting_id": "scout_point_5"
     }
    }
@@ -5315,7 +5363,7 @@
    "stretch": 1.0
   },
   "method": "Relative scouting priority on a local grid: exponential distance decay from reported symptomatic points, stretched downwind when forecast wind direction is consistent; reduced near prior observations reported clear. Weather favourability is reported separately (farm-level). Not an infection probability.",
-  "prior_observations_used": 0
+  "prior_observations_used": 2
  },
  "guidance_scope": {
   "applicability": "Biology (free water, temperature range, latency, dispersal, lower-canopy onset) is pathogen-level and applies across regions. Practical guidance is drawn mainly from Hawaiʻi extension publications; only generic measures (inspection, sanitation, movement limits, re-scouting, consulting extension, resistant cultivars) are retained. Hawaiʻi-specific regulatory reporting, product lists and contacts are deliberately omitted.",

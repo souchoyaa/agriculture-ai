@@ -1,6 +1,8 @@
 // Canonical API 0.1.0 client boundary. Views consume `Api` only; mock and HTTP stay independent.
 import observationFixture from '../../shared/fixtures/observation.json';
 import analysisFixture from '../../shared/fixtures/analysis.json';
+import unsupportedCropExample from '../../shared/fixtures/examples/unsupported_crop.analysis.json';
+import lowConfidenceExample from '../../shared/fixtures/examples/low_confidence.analysis.json';
 
 export const CONTRACT_VERSION = '0.1.0';
 export type DataMode = 'demo' | 'live' | 'cached';
@@ -21,16 +23,44 @@ export interface MapFeature {
 export interface Analysis {
   contract_version: string; id: string; data_mode: DataMode; provenance: Provenance;
   observation_id: string; generated_at: string; status: AnalysisStatus;
-  condition: { id: string; label: string; confidence: number; uncertainty: string; [extra: string]: unknown };
+  condition: {
+    id: string; label: string; confidence: number; uncertainty: string;
+    // Optional backend additions (0.1.0, additive). Absent on older servers.
+    abstained?: boolean; confidence_kind?: string; pathogen?: string;
+    differentials?: { signal?: string; condition_id: string; label: string; confidence?: number; source_ids?: string[] }[];
+    support_blocked_by_differential?: boolean;
+    severity?: { affected_leaf_area_pct?: number; level?: number; scale?: string; scope?: string; source_ids?: string[] } | null;
+    [extra: string]: unknown;
+  };
   environment: { status: Freshness; as_of: string | null; temperature_c: number | null; relative_humidity_pct: number | null; rainfall_mm: number | null; [extra: string]: unknown };
   map: { status: 'available' | 'unavailable' | 'unsupported'; type: 'FeatureCollection'; features: MapFeature[]; limitations: string; [extra: string]: unknown };
-  scouting: { id: string; text: string; [extra: string]: unknown }[];
+  scouting: { id: string; text: string; rank?: number; priority?: number; location?: { latitude: number; longitude: number }; distance_m?: number; source_ids?: string[]; [extra: string]: unknown }[];
   recommendations: { id: string; text: string; source_ids: string[]; [extra: string]: unknown }[];
-  sources: { id: string; title: string; url: string; accessed_at: string; [extra: string]: unknown }[];
+  sources: { id: string; title: string; url: string; accessed_at: string; license?: string; kind?: string; publisher?: string; [extra: string]: unknown }[];
+  weather_risk?: WeatherRisk;
+  review?: { suggested: boolean; reasons?: { id: string; text: string }[]; requires_user_authorization?: boolean; auto_contact?: boolean };
+  localization?: { requested?: string; used?: string; fallback?: boolean; reviewed_by_native_speaker?: boolean; catalog_status?: string };
+  guidance_scope?: { applicability?: string; local_check_required?: string[]; regions_of_guidance_sources?: string[] };
+  evidence?: { label: string; confidence?: number; recognized?: boolean; specific?: boolean; contribution?: number }[];
   offline: { cached: boolean; stale: boolean; sync_status: 'local_only' | 'pending' | 'synced' | 'failed'; [extra: string]: unknown };
   [extra: string]: unknown;
 }
-export interface Health { status: string; contract_version: string; data_mode: DataMode }
+export interface WeatherRisk {
+  status: 'available' | 'partial' | 'unavailable';
+  class?: 'low' | 'moderate' | 'high' | null;
+  summary?: string; interpretation?: string; calibrated?: boolean;
+  favourable_days?: number; assessed_days?: number; history_days?: number; forecast_days?: number;
+  days?: { date: string; favourable?: boolean; complete?: boolean; period?: string }[];
+  climatology?: { status?: string; relation?: string; summary?: string; caveat?: string };
+  limitations?: string[];
+  [extra: string]: unknown;
+}
+export interface Health {
+  status: string; contract_version: string; data_mode: DataMode;
+  /** Service capability (backend ≥ 19af16e); never a label for individual analyses. */
+  data_mode_scope?: string;
+  capabilities?: { image_inference?: string; weather?: string; calibration?: string; persistence?: string; [extra: string]: unknown };
+}
 export interface Api {
   readonly kind: 'mock' | 'http';
   readonly baseUrl?: string;
@@ -45,16 +75,18 @@ export class ApiError extends Error {
 export const demoObservation = observationFixture as Observation;
 export { demoObservation as observation };
 
+// Signal labels the backend coffee knowledge base recognises (backend/data/conditions); used
+// only to pick between two canned examples so the offline demo can show abstention.
+const MOCK_RECOGNIZED = new Set(['orange_powder_leaf_underside', 'rust_like_leaf_marks', 'yellow_spots_upper_leaf', 'lesions_lower_canopy_first', 'premature_leaf_drop', 'brown_dry_lesion_centres']);
+
 export const mockApi: Api = {
   kind: 'mock',
+  /** Returns a published backend example verbatim (fixed demo answer; it does not read the report). */
   async analyze(input) {
-    const result = JSON.parse(JSON.stringify(analysisFixture)) as Analysis;
+    const example = input.crop !== 'coffee' ? unsupportedCropExample
+      : input.signals.some(s => MOCK_RECOGNIZED.has(s.label)) ? analysisFixture : lowConfidenceExample;
+    const result = JSON.parse(JSON.stringify(example)) as Analysis;
     result.observation_id = input.id;
-    if (input.crop !== 'coffee') {
-      result.status = 'unsupported';
-      result.condition = { id: 'unknown', label: 'Unsupported crop', confidence: 0, uncertainty: 'Bootstrap supports coffee demo only' };
-      result.scouting = []; result.recommendations = [];
-    }
     return result;
   },
   async health() { return { status: 'ok', contract_version: CONTRACT_VERSION, data_mode: 'demo' }; },
