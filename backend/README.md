@@ -7,7 +7,7 @@ FastAPI + uv. Domain logic in `app/domain/` (no HTTP), VLM boundary in `app/adap
 cd backend
 export UV_CACHE_DIR="$PWD/.cache/uv" UV_PYTHON_INSTALL_DIR="$PWD/.cache/python"
 uv sync --python 3.12
-uv run python -m unittest discover -s tests          # 70 tests, offline (verified 2026-10-04 04:56Z)
+uv run python -m unittest discover -s tests          # 71 tests, offline (verified 2026-10-04 04:56Z)
 uv run python scripts/demo.py                        # all scenarios end-to-end, writes docs/backend/examples/*.geojson|svg
 AGRI_FIXED_NOW=2026-10-04T04:59:00Z uv run uvicorn app.main:app --host 127.0.0.1 --port 8000
 uv run python scripts/demo.py --base-url http://127.0.0.1:8000   # same journey over real HTTP
@@ -18,7 +18,7 @@ CORS for a web build on another origin: `AGRI_CORS_ORIGINS=http://localhost:8091
 Without `AGRI_FIXED_NOW` the real clock is used. The real weather cache was fetched 2026-10-04T04:45:47Z; it is fresh for six hours after that fetch, then explicitly stale. The frozen fixture analysis time is 2026-10-04T04:59:00Z.
 
 ## Integration status
-Integration branch `integration` contains backend 42f4dd7 and frontend source from aacd963 (source integration 7acfbdb), plus the monitor-completed weather/fixture refresh. Independent checks: backend 70 tests (one optional raw-ERA5 test skipped), frontend TypeScript/adapters and 16 domain tests, production web export. Earlier combined milestones passed strict real-backend browser smoke and phone/desktop journeys with zero console errors; evidence is in `docs/backend/integration/README.md`. The newest source/data refresh still awaits another full browser journey after Claude resumes. Existing screenshots were preserved.
+Integration branch `integration` contains backend 42f4dd7 and frontend source from aacd963 (source integration 7acfbdb), plus the monitor-completed weather/fixture refresh. Independent checks: backend 71 tests (one optional raw-ERA5 test skipped), frontend TypeScript/adapters and 17 domain tests, production web export. Earlier combined milestones passed strict real-backend browser smoke and phone/desktop journeys with zero console errors; evidence is in `docs/backend/integration/README.md`. The newest source/data refresh still awaits another full browser journey after Claude resumes. Existing screenshots were preserved.
 
 ## Coverage
 | Crop | Condition | Signals understood | Locales |

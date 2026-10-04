@@ -255,7 +255,8 @@
    {
     "component": "observation",
     "origin": "demo",
-    "adapter": "mock-vlm"
+    "adapter": "mock-vlm",
+    "source": "synthetic fixture; no model inference"
    },
    {
     "component": "evidence_model",

@@ -247,6 +247,15 @@ test('photo cleanup only targets files inside the app-owned photos directory', (
   }
 });
 
+test('live reports disclose example-field coordinates in their provenance', () => {
+  const args = { id: 'location-origin', field, symptoms: ['yellow_spots_upper_leaf'], certainty: 'sure' as const, locale: 'en', now: new Date(), hasPhoto: false };
+  const example = buildObservation({ ...args, field: { ...field, demo: true } });
+  assert(validObservation(example));
+  assert.equal(example.data_mode, 'live', 'the symptom report is still current');
+  assert.match(example.provenance.source, /example field location/);
+  assert.doesNotMatch(buildObservation(args).provenance.source, /example field location/);
+});
+
 (async () => {
   let failed = 0;
   for (const [name, fn] of tests) {

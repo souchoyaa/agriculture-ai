@@ -27,3 +27,6 @@ Bootstrap `frontend/src/api.ts` derived types via `typeof analysis.json`; its li
 
 ## Monitor completion of interrupted weather refresh
 Claude backend fetched the real Open-Meteo cache at 2026-10-04T04:45:47.168074+00:00 before hitting quota. The monitor preserved those downloaded weather values in integration (clarifying the model-versus-station provenance note) and froze fixture analysis time to 2026-10-04T04:59:00+00:00, then regenerated fixtures offline. The backend development worktree and its uncommitted download were left intact.
+
+## Mixed observation provenance
+The client explicitly identifies seeded example-field coordinates during capture and in results. Live farmer reports retain an example-location note in observation provenance, and the backend preserves that supplied source in its observation component. New personal fields currently have no location-entry flow; their real weather/scouting context remains unavailable.

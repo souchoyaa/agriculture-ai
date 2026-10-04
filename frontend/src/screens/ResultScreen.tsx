@@ -31,6 +31,8 @@ export function ResultScreen({ nav, recordId }: { nav: Nav; recordId: string }) 
         <Text style={type.label}>{(field?.name ?? '').toUpperCase()} · {formatDateTime(record.createdAt, state.settings.locale)}</Text>
         <H1>{t('result.title')}</H1>
       </View>
+      {record.observation.location && (field?.demo || String(record.observation.provenance.source ?? '').includes('example field location'))
+        ? <Card tone="warn"><Body>{t('location.example')}</Body></Card> : null}
       {record.analysis.kind === 'done'
         ? <AnalysisView record={record} analysis={record.analysis.analysis} via={record.analysis.via} nav={nav} />
         : <PendingView record={record} />}

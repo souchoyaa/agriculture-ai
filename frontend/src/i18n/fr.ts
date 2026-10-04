@@ -255,6 +255,8 @@ export const fr: Messages = {
   'field.compare.score': 'Score des indices {score}',
   'field.compare.weather': 'Météo favorable : {cls}',
   'field.compare.note': 'Les scores ne sont pas calibrés et dépendent de ce qui a été signalé à chaque fois ; un score différent ne signifie pas à lui seul que la maladie a progressé ou reculé.',
+  'location.example': 'Ce champ est un exemple. La météo et les points à inspecter utilisent son emplacement fictif, pas celui de votre exploitation.',
+  'location.missing': 'Vous pouvez toujours noter les symptômes. Un emplacement enregistré est nécessaire pour la météo et les points à inspecter fournis par le serveur.',
   'common.loading': 'Chargement…',
   'common.close': 'Fermer',
   'common.yes': 'Oui',

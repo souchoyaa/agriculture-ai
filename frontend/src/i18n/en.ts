@@ -253,6 +253,8 @@ export const en = {
   'field.compare.score': 'Evidence score {score}',
   'field.compare.weather': 'Weather favourability: {cls}',
   'field.compare.note': 'Scores are uncalibrated and depend on what was reported each time; a different score does not by itself mean the disease got better or worse.',
+  'location.example': 'This is an example field. Weather and scouting use its example location, not the location of your farm.',
+  'location.missing': 'You can still record symptoms. A saved field location is needed for server weather and scouting.',
   'common.loading': 'Loading…',
   'common.close': 'Close',
   'common.yes': 'Yes',

@@ -362,6 +362,16 @@ class Http(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), read("fixtures/analysis.json"))
 
+    def test_observation_source_preserved_in_analysis_provenance(self):
+        obs = observation()
+        obs["data_mode"] = "live"
+        obs["provenance"] = {"adapter": "farmer-report", "source": "symptom checklist; example field location, not verified as your farm"}
+        response = self.client.post("/v1/analyses", json=obs)
+        self.assertEqual(response.status_code, 200)
+        component = next(c for c in response.json()["provenance"]["components"] if c["component"] == "observation")
+        self.assertEqual(component["origin"], "live")
+        self.assertEqual(component["source"], obs["provenance"]["source"])
+
     def test_invalid_observation_envelope(self):
         bad = observation()
         bad["signals"][0]["confidence"] = 2
