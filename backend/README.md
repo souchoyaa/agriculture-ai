@@ -7,7 +7,7 @@ FastAPI + uv. Domain logic in `app/domain/` (no HTTP), VLM boundary in `app/adap
 cd backend
 export UV_CACHE_DIR="$PWD/.cache/uv" UV_PYTHON_INSTALL_DIR="$PWD/.cache/python"
 uv sync --python 3.12
-uv run python -m unittest discover -s tests          # 65 tests, offline (verified 2026-10-04 04:36Z)
+uv run python -m unittest discover -s tests          # 67 tests, offline (verified 2026-10-04 04:45Z)
 uv run python scripts/demo.py                        # all scenarios end-to-end, writes docs/backend/examples/*.geojson|svg
 AGRI_FIXED_NOW=2026-10-04T00:00:00Z uv run uvicorn app.main:app --host 127.0.0.1 --port 8000
 uv run python scripts/demo.py --base-url http://127.0.0.1:8000   # same journey over real HTTP
@@ -31,7 +31,7 @@ Look-alike conditions (Cercospora/brown leaf spot, leaf miner, red spider mite, 
 - `weather_risk.class`: share of days with ≥ 6 h wet spell at favourable temperature, 14 d back / 7 d ahead. Uncalibrated; saturates in humid zones (see `docs/backend/model.md`).
 - `map`: relative scouting priority (0–1), not infection probability.
 - `review`: proposes officer review; never contacts anyone (`requires_user_authorization`).
-- Sources: `data/sources.json` (URL, access date, licence, region). Guidance drawn mostly from Hawaiʻi extension material; only generic measures kept (`guidance_scope`).
+- Sources: `data/sources.json` (URL, access date, licence, region). Guidance from Hawaiʻi extension material plus Rwanda Agriculture Board/Plantwise factsheet and a Rwandan farm survey; generic measures only, no product/dose advice (`guidance_scope`, `regional_context`).
 
 ## Next step for the real Liquid adapter
 Implement `LiquidVLMAdapter.observe(raw)` in `app/adapters/vlm.py`: map model labels onto the signal vocabulary in `data/conditions/*.json`, keep per-signal confidence, never invent location/locale, set `provenance.adapter = "liquid-vlm"` + model version, validate with `contracts.validate("observation", …)`. Unknown labels pass through as unrecognised (they cannot raise the score).

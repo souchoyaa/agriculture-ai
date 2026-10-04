@@ -209,5 +209,45 @@
       "class_vocabulary",
       "differential_biotic_stresses"
     ]
+  },
+  {
+    "id": "rab_plantwise_rw014_2012",
+    "title": "Factsheet for farmers: Coffee leaf rust (RW014En)",
+    "authors": "Mushimiyimana, S.; Nduwayezu, A. (Rwanda Agriculture Board); edited by Plantwise/CABI",
+    "publisher": "Plantwise (CABI)",
+    "published": "2012-05",
+    "url": "https://factsheetadmin.plantwise.org/Uploads/PDFs/20127801774.pdf",
+    "accessed_at": "2026-10-04T04:37:00Z",
+    "license": "CC BY-SA 4.0",
+    "kind": "extension",
+    "region": "Rwanda (also stated relevant to Kenya, Ghana)",
+    "used_for": [
+      "symptoms",
+      "wind_and_human_spread",
+      "action_threshold_two_spots_per_leaf",
+      "spacing_pruning",
+      "resistant_varieties"
+    ],
+    "note": "Contains fungicide product names and doses (2012); deliberately not reproduced in app output — registrations/labels must be checked locally."
+  },
+  {
+    "id": "bigirimana_2012_ajar",
+    "title": "Incidence and severity of coffee leaf rust and other coffee pests and diseases in Rwanda",
+    "authors": "Bigirimana, J.; Njoroge, K.; Gahakwa, D.; Phiri, N. A.",
+    "publisher": "African Journal of Agricultural Research 7(26)",
+    "published": "2012-07-10",
+    "doi": "10.5897/ajar11.955",
+    "url": "https://doi.org/10.5897/ajar11.955",
+    "accessed_at": "2026-10-04T04:39:00Z",
+    "license": "Open access (Academic Journals); abstract read via Semantic Scholar, full text not read",
+    "kind": "peer_reviewed",
+    "region": "Rwanda",
+    "used_for": [
+      "rwanda_all_provinces_affected",
+      "altitude_negative_correlation",
+      "commercial_cultivars_susceptible",
+      "mulching_pruning_fertiliser_lower_severity",
+      "intercropping_higher_severity"
+    ]
   }
 ]

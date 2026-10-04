@@ -257,8 +257,15 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
     result["review"] = {"suggested": bool(reasons), "reasons": [{"id": r, "text": t(f"review.reason.{r}")} for r in reasons],
                         "requires_user_authorization": True, "auto_contact": False}
 
-    result["sources"] = knowledge.cite(used_sources)
     result["guidance_scope"] = condition["guidance_scope"]
+    result["regional_context"] = [
+        {"id": note["id"], "region": note["region"], "text": t(f"regional.{note['id']}"), "source_ids": note["source_ids"]}
+        for note in condition.get("regional_notes", [])
+        if location and note["bbox"][0] <= location["longitude"] <= note["bbox"][2] and note["bbox"][1] <= location["latitude"] <= note["bbox"][3]
+    ]
+    for note in result["regional_context"]:
+        used_sources |= set(note["source_ids"])
+    result["sources"] = knowledge.cite(used_sources)
     result["provenance"]["components"] = [
         {"component": "observation", "origin": observation["data_mode"], "adapter": observation["provenance"]["adapter"]},
         {"component": "evidence_model", "origin": "agent_authored_heuristic", "expert_reviewed": False, "calibrated": False},

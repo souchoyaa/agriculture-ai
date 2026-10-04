@@ -54,5 +54,8 @@
   "map.label.scouting_point": "Punto prioritario {rank}",
   "uncertainty.specific_low_certainty": "Se reportó un signo específico de la roya del café, pero con poca certeza (puntuación de evidencia {score}). Confírmelo en más hojas antes de actuar.",
   "review.reason.specific_low_certainty": "Se reportó un signo específico con poca certeza; un experto debería confirmarlo antes de tomar decisiones.",
-  "risk.climatology_caveat": "La referencia de largo plazo usa un conjunto de datos meteorológicos distinto al del periodo actual, así que la comparación es solo orientativa."
+  "risk.climatology_caveat": "La referencia de largo plazo usa un conjunto de datos meteorológicos distinto al del periodo actual, así que la comparación es solo orientativa.",
+  "recommendation.count_spots_threshold": "Cuente las manchas de roya en una muestra de hojas. La guía de extensión de Ruanda considera el control con unas dos manchas por hoja; consulte a su técnico de extensión antes de actuar.",
+  "recommendation.open_canopy_spacing_pruning": "Mantenga la distancia de siembra recomendada y pode para abrir el arbusto. En un estudio de fincas en Ruanda, la poda, el acolchado y la fertilización se asociaron con menos roya, y la intercalación de cultivos con más.",
+  "regional.rwanda_survey_context": "Ruanda: un estudio de 2012 en 307 fincas encontró roya en todas las provincias (peor en la Provincia Oriental), menos roya a mayor altitud y todas las variedades comerciales susceptibles."
 }
