@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Image, Linking, Pressable, Text, View } from 'react-native';
+import { Image, Linking, Pressable, Text, useWindowDimensions, View } from 'react-native';
+
+export const RESULT_TWO_COLUMN_MIN = 1180;
 import type { Analysis } from '../api';
 import { followUpDue, signalStrength, type ObservationRecord } from '../domain/model';
 import { formatDate, formatDateTime, type MessageId } from '../i18n';
@@ -63,11 +65,14 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
   const sourceById = new Map(analysis.sources.map(s => [s.id, s]));
   const due = followUpDue(record, new Date());
   const isDemo = analysis.data_mode === 'demo' || via === 'mock';
+  // Wide screens: understanding/action on the left, spatial/weather/monitoring on the right.
+  const twoCol = useWindowDimensions().width >= RESULT_TWO_COLUMN_MIN;
   // Ranked, located scouting points are listed with the map when it is available.
   const doNext = analysis.map.status === 'available' ? analysis.scouting.filter(s => typeof s.rank !== 'number') : analysis.scouting;
 
   return (
-    <View style={{ gap: space(4) }}>
+    <View style={{ flexDirection: twoCol ? 'row' : 'column', gap: space(4), alignItems: 'flex-start' }}>
+    <View style={{ gap: space(4), flex: twoCol ? 1 : undefined, width: twoCol ? undefined : '100%' }}>
       <View accessibilityRole="alert" style={{ backgroundColor: isDemo ? color.turmeric : color.skySoft, borderRadius: radius.sm, padding: space(3), borderWidth: 2, borderColor: isDemo ? '#8A6A00' : color.sky }}>
         <Text style={[type.label, { color: color.ink, fontSize: 14 }]}>{isDemo ? t('result.demoStamp') : t('result.liveStamp')}</Text>
         {via === 'mock' ? <Text style={[type.small, { color: color.ink, marginTop: 2 }]}>{t('result.mockExample')}</Text>
@@ -141,6 +146,8 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
       </Card>
 
       <ReviewCard analysis={analysis} record={record} />
+    </View>
+    <View style={{ gap: space(4), flex: twoCol ? 1 : undefined, width: twoCol ? undefined : '100%' }}>
       <RiskMap map={analysis.map} scouting={analysis.scouting} />
       <WeatherCard env={analysis.environment} risk={analysis.weather_risk} />
 
@@ -154,6 +161,7 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
       </Card>
 
       <Details analysis={analysis} record={record} via={via} />
+    </View>
     </View>
   );
 }
