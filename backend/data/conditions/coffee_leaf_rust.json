@@ -1,0 +1,59 @@
+{
+  "id": "coffee_leaf_rust",
+  "crop": "coffee",
+  "pathogen": "Hemileia vastatrix",
+  "label_key": "condition.coffee_leaf_rust.label",
+  "knowledge_reviewed": "Agent-curated from listed extension and peer-reviewed sources on 2026-10-04; not yet reviewed by a plant pathologist.",
+  "signals": {
+    "orange_powder_leaf_underside": {"weight": 0.85, "specific": true, "source_ids": ["hdoa_npa_20_03_2021", "hdoa_field_guide_2020", "talhinhas_2017_mpp"]},
+    "rust_like_leaf_marks": {"weight": 0.65, "specific": false, "source_ids": ["hdoa_field_guide_2020"]},
+    "yellow_spots_upper_leaf": {"weight": 0.4, "specific": false, "source_ids": ["hdoa_npa_20_03_2021", "talhinhas_2017_mpp"]},
+    "lesions_lower_canopy_first": {"weight": 0.3, "specific": false, "source_ids": ["hdoa_npa_20_03_2021", "ctahr_pd118_2021"]},
+    "premature_leaf_drop": {"weight": 0.25, "specific": false, "source_ids": ["hdoa_npa_20_03_2021"]},
+    "brown_dry_lesion_centres": {"weight": 0.25, "specific": false, "source_ids": ["hdoa_npa_20_03_2021"]}
+  },
+  "evidence_model": {
+    "method": "noisy_or",
+    "description": "score = 1 - prod(1 - weight_i * confidence_i) over recognised signals. Weights are expert-set specificity assumptions (uncalibrated), not fitted constants.",
+    "abstain_below": 0.35,
+    "supported_at_or_above": 0.75,
+    "supported_requires_specific_signal": true
+  },
+  "weather_model": {
+    "description": "Hourly infection-favourability heuristic: wet hour (RH >= wet_rh_pct or precipitation >= wet_precip_mm) weighted by a trapezoidal temperature factor; a day is favourable when it contains a wet spell >= min_wet_hours with mean temperature factor >= min_temp_factor.",
+    "temperature_c": {"zero_below": 12.5, "optimum_low": 21.0, "optimum_high": 23.0, "zero_above": 32.5,
+      "source_ids": ["marino_2026_frontiers", "de_jong_1987_njpp"],
+      "note": "Germination bounds/optimum from review citing De Jong et al. 1987; linear ramps between bounds are an assumption."},
+    "min_wet_hours": {"value": 6, "source_ids": ["marino_2026_frontiers"], "note": "Lower end of the 6-24 h wetness reported for germination."},
+    "wet_rh_pct": {"value": 90, "source_ids": [], "note": "Assumption: RH >= 90% used as a leaf-wetness proxy; no leaf-wetness sensor data. Uncalibrated."},
+    "wet_precip_mm": {"value": 0.1, "source_ids": ["hdoa_npa_20_03_2021"], "note": "Free water from rain is required for germination; threshold is an assumption."},
+    "min_temp_factor": {"value": 0.5, "source_ids": [], "note": "Assumption."},
+    "latent_period_days": {"min": 28, "max": 42, "source_ids": ["hdoa_npa_20_03_2021"], "note": "Characteristic lesions appear 4-6 weeks after infection."},
+    "classes": {"low_below": 0.2, "high_at_or_above": 0.5, "note": "Class thresholds on fraction of favourable days are uncalibrated assumptions."},
+    "history_days": 14,
+    "forecast_days": 7
+  },
+  "spatial_model": {
+    "description": "Relative scouting priority on a local grid: exponential distance decay from reported symptomatic points, stretched downwind when forecast wind direction is consistent; reduced near prior observations reported clear. Weather favourability is reported separately (farm-level). Not an infection probability.",
+    "cell_size_m": 20,
+    "half_width_cells": 5,
+    "decay_length_m": 40,
+    "downwind_stretch": 1.0,
+    "dispersal_source_ids": ["hdoa_npa_20_03_2021", "marino_2026_frontiers"],
+    "note": "Wind and rain-splash dispersal are documented; decay length, stretch and grid size are uncalibrated layout assumptions for scouting, not fitted dispersal kernels."
+  },
+  "scouting": [
+    {"id": "inspect_lower_canopy_undersides", "source_ids": ["hdoa_npa_20_03_2021", "hdoa_field_guide_2020", "ctahr_pd118_2021"]},
+    {"id": "photograph_both_leaf_surfaces", "source_ids": ["hdoa_npa_20_03_2021", "hdoa_field_guide_2020"]},
+    {"id": "check_wet_leaf_edges_tips", "source_ids": ["hdoa_npa_20_03_2021"]},
+    {"id": "walk_priority_points", "source_ids": []}
+  ],
+  "recommendations": [
+    {"id": "flag_area_limit_movement", "source_ids": ["hdoa_npa_20_03_2021", "hdoa_field_guide_2020"]},
+    {"id": "sanitize_clothing_tools", "source_ids": ["hdoa_npa_20_03_2021"]},
+    {"id": "rescout_after_latent_period", "source_ids": ["hdoa_npa_20_03_2021"]},
+    {"id": "consult_extension_before_fungicide", "source_ids": ["ctahr_pd118_2021", "hdoa_npa_20_03_2021"]},
+    {"id": "remove_feral_coffee_weeds", "source_ids": ["hdoa_npa_20_03_2021"]},
+    {"id": "consider_resistant_cultivars", "source_ids": ["talhinhas_2017_mpp", "avelino_2015_food_security"]}
+  ]
+}

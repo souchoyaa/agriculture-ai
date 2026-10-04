@@ -1,7 +1,7 @@
 {
  "contract_version": "0.1.0",
- "id": "analysis-dbd415beedc858b4",
- "observation_id": "demo-coffee-001",
+ "id": "analysis-9bbf757ee668bfdd",
+ "observation_id": "demo-coffee-001-es",
  "data_mode": "demo",
  "generated_at": "2026-10-04T00:00:00Z",
  "environment": {
@@ -25,7 +25,7 @@
  "scouting": [
   {
    "id": "inspect_lower_canopy_undersides",
-   "text": "Inspect the undersides of lower-canopy leaves first; look for yellow-orange powder below yellow spots.",
+   "text": "Revise primero el envés de las hojas de la parte baja de la planta; busque polvo amarillo-naranja debajo de las manchas amarillas.",
    "source_ids": [
     "hdoa_npa_20_03_2021",
     "hdoa_field_guide_2020",
@@ -34,7 +34,7 @@
   },
   {
    "id": "photograph_both_leaf_surfaces",
-   "text": "Photograph the whole plant and both the upper and lower surface of suspect leaves.",
+   "text": "Fotografíe la planta entera y el haz y el envés de las hojas sospechosas.",
    "source_ids": [
     "hdoa_npa_20_03_2021",
     "hdoa_field_guide_2020"
@@ -42,19 +42,19 @@
   },
   {
    "id": "check_wet_leaf_edges_tips",
-   "text": "Check leaf edges and tips where water collects; spots often start there.",
+   "text": "Revise los bordes y las puntas de las hojas donde se acumula el agua; las manchas suelen empezar allí.",
    "source_ids": [
     "hdoa_npa_20_03_2021"
    ]
   },
   {
    "id": "walk_priority_points",
-   "text": "Walk the marked priority points, starting with the highest rank, and record what you find at each.",
+   "text": "Recorra los puntos prioritarios marcados, empezando por el de mayor rango, y anote lo que encuentre en cada uno.",
    "source_ids": []
   },
   {
    "id": "scout_point_1",
-   "text": "Priority point 1: the reported plant and its immediate neighbours.",
+   "text": "Punto prioritario 1: la planta reportada y sus vecinas inmediatas.",
    "rank": 1,
    "priority": 1.0,
    "location": {
@@ -66,7 +66,7 @@
   },
   {
    "id": "scout_point_2",
-   "text": "Priority point 2: about 45 m south-west of the reported plant.",
+   "text": "Punto prioritario 2: a unos 45 m al suroeste de la planta reportada.",
    "rank": 2,
    "priority": 0.5483,
    "location": {
@@ -78,7 +78,7 @@
   },
   {
    "id": "scout_point_3",
-   "text": "Priority point 3: about 40 m south of the reported plant.",
+   "text": "Punto prioritario 3: a unos 40 m al sur de la planta reportada.",
    "rank": 3,
    "priority": 0.4348,
    "location": {
@@ -90,7 +90,7 @@
   },
   {
    "id": "scout_point_4",
-   "text": "Priority point 4: about 40 m east of the reported plant.",
+   "text": "Punto prioritario 4: a unos 40 m al este de la planta reportada.",
    "rank": 4,
    "priority": 0.3679,
    "location": {
@@ -102,7 +102,7 @@
   },
   {
    "id": "scout_point_5",
-   "text": "Priority point 5: about 40 m north of the reported plant.",
+   "text": "Punto prioritario 5: a unos 40 m al norte de la planta reportada.",
    "rank": 5,
    "priority": 0.3679,
    "location": {
@@ -116,7 +116,7 @@
  "recommendations": [
   {
    "id": "flag_area_limit_movement",
-   "text": "Mark the affected area and avoid moving leaves, plant material, soil or tools out of it.",
+   "text": "Marque la zona afectada y evite sacar de ella hojas, material vegetal, suelo o herramientas.",
    "source_ids": [
     "hdoa_npa_20_03_2021",
     "hdoa_field_guide_2020"
@@ -124,21 +124,21 @@
   },
   {
    "id": "sanitize_clothing_tools",
-   "text": "After visiting affected trees, wash clothing and clean footwear and tools before entering other plots.",
+   "text": "Después de visitar árboles afectados, lave la ropa y limpie el calzado y las herramientas antes de entrar en otras parcelas.",
    "source_ids": [
     "hdoa_npa_20_03_2021"
    ]
   },
   {
    "id": "rescout_after_latent_period",
-   "text": "Plan to re-inspect in 4-6 weeks: lesions from recent infections appear after this delay.",
+   "text": "Planifique una nueva inspección en 4-6 semanas: las lesiones de infecciones recientes aparecen tras ese plazo.",
    "source_ids": [
     "hdoa_npa_20_03_2021"
    ]
   },
   {
    "id": "consult_extension_before_fungicide",
-   "text": "Before any fungicide use, consult your local extension officer; follow the product label exactly.",
+   "text": "Antes de usar cualquier fungicida, consulte a su técnico de extensión local; siga exactamente la etiqueta del producto.",
    "source_ids": [
     "ctahr_pd118_2021",
     "hdoa_npa_20_03_2021"
@@ -146,14 +146,14 @@
   },
   {
    "id": "remove_feral_coffee_weeds",
-   "text": "Remove unmanaged (feral) coffee plants and competing weeds near the plot.",
+   "text": "Elimine las plantas de café abandonadas (asilvestradas) y las malezas competidoras cerca de la parcela.",
    "source_ids": [
     "hdoa_npa_20_03_2021"
    ]
   },
   {
    "id": "consider_resistant_cultivars",
-   "text": "For future planting, ask about rust-resistant coffee varieties suited to your area.",
+   "text": "Para futuras siembras, consulte sobre variedades de café resistentes a la roya adaptadas a su zona.",
    "source_ids": [
     "talhinhas_2017_mpp",
     "avelino_2015_food_security"
@@ -358,10 +358,10 @@
   "sync_status": "local_only"
  },
  "localization": {
-  "requested": "en",
-  "used": "en",
+  "requested": "es-CO",
+  "used": "es",
   "fallback": false,
-  "catalog_status": "source_language",
+  "catalog_status": "authored_by_agent",
   "reviewed_by_native_speaker": false
  },
  "review": {
@@ -369,7 +369,7 @@
   "reasons": [
    {
     "id": "needs_review",
-    "text": "Evidence is not specific; an expert should confirm before decisions."
+    "text": "La evidencia no es específica; un experto debería confirmarla antes de tomar decisiones."
    }
   ],
   "requires_user_authorization": true,
@@ -378,10 +378,10 @@
  "status": "needs_review",
  "condition": {
   "id": "coffee_leaf_rust",
-  "label": "Possible coffee leaf rust",
+  "label": "Posible roya del café",
   "confidence": 0.423,
   "confidence_kind": "uncalibrated evidence score from image signals; not a probability of infection",
-  "uncertainty": "Some signals resemble coffee leaf rust (evidence score 0.42), but they are not specific enough. Similar spots can have other causes.",
+  "uncertainty": "Algunas señales se parecen a la roya del café (puntuación de evidencia 0.42), pero no son suficientemente específicas. Manchas similares pueden tener otras causas.",
   "abstained": false,
   "candidate_id": "coffee_leaf_rust",
   "pathogen": "Hemileia vastatrix"
@@ -606,7 +606,7 @@
    }
   ],
   "condition_id": "coffee_leaf_rust",
-  "summary": "Recent or forecast weather was sometimes favourable for rust infection.",
+  "summary": "El clima reciente o previsto fue a veces favorable para la infección de roya.",
   "reference_time": "2026-10-03T08:00:00Z",
   "history_days": 14,
   "forecast_days": 7,
@@ -5036,7 +5036,7 @@
     "properties": {
      "kind": "reported_observation",
      "present": true,
-     "observation_id": "demo-coffee-001",
+     "observation_id": "demo-coffee-001-es",
      "current": true
     }
    },
@@ -5121,7 +5121,7 @@
     }
    }
   ],
-  "limitations": "Relative scouting priority (0-1) around reported points; not an infection probability. Uncalibrated distance decay and wind stretch.",
+  "limitations": "Prioridad relativa de inspección (0-1) alrededor de los puntos reportados; no es una probabilidad de infección. Decaimiento por distancia y estiramiento por viento no calibrados.",
   "value_kind": "relative_scouting_priority",
   "scale": [
    0,

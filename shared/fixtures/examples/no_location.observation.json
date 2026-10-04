@@ -1,0 +1,18 @@
+{
+ "contract_version": "0.1.0",
+ "id": "demo-coffee-001-nolocation",
+ "data_mode": "demo",
+ "observed_at": "2026-10-03T08:00:00Z",
+ "crop": "coffee",
+ "locale": "en",
+ "signals": [
+  {
+   "label": "rust_like_leaf_marks",
+   "confidence": 0.65
+  }
+ ],
+ "provenance": {
+  "adapter": "mock-vlm",
+  "source": "synthetic fixture; no model inference"
+ }
+}

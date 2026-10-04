@@ -1,0 +1,44 @@
+{
+ "contract_version": "0.1.0",
+ "id": "demo-coffee-001-history",
+ "data_mode": "demo",
+ "observed_at": "2026-10-03T08:00:00Z",
+ "crop": "coffee",
+ "locale": "en",
+ "location": {
+  "latitude": -1.95,
+  "longitude": 30.06
+ },
+ "signals": [
+  {
+   "label": "orange_powder_leaf_underside",
+   "confidence": 0.9
+  },
+  {
+   "label": "yellow_spots_upper_leaf",
+   "confidence": 0.8
+  }
+ ],
+ "provenance": {
+  "adapter": "mock-vlm",
+  "source": "synthetic fixture; no model inference"
+ },
+ "prior_observations": [
+  {
+   "id": "prior-1",
+   "observed_at": "2026-09-20T09:00:00Z",
+   "condition_id": "coffee_leaf_rust",
+   "present": true,
+   "latitude": -1.9497,
+   "longitude": 30.0604
+  },
+  {
+   "id": "prior-2",
+   "observed_at": "2026-09-27T09:00:00Z",
+   "condition_id": "coffee_leaf_rust",
+   "present": false,
+   "latitude": -1.9503,
+   "longitude": 30.0597
+  }
+ ]
+}

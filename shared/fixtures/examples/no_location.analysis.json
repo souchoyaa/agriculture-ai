@@ -1,0 +1,341 @@
+{
+ "contract_version": "0.1.0",
+ "id": "analysis-97c1c76c0a6887ec",
+ "observation_id": "demo-coffee-001-nolocation",
+ "data_mode": "demo",
+ "generated_at": "2026-10-04T00:00:00Z",
+ "environment": {
+  "status": "unavailable",
+  "as_of": null,
+  "temperature_c": null,
+  "relative_humidity_pct": null,
+  "rainfall_mm": null,
+  "period_hours": 24,
+  "period_end": "2026-10-03T08:00:00Z",
+  "aggregation": "temperature/humidity mean and rainfall total over the 24 h before observed_at",
+  "covered_hours": 0,
+  "notes": [
+   "no_location"
+  ]
+ },
+ "scouting": [
+  {
+   "id": "inspect_lower_canopy_undersides",
+   "text": "Inspect the undersides of lower-canopy leaves first; look for yellow-orange powder below yellow spots.",
+   "source_ids": [
+    "hdoa_npa_20_03_2021",
+    "hdoa_field_guide_2020",
+    "ctahr_pd118_2021"
+   ]
+  },
+  {
+   "id": "photograph_both_leaf_surfaces",
+   "text": "Photograph the whole plant and both the upper and lower surface of suspect leaves.",
+   "source_ids": [
+    "hdoa_npa_20_03_2021",
+    "hdoa_field_guide_2020"
+   ]
+  },
+  {
+   "id": "check_wet_leaf_edges_tips",
+   "text": "Check leaf edges and tips where water collects; spots often start there.",
+   "source_ids": [
+    "hdoa_npa_20_03_2021"
+   ]
+  }
+ ],
+ "recommendations": [
+  {
+   "id": "flag_area_limit_movement",
+   "text": "Mark the affected area and avoid moving leaves, plant material, soil or tools out of it.",
+   "source_ids": [
+    "hdoa_npa_20_03_2021",
+    "hdoa_field_guide_2020"
+   ]
+  },
+  {
+   "id": "sanitize_clothing_tools",
+   "text": "After visiting affected trees, wash clothing and clean footwear and tools before entering other plots.",
+   "source_ids": [
+    "hdoa_npa_20_03_2021"
+   ]
+  },
+  {
+   "id": "rescout_after_latent_period",
+   "text": "Plan to re-inspect in 4-6 weeks: lesions from recent infections appear after this delay.",
+   "source_ids": [
+    "hdoa_npa_20_03_2021"
+   ]
+  },
+  {
+   "id": "consult_extension_before_fungicide",
+   "text": "Before any fungicide use, consult your local extension officer; follow the product label exactly.",
+   "source_ids": [
+    "ctahr_pd118_2021",
+    "hdoa_npa_20_03_2021"
+   ]
+  },
+  {
+   "id": "remove_feral_coffee_weeds",
+   "text": "Remove unmanaged (feral) coffee plants and competing weeds near the plot.",
+   "source_ids": [
+    "hdoa_npa_20_03_2021"
+   ]
+  },
+  {
+   "id": "consider_resistant_cultivars",
+   "text": "For future planting, ask about rust-resistant coffee varieties suited to your area.",
+   "source_ids": [
+    "talhinhas_2017_mpp",
+    "avelino_2015_food_security"
+   ]
+  }
+ ],
+ "sources": [
+  {
+   "id": "avelino_2015_food_security",
+   "title": "The coffee rust crises in Colombia and Central America (2008-2013): impacts, plausible causes and proposed solutions",
+   "authors": "Avelino, J.; Cristancho, M.; Georgiou, S.; Imbach, P.; Aguilar, L.; Bornemann, G.; et al.",
+   "publisher": "Food Security 7:303-321",
+   "published": "2015-03-11",
+   "doi": "10.1007/s12571-015-0446-9",
+   "url": "https://doi.org/10.1007/s12571-015-0446-9",
+   "accessed_at": "2026-10-03T23:46:00Z",
+   "license": "CC BY 4.0",
+   "kind": "peer_reviewed",
+   "used_for": [
+    "reduced_thermal_amplitude_shorter_latency",
+    "early_warning_resistant_cultivars"
+   ]
+  },
+  {
+   "id": "ctahr_pd118_2021",
+   "title": "Spraying to Suppress Coffee Leaf Rust (Hemileia vastatrix) in Hawai'i (PD-118)",
+   "authors": "Kawabata, A. M.; Nakamoto, S. T.",
+   "publisher": "University of Hawai'i at Manoa, College of Tropical Agriculture and Human Resources",
+   "published": "2021-06",
+   "url": "https://www.ctahr.hawaii.edu/oc/freepubs/pdf/PD-118.pdf",
+   "accessed_at": "2026-10-03T23:44:00Z",
+   "license": "Copyright University of Hawai'i; cite only",
+   "kind": "extension",
+   "used_for": [
+    "lower_canopy_first",
+    "early_detection",
+    "label_is_law",
+    "consult_extension_before_fungicide",
+    "spore_survival_six_weeks"
+   ]
+  },
+  {
+   "id": "hdoa_field_guide_2020",
+   "title": "Field Guide to Coffee Leaf Rust (Hemileia vastatrix), No. 02-PP-2020 (revised 2020-11-24)",
+   "authors": "Ocenar, J.",
+   "publisher": "Hawai'i Department of Agriculture",
+   "published": "2020-11-24",
+   "url": "https://hdoa.hawaii.gov/pi/files/2020/12/CLR-Public-field-guide-with-form11-20.pdf",
+   "accessed_at": "2026-10-03T23:44:00Z",
+   "license": "Government extension publication; cite, do not redistribute modified copies",
+   "kind": "extension",
+   "used_for": [
+    "symptoms",
+    "lower_canopy_first",
+    "photograph_both_surfaces",
+    "flag_area"
+   ]
+  },
+  {
+   "id": "hdoa_npa_20_03_2021",
+   "title": "New Pest Advisory No. 20-03: Coffee Leaf Rust, Hemileia vastatrix (revised January 2021)",
+   "authors": "Ocenar, J.; Kawabata, A.",
+   "publisher": "Hawai'i Department of Agriculture, Plant Pest Control Branch",
+   "published": "2021-01",
+   "url": "https://dab.hawaii.gov/pi/files/2021/01/NPA-20-03-Coffee-leaf-rust1-21.pdf",
+   "accessed_at": "2026-10-03T23:44:00Z",
+   "license": "Government extension publication; cite, do not redistribute modified copies",
+   "kind": "extension",
+   "used_for": [
+    "symptoms",
+    "biology_free_water",
+    "infection_24_48h_wetness",
+    "lesions_4_6_weeks",
+    "dispersal_wind_rain_contact",
+    "sanitation",
+    "do_not_move_material",
+    "photograph_both_surfaces"
+   ]
+  },
+  {
+   "id": "talhinhas_2017_mpp",
+   "title": "The coffee leaf rust pathogen Hemileia vastatrix: one and a half centuries around the tropics",
+   "authors": "Talhinhas, P.; Batista, D.; Diniz, I.; Vieira, A.; Silva, D. N.; Loureiro, A.; et al.",
+   "publisher": "Molecular Plant Pathology 18(8):1039-1051",
+   "published": "2017",
+   "doi": "10.1111/mpp.12512",
+   "url": "https://doi.org/10.1111/mpp.12512",
+   "accessed_at": "2026-10-03T23:44:00Z",
+   "license": "Publisher terms; cite only",
+   "kind": "peer_reviewed",
+   "used_for": [
+    "urediniospore_inoculum",
+    "chlorotic_spots_then_orange_uredinia",
+    "resistant_cultivars"
+   ]
+  }
+ ],
+ "evidence": [
+  {
+   "label": "rust_like_leaf_marks",
+   "confidence": 0.65,
+   "recognized": true,
+   "weight": 0.65,
+   "specific": false,
+   "contribution": 0.423,
+   "source_ids": [
+    "hdoa_field_guide_2020"
+   ]
+  }
+ ],
+ "provenance": {
+  "adapter": "agri-backend",
+  "source": "rule-based analysis over adapter observation",
+  "observation_adapter": "mock-vlm",
+  "observation_source": "synthetic fixture; no model inference",
+  "knowledge_version": "clr-2026-10-04",
+  "components": [
+   {
+    "component": "observation",
+    "origin": "demo",
+    "adapter": "mock-vlm"
+   },
+   {
+    "component": "evidence_model",
+    "origin": "expert_heuristic",
+    "calibrated": false
+   },
+   {
+    "component": "weather",
+    "origin": "unavailable",
+    "provider": null
+   },
+   {
+    "component": "weather_risk",
+    "origin": "literature_parameterised_heuristic",
+    "calibrated": false
+   },
+   {
+    "component": "scouting_map",
+    "origin": "layout_heuristic",
+    "calibrated": false
+   },
+   {
+    "component": "guidance",
+    "origin": "curated_extension_sources",
+    "expert_reviewed": false
+   }
+  ]
+ },
+ "offline": {
+  "cached": false,
+  "stale": true,
+  "sync_status": "local_only"
+ },
+ "localization": {
+  "requested": "en",
+  "used": "en",
+  "fallback": false,
+  "catalog_status": "source_language",
+  "reviewed_by_native_speaker": false
+ },
+ "review": {
+  "suggested": true,
+  "reasons": [
+   {
+    "id": "needs_review",
+    "text": "Evidence is not specific; an expert should confirm before decisions."
+   }
+  ],
+  "requires_user_authorization": true,
+  "auto_contact": false
+ },
+ "status": "needs_review",
+ "condition": {
+  "id": "coffee_leaf_rust",
+  "label": "Possible coffee leaf rust",
+  "confidence": 0.423,
+  "confidence_kind": "uncalibrated evidence score from image signals; not a probability of infection",
+  "uncertainty": "Some signals resemble coffee leaf rust (evidence score 0.42), but they are not specific enough. Similar spots can have other causes.",
+  "abstained": false,
+  "candidate_id": "coffee_leaf_rust",
+  "pathogen": "Hemileia vastatrix"
+ },
+ "weather_risk": {
+  "status": "unavailable",
+  "class": null,
+  "favourable_day_fraction": null,
+  "days": [],
+  "condition_id": "coffee_leaf_rust",
+  "summary": "Weather data unavailable; infection-favourability could not be assessed.",
+  "reference_time": "2026-10-03T08:00:00Z",
+  "history_days": 14,
+  "forecast_days": 7,
+  "method": "Hourly infection-favourability heuristic: wet hour (RH >= wet_rh_pct or precipitation >= wet_precip_mm) weighted by a trapezoidal temperature factor; a day is favourable when it contains a wet spell >= min_wet_hours with mean temperature factor >= min_temp_factor.",
+  "calibrated": false,
+  "interpretation": "Infection-favourable weather suitability class; not a probability of infection or disease.",
+  "parameters": {
+   "temperature_c": {
+    "zero_below": 12.5,
+    "optimum_low": 21.0,
+    "optimum_high": 23.0,
+    "zero_above": 32.5,
+    "source_ids": [
+     "marino_2026_frontiers",
+     "de_jong_1987_njpp"
+    ],
+    "note": "Germination bounds/optimum from review citing De Jong et al. 1987; linear ramps between bounds are an assumption."
+   },
+   "min_wet_hours": {
+    "value": 6,
+    "source_ids": [
+     "marino_2026_frontiers"
+    ],
+    "note": "Lower end of the 6-24 h wetness reported for germination."
+   },
+   "wet_rh_pct": {
+    "value": 90,
+    "source_ids": [],
+    "note": "Assumption: RH >= 90% used as a leaf-wetness proxy; no leaf-wetness sensor data. Uncalibrated."
+   },
+   "wet_precip_mm": {
+    "value": 0.1,
+    "source_ids": [
+     "hdoa_npa_20_03_2021"
+    ],
+    "note": "Free water from rain is required for germination; threshold is an assumption."
+   },
+   "min_temp_factor": {
+    "value": 0.5,
+    "source_ids": [],
+    "note": "Assumption."
+   },
+   "classes": {
+    "low_below": 0.2,
+    "high_at_or_above": 0.5,
+    "note": "Class thresholds on fraction of favourable days are uncalibrated assumptions."
+   }
+  },
+  "latent_period_days": {
+   "min": 28,
+   "max": 42,
+   "source_ids": [
+    "hdoa_npa_20_03_2021"
+   ],
+   "note": "Characteristic lesions appear 4-6 weeks after infection."
+  }
+ },
+ "map": {
+  "status": "unavailable",
+  "type": "FeatureCollection",
+  "features": [],
+  "limitations": "No location supplied; map and scouting points unavailable."
+ }
+}

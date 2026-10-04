@@ -1,11 +1,11 @@
 {
  "contract_version": "0.1.0",
- "id": "analysis-dbd415beedc858b4",
+ "id": "analysis-cd823faf9967fec7",
  "observation_id": "demo-coffee-001",
  "data_mode": "demo",
- "generated_at": "2026-10-04T00:00:00Z",
+ "generated_at": "2026-10-07T12:00:00Z",
  "environment": {
-  "status": "fresh",
+  "status": "stale",
   "as_of": "2026-10-03T23:46:00Z",
   "temperature_c": 24.0,
   "relative_humidity_pct": 53.4,
@@ -18,7 +18,7 @@
   "origin": "cached",
   "provider": "open-meteo",
   "source_id": "open_meteo",
-  "age_hours": 0.2,
+  "age_hours": 84.2,
   "grid_distance_km": 0.0,
   "data_kind": "model output (not station observations)"
  },
@@ -354,7 +354,7 @@
  },
  "offline": {
   "cached": true,
-  "stale": false,
+  "stale": true,
   "sync_status": "local_only"
  },
  "localization": {

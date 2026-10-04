@@ -1,0 +1,26 @@
+{
+ "contract_version": "0.1.0",
+ "id": "demo-coffee-001-weak",
+ "data_mode": "demo",
+ "observed_at": "2026-10-03T08:00:00Z",
+ "crop": "coffee",
+ "locale": "en",
+ "location": {
+  "latitude": -1.95,
+  "longitude": 30.06
+ },
+ "signals": [
+  {
+   "label": "yellow_spots_upper_leaf",
+   "confidence": 0.3
+  },
+  {
+   "label": "unknown_texture",
+   "confidence": 0.9
+  }
+ ],
+ "provenance": {
+  "adapter": "mock-vlm",
+  "source": "synthetic fixture; no model inference"
+ }
+}

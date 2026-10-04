@@ -81,6 +81,45 @@
         ],
         "additionalProperties": true
       }
+    },
+    "prior_observations": {
+      "type": "array",
+      "description": "Optional device-held history near this observation; not stored by the backend.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "condition_id": {
+            "type": "string"
+          },
+          "present": {
+            "type": "boolean"
+          },
+          "latitude": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "longitude": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": [
+          "condition_id",
+          "present",
+          "latitude",
+          "longitude"
+        ],
+        "additionalProperties": true
+      }
     }
   },
   "required": [

@@ -1,0 +1,62 @@
+{
+ "contract_version": "0.1.0",
+ "id": "analysis-88e784cf1a8182a8",
+ "observation_id": "demo-coffee-001-maize",
+ "data_mode": "demo",
+ "generated_at": "2026-10-04T00:00:00Z",
+ "environment": {
+  "status": "unavailable",
+  "as_of": null,
+  "temperature_c": null,
+  "relative_humidity_pct": null,
+  "rainfall_mm": null
+ },
+ "scouting": [],
+ "recommendations": [],
+ "sources": [],
+ "evidence": [],
+ "provenance": {
+  "adapter": "agri-backend",
+  "source": "rule-based analysis over adapter observation",
+  "observation_adapter": "mock-vlm",
+  "observation_source": "synthetic fixture; no model inference",
+  "knowledge_version": "clr-2026-10-04"
+ },
+ "offline": {
+  "cached": false,
+  "stale": false,
+  "sync_status": "local_only"
+ },
+ "localization": {
+  "requested": "en",
+  "used": "en",
+  "fallback": false,
+  "catalog_status": "source_language",
+  "reviewed_by_native_speaker": false
+ },
+ "review": {
+  "suggested": false,
+  "reasons": [],
+  "requires_user_authorization": true,
+  "auto_contact": false
+ },
+ "status": "unsupported",
+ "condition": {
+  "id": "unknown",
+  "label": "Unsupported crop",
+  "confidence": 0,
+  "uncertainty": "Crop 'maize' is not covered. Supported crops: coffee.",
+  "abstained": true
+ },
+ "map": {
+  "status": "unsupported",
+  "type": "FeatureCollection",
+  "features": [],
+  "limitations": "Crop not covered by the knowledge base."
+ },
+ "weather_risk": {
+  "status": "unavailable",
+  "class": null,
+  "reason": "unsupported_crop"
+ }
+}

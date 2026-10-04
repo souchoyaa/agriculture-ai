@@ -1,0 +1,234 @@
+"""Turn a canonical observation into a canonical analysis. Independent of HTTP and of model syntax."""
+import hashlib
+import json
+import math
+from datetime import datetime, timezone
+
+from . import knowledge, risk, spatial, weather
+
+CONTRACT_VERSION = "0.1.0"
+KNOWLEDGE_VERSION = "clr-2026-10-04"
+PRIOR_RADIUS_M = 300.0
+
+
+def iso(t: datetime) -> str:
+    return t.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def evidence_score(signals: list[dict], condition: dict) -> tuple[float, list[dict], bool]:
+    """Noisy-OR over recognised signals. Returns (score, evidence rows, any specific signal)."""
+    known = condition["signals"]
+    rows, remaining, specific = [], 1.0, False
+    for signal in signals:
+        spec = known.get(signal["label"])
+        row = {"label": signal["label"], "confidence": signal["confidence"], "recognized": spec is not None}
+        if spec:
+            contribution = spec["weight"] * signal["confidence"]
+            remaining *= 1 - contribution
+            specific |= spec["specific"] and signal["confidence"] >= 0.5
+            row.update(weight=spec["weight"], specific=spec["specific"], contribution=round(contribution, 3), source_ids=spec["source_ids"])
+        rows.append(row)
+    return round(1 - remaining, 3), rows, specific
+
+
+def environment_block(series, notes, observed_at, now) -> dict:
+    summary = risk.summarize_period(series, observed_at)
+    block = {
+        "status": "unavailable" if series is None else series.freshness(now),
+        "as_of": iso(series.fetched_at) if series else None,
+        "temperature_c": summary["temperature_c"],
+        "relative_humidity_pct": summary["relative_humidity_pct"],
+        "rainfall_mm": summary["rainfall_mm"],
+        "period_hours": 24,
+        "period_end": iso(observed_at),
+        "aggregation": "temperature/humidity mean and rainfall total over the 24 h before observed_at",
+        "covered_hours": summary["covered_hours"],
+        "notes": notes,
+    }
+    if series:
+        block.update(origin=series.origin, provider=series.provider, source_id=series.source_id,
+                     age_hours=round(series.age_hours(now), 1), grid_distance_km=series.distance_km,
+                     data_kind="model output (not station observations)")
+    return block
+
+
+def unsupported(observation, now, t, locale_info) -> dict:
+    return base_analysis(observation, now, locale_info) | {
+        "status": "unsupported",
+        "condition": {"id": "unknown", "label": t("condition.unsupported_crop.label"), "confidence": 0,
+                      "uncertainty": t("uncertainty.unsupported_crop", crop=observation["crop"], supported=", ".join(knowledge.supported_crops())),
+                      "abstained": True},
+        "map": {"status": "unsupported", "type": "FeatureCollection", "features": [], "limitations": "Crop not covered by the knowledge base."},
+        "weather_risk": {"status": "unavailable", "class": None, "reason": "unsupported_crop"},
+    }
+
+
+def base_analysis(observation, now, locale_info) -> dict:
+    digest = hashlib.sha256((json.dumps(observation, sort_keys=True) + iso(now) + KNOWLEDGE_VERSION).encode()).hexdigest()[:16]
+    return {
+        "contract_version": CONTRACT_VERSION,
+        "id": f"analysis-{digest}",
+        "observation_id": observation["id"],
+        "data_mode": "demo" if observation["data_mode"] == "demo" else observation["data_mode"],
+        "generated_at": iso(now),
+        "environment": {"status": "unavailable", "as_of": None, "temperature_c": None, "relative_humidity_pct": None, "rainfall_mm": None},
+        "scouting": [], "recommendations": [], "sources": [], "evidence": [],
+        "provenance": {"adapter": "agri-backend", "source": "rule-based analysis over adapter observation",
+                       "observation_adapter": observation["provenance"]["adapter"], "observation_source": observation["provenance"]["source"],
+                       "knowledge_version": KNOWLEDGE_VERSION},
+        "offline": {"cached": False, "stale": False, "sync_status": "local_only"},
+        "localization": locale_info,
+        "review": {"suggested": False, "reasons": [], "requires_user_authorization": True, "auto_contact": False},
+    }
+
+
+def analyze(observation: dict, now: datetime | None = None, allow_network: bool | None = None) -> dict:
+    now = now or datetime.now(timezone.utc)
+    locale, fell_back = knowledge.resolve_locale(observation.get("locale"))
+    t = knowledge.Translator(locale)
+    locale_info = {"requested": observation.get("locale"), "used": locale, "fallback": fell_back,
+                   "catalog_status": t.meta["status"], "reviewed_by_native_speaker": t.meta["reviewed_by_native_speaker"]}
+    candidates = knowledge.conditions_for_crop(observation["crop"])
+    if not candidates:
+        return unsupported(observation, now, t, locale_info)
+
+    # Score every condition for this crop; one condition today, structure allows more.
+    scored = sorted(((evidence_score(observation["signals"], c), c) for c in candidates), key=lambda x: -x[0][0])
+    (score, evidence, specific), condition = scored[0]
+    em, wm, sm = condition["evidence_model"], condition["weather_model"], condition["spatial_model"]
+    abstained = score < em["abstain_below"]
+    supported = not abstained and score >= em["supported_at_or_above"] and (specific or not em["supported_requires_specific_signal"])
+    status = "supported" if supported else "needs_review"
+    uncertainty_key = "uncertainty.abstain" if abstained else ("uncertainty.supported" if supported else "uncertainty.needs_review")
+
+    result = base_analysis(observation, now, locale_info)
+    result["status"] = status
+    result["evidence"] = evidence
+    result["condition"] = {
+        "id": "undetermined" if abstained else condition["id"],
+        "label": t("condition.undetermined.label" if abstained else condition["label_key"]),
+        "confidence": score,
+        "confidence_kind": "uncalibrated evidence score from image signals; not a probability of infection",
+        "uncertainty": t(uncertainty_key, score=f"{score:.2f}"),
+        "abstained": abstained,
+        "candidate_id": condition["id"],
+        "pathogen": condition["pathogen"],
+    }
+    used_sources = {s for row in evidence for s in row.get("source_ids", [])}
+
+    # Environment and weather favourability (needs location).
+    location = observation.get("location")
+    observed_at = weather.parse_time(observation["observed_at"])
+    series, notes = (weather.get_weather(location["latitude"], location["longitude"], now, allow_network) if location else (None, ["no_location"]))
+    result["environment"] = environment_block(series, notes, observed_at, now)
+    assessment = risk.assess(series, observed_at, wm)
+    risk_class = assessment["class"]
+    result["weather_risk"] = {
+        **assessment,
+        "condition_id": condition["id"],
+        "summary": t(f"risk.class.{risk_class}") if risk_class else t("risk.unavailable"),
+        "reference_time": iso(observed_at),
+        "history_days": wm["history_days"], "forecast_days": wm["forecast_days"],
+        "method": wm["description"],
+        "calibrated": False,
+        "interpretation": "Infection-favourable weather suitability class; not a probability of infection or disease.",
+        "parameters": {k: wm[k] for k in ("temperature_c", "min_wet_hours", "wet_rh_pct", "wet_precip_mm", "min_temp_factor", "classes")},
+        "latent_period_days": wm["latent_period_days"],
+    }
+    if series:
+        used_sources |= {series.source_id, *wm["temperature_c"]["source_ids"], *wm["min_wet_hours"]["source_ids"]}
+        result["offline"] = {"cached": series.origin == "cached", "stale": result["environment"]["status"] != "fresh", "sync_status": "local_only"}
+    else:
+        result["offline"] = {"cached": False, "stale": True, "sync_status": "local_only"}
+
+    # Spatial scouting priority (needs location and a suspected condition).
+    result["map"], points = build_map(observation, condition, sm, series, observed_at, abstained, t)
+    if points:
+        used_sources |= set(sm["dispersal_source_ids"])
+
+    # Scouting and recommendations.
+    if abstained:
+        result["scouting"] = [{"id": "photograph_both_leaf_surfaces", "text": t("scouting.photograph_both_leaf_surfaces"),
+                               "source_ids": ["hdoa_npa_20_03_2021"]}]
+        recs = [("retake_photo", []), ("seek_local_review", [])]
+        used_sources.add("hdoa_npa_20_03_2021")
+    else:
+        result["scouting"] = [{"id": s["id"], "text": t(f"scouting.{s['id']}"), "source_ids": s["source_ids"]}
+                              for s in condition["scouting"] if s["id"] != "walk_priority_points" or points] + points
+        recs = [(r["id"], r["source_ids"]) for r in condition["recommendations"]]
+        for _, ids in recs:
+            used_sources |= set(ids)
+        for s in condition["scouting"]:
+            used_sources |= set(s["source_ids"])
+    result["recommendations"] = [{"id": rid, "text": t(f"recommendation.{rid}"), "source_ids": ids} for rid, ids in recs]
+
+    # Human review is proposed, never sent.
+    reasons = []
+    if not abstained:
+        reasons.append("supported" if supported else "needs_review")
+        if risk_class == "high":
+            reasons.append("high_weather")
+    result["review"] = {"suggested": bool(reasons), "reasons": [{"id": r, "text": t(f"review.reason.{r}")} for r in reasons],
+                        "requires_user_authorization": True, "auto_contact": False}
+
+    result["sources"] = knowledge.cite(used_sources)
+    result["provenance"]["components"] = [
+        {"component": "observation", "origin": observation["data_mode"], "adapter": observation["provenance"]["adapter"]},
+        {"component": "evidence_model", "origin": "expert_heuristic", "calibrated": False},
+        {"component": "weather", "origin": series.origin if series else "unavailable", "provider": series.provider if series else None},
+        {"component": "weather_risk", "origin": "literature_parameterised_heuristic", "calibrated": False},
+        {"component": "scouting_map", "origin": "layout_heuristic", "calibrated": False},
+        {"component": "guidance", "origin": "curated_extension_sources", "expert_reviewed": False},
+    ]
+    return result
+
+
+def build_map(observation, condition, sm, series, observed_at, abstained, t) -> tuple[dict, list[dict]]:
+    location = observation.get("location")
+    if not location:
+        return {"status": "unavailable", "type": "FeatureCollection", "features": [], "limitations": t("map.no_location")}, []
+    if abstained:
+        return {"status": "unavailable", "type": "FeatureCollection", "features": [],
+                "limitations": "No suspected condition; scouting priority not computed."}, []
+    lat0, lon0 = location["latitude"], location["longitude"]
+    near = lambda p: math.hypot(*spatial.to_local(lat0, lon0, p["latitude"], p["longitude"])) <= PRIOR_RADIUS_M
+    priors = [p for p in observation.get("prior_observations", []) if p.get("condition_id") == condition["id"] and near(p)]
+    sources = [location] + [p for p in priors if p.get("present")]
+    cleared = [p for p in priors if p.get("present") is False]
+
+    wind = None
+    if series:
+        forecast = [h for h in series.hours if h.time >= observed_at][:24 * condition["weather_model"]["forecast_days"]]
+        wind = weather.mean_wind_from(forecast)
+    wind_used = wind if wind and wind[1] >= 0.3 else None
+    cells = spatial.priority_grid((lat0, lon0), sources, cleared, sm, wind_used[0] if wind_used else None)
+
+    features = [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [spatial.cell_polygon(lat0, lon0, c["east_m"], c["north_m"], sm["cell_size_m"])]},
+                 "properties": {"kind": "scouting_priority_cell", "priority": c["priority"], "row": c["row"], "col": c["col"]}}
+                for c in cells]
+    features += [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [p["longitude"], p["latitude"]]},
+                  "properties": {"kind": "reported_observation", "present": p is location or bool(p.get("present")),
+                                 "observation_id": observation["id"] if p is location else p.get("id"), "current": p is location}}
+                 for p in [location] + priors]
+    points = []
+    for rank, cell in enumerate(spatial.pick_points(cells), start=1):
+        lat, lon = spatial.to_geo(lat0, lon0, cell["east_m"], cell["north_m"])
+        distance = round(math.hypot(cell["east_m"], cell["north_m"]))
+        text = (t("scouting.point_origin", rank=rank) if distance < sm["cell_size_m"]
+                else t("scouting.point", rank=rank, distance_m=distance, bearing=t(f"bearing.{spatial.bearing_label(cell['east_m'], cell['north_m'])}")))
+        point = {"id": f"scout_point_{rank}", "text": text, "rank": rank, "priority": cell["priority"],
+                 "location": {"latitude": round(lat, 7), "longitude": round(lon, 7)}, "distance_m": distance, "source_ids": []}
+        points.append(point)
+        features.append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [round(lon, 7), round(lat, 7)]},
+                         "properties": {"kind": "scouting_point", "rank": rank, "priority": cell["priority"], "scouting_id": point["id"]}})
+    return {
+        "status": "available", "type": "FeatureCollection", "features": features,
+        "limitations": t("map.limitations"),
+        "value_kind": "relative_scouting_priority", "scale": [0, 1], "calibrated": False,
+        "crs": "EPSG:4326", "cell_size_m": sm["cell_size_m"],
+        "horizon_days": condition["weather_model"]["forecast_days"],
+        "wind": {"used": wind_used is not None, "mean_from_deg": round(wind[0]) if wind else None,
+                 "consistency": round(wind[1], 2) if wind else None, "stretch": sm["downwind_stretch"]},
+        "method": sm["description"],
+        "prior_observations_used": len(priors),
+    }, points
