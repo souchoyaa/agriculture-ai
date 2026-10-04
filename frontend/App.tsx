@@ -8,18 +8,25 @@ import { FieldScreen, HistoryScreen } from './src/screens/HistoryScreens';
 import { RESULT_TWO_COLUMN_MIN, ResultScreen } from './src/screens/ResultScreen';
 import { SettingsScreen } from './src/screens/SettingsScreen';
 import { StoreProvider, useStore } from './src/state/store';
-import { color, space, type } from './src/ui/theme';
-import type { PS } from './src/ui/components';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useFonts as useManrope, Manrope_700Bold, Manrope_800ExtraBold } from '@expo-google-fonts/manrope';
+import { useFonts as useInter, Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
+import { color, font, gradient, radius, shadow, space, type } from './src/ui/theme';
+import { Icon, type PS } from './src/ui/components';
 
 export default function App() {
+  // Fonts ship inside the bundle (no network). Render anyway if loading fails.
+  const [manrope, manropeErr] = useManrope({ Manrope_700Bold, Manrope_800ExtraBold });
+  const [inter, interErr] = useInter({ Inter_400Regular, Inter_500Medium, Inter_600SemiBold });
+  if (!((manrope || manropeErr) && (inter || interErr))) return <View style={{ flex: 1, backgroundColor: color.paper, alignItems: 'center', justifyContent: 'center' }}><ActivityIndicator color={color.leaf} size="large" /></View>;
   return <StoreProvider><Shell /></StoreProvider>;
 }
 
-const TABS: { name: TabName; glyph: string; label: 'tab.fields' | 'tab.check' | 'tab.history' | 'tab.settings' }[] = [
-  { name: 'fields', glyph: '▦', label: 'tab.fields' },
-  { name: 'check', glyph: '＋', label: 'tab.check' },
-  { name: 'history', glyph: '☰', label: 'tab.history' },
-  { name: 'settings', glyph: '⚙', label: 'tab.settings' },
+const TABS: { name: TabName; icon: string; iconOn: string; label: 'tab.fields' | 'tab.check' | 'tab.history' | 'tab.settings' }[] = [
+  { name: 'fields', icon: 'sprout-outline', iconOn: 'sprout', label: 'tab.fields' },
+  { name: 'check', icon: 'plus-circle-outline', iconOn: 'plus-circle', label: 'tab.check' },
+  { name: 'history', icon: 'clipboard-text-clock-outline', iconOn: 'clipboard-text-clock', label: 'tab.history' },
+  { name: 'settings', icon: 'cog-outline', iconOn: 'cog', label: 'tab.settings' },
 ];
 const tabOf = (r: Route): TabName => r.name === 'field' || r.name === 'result' ? 'fields' : r.name;
 
@@ -63,16 +70,17 @@ function Shell() {
   return (
     <View style={{ flex: 1, backgroundColor: color.paper, paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
       <StatusBar barStyle="dark-content" />
-      <ModeBar onPress={() => goTab('settings')} />
+      <Header onMode={() => goTab('settings')} showBrand={!wide} />
       <View style={{ flex: 1, flexDirection: wide ? 'row' : 'column' }}>
         {wide ? tabs : null}
-        <ScrollView ref={scroll} style={{ flex: 1 }} contentContainerStyle={{ padding: space(wide ? 8 : 4), paddingBottom: space(10), width: '100%', maxWidth: route.name === 'result' && width >= RESULT_TWO_COLUMN_MIN ? 1180 : 760, alignSelf: 'center', gap: space(3) }}>
+        <ScrollView ref={scroll} style={{ flex: 1 }} contentContainerStyle={{ padding: space(wide ? 8 : 4), paddingTop: space(wide ? 8 : 2), paddingBottom: space(8), width: '100%', maxWidth: route.name === 'result' && width >= RESULT_TWO_COLUMN_MIN ? 1180 : 760, alignSelf: 'center', gap: space(3) }}>
           <LanguageNotice />
-          {storageError ? <Text accessibilityRole="alert" style={[type.body, { color: color.clay }]}>⚠ Storage error: {storageError}</Text> : null}
-          {recovered ? <Text accessibilityRole="alert" style={[type.small, { color: color.clay }]}>⚠ Saved data could not be read; example data restored (backup kept).</Text> : null}
+          {storageError ? <Text accessibilityRole="alert" style={[type.body, { color: color.clay }]}>Storage error: {storageError}</Text> : null}
+          {recovered ? <Text accessibilityRole="alert" style={[type.small, { color: color.clay }]}>Saved data could not be read; example data restored (backup kept).</Text> : null}
           {nav.canGoBack ? (
-            <Pressable accessibilityRole="button" accessibilityLabel={t('field.back')} onPress={nav.back} style={{ alignSelf: 'flex-start', minHeight: 48, minWidth: 48, justifyContent: 'center', paddingRight: space(3) }}>
-              <Text style={[type.heading, { color: color.leafDark }]}>← {t('field.back')}</Text>
+            <Pressable accessibilityRole="button" accessibilityLabel={t('field.back')} onPress={nav.back} style={{ alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: space(1), minHeight: 44, paddingRight: space(4), paddingLeft: space(2), borderRadius: radius.pill, backgroundColor: color.card }}>
+              <Icon name="chevron-left" size={22} color={color.leafDark} />
+              <Text style={[type.heading, { color: color.leafDark }]}>{t('field.back')}</Text>
             </Pressable>
           ) : null}
           {screen}
@@ -83,26 +91,54 @@ function Shell() {
   );
 }
 
-function ModeBar({ onPress }: { onPress: () => void }) {
+function ModeChip({ onPress }: { onPress: () => void }) {
   const { t, api, connection, state } = useStore();
-  let text: string; let detail: string; let bg = color.turmeric; let fg = color.ink;
-  if (api.kind === 'mock') { text = t('mode.mock'); detail = t('mode.mock.detail'); }
-  else if (connection.kind === 'unreachable') { text = t('mode.http.unreachable'); detail = connection.message; bg = color.clay; fg = '#fff'; }
-  else if (connection.kind === 'unverified') { text = t('mode.http', { url: state.settings.baseUrl }); detail = t('mode.http.unverified'); bg = color.skySoft; }
-  else if (connection.kind === 'checking') { text = t('mode.http', { url: state.settings.baseUrl }); detail = t('mode.http.checking'); bg = color.skySoft; }
+  let chip: string; let detail: string; let icon = 'flask-outline'; let bg = color.turmericSoft; let fg = color.turmericInk;
+  if (api.kind === 'mock') { chip = t('mode.chip.mock'); detail = t('mode.mock.detail'); }
   else {
-    text = t('mode.http', { url: state.settings.baseUrl });
-    // Health describes service capability only; result provenance is labelled per analysis.
-    const caps = connection.kind === 'ok' ? connection.health.capabilities : undefined;
-    const limited = !caps || /^none/i.test(String(caps.image_inference ?? '')) || /^none/i.test(String(caps.calibration ?? ''));
-    detail = limited ? t('mode.http.limits') : t('mode.http.live');
-    bg = color.skySoft;
+    icon = 'server-network'; bg = color.skySoft; fg = color.sky;
+    chip = t('mode.chip.http');
+    if (connection.kind === 'unreachable') { chip = t('mode.chip.unreachable'); detail = t('mode.http.unreachable'); icon = 'cloud-off-outline'; bg = color.claySoft; fg = color.clay; }
+    else if (connection.kind === 'unverified') detail = t('mode.http.unverified');
+    else if (connection.kind === 'checking') detail = t('mode.http.checking');
+    else {
+      // Health describes service capability only; result provenance is labelled per analysis.
+      const caps = connection.kind === 'ok' ? connection.health.capabilities : undefined;
+      const limited = !caps || /^none/i.test(String(caps.image_inference ?? '')) || /^none/i.test(String(caps.calibration ?? ''));
+      detail = limited ? t('mode.http.limits') : t('mode.http.live');
+    }
+    detail = `${t('mode.http', { url: state.settings.baseUrl })} · ${detail}`;
   }
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`${text}. ${detail}`} style={({ focused }: PS) => [focused && { outlineStyle: 'solid', outlineWidth: 3, outlineColor: color.focus, outlineOffset: -3 } as object, { backgroundColor: bg, paddingHorizontal: space(4), paddingVertical: space(2), borderBottomWidth: 2, borderBottomColor: '#0002', minHeight: 48, justifyContent: 'center' }]}>
-      <Text style={[type.label, { color: fg, fontSize: 13 }]}>{text}</Text>
-      <Text style={[type.small, { color: fg, fontSize: 13, lineHeight: 17 }]} numberOfLines={2}>{detail}</Text>
+    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`${chip}. ${detail}`}
+      style={({ focused }: PS) => [{ gap: 2, alignItems: 'flex-end', maxWidth: 260, flexShrink: 1 }, focused && { outlineStyle: 'solid', outlineWidth: 3, outlineColor: color.focus, borderRadius: 12 } as object]}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: bg, paddingHorizontal: space(3), paddingVertical: 6, borderRadius: radius.pill }}>
+        <Icon name={icon} size={16} color={fg} />
+        <Text style={{ fontFamily: font.semibold, fontSize: 13.5, color: fg }}>{chip}</Text>
+      </View>
+      <Text numberOfLines={2} style={[type.small, { fontSize: 12, lineHeight: 15, textAlign: 'right', color: color.muted }]}>{detail}</Text>
     </Pressable>
+  );
+}
+
+function Header({ onMode, showBrand }: { onMode: () => void; showBrand: boolean }) {
+  const { t } = useStore();
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space(3), paddingHorizontal: space(4), paddingTop: space(3), paddingBottom: space(2), backgroundColor: color.paper }}>
+      {showBrand ? <Brand label={t('app.name')} /> : <View />}
+      <ModeChip onPress={onMode} />
+    </View>
+  );
+}
+
+function Brand({ label }: { label: string }) {
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: space(2.5) }}>
+      <LinearGradient colors={gradient.hero} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ width: 38, height: 38, borderRadius: 12, alignItems: 'center', justifyContent: 'center' }}>
+        <Icon name="sprout" size={22} color="#fff" />
+      </LinearGradient>
+      <Text style={{ fontFamily: font.display, fontSize: 18, color: color.ink, letterSpacing: -0.3 }}>{label}</Text>
+    </View>
   );
 }
 
@@ -110,26 +146,31 @@ function LanguageNotice() {
   const { t, state } = useStore();
   if (isSupported(state.settings.locale)) return null;
   const name = LOCALES.find(l => l.code === state.settings.locale)?.name ?? state.settings.locale;
-  return <View accessibilityRole="alert" style={{ backgroundColor: color.skySoft, borderRadius: 8, padding: space(3), borderWidth: 1.5, borderColor: color.sky }}><Text style={type.body}>ⓘ {t('lang.fallback', { language: name })}</Text></View>;
+  return (
+    <View accessibilityRole="alert" style={{ flexDirection: 'row', gap: space(2), alignItems: 'center', backgroundColor: color.skySoft, borderRadius: radius.md, padding: space(3) }}>
+      <Icon name="translate" size={20} color={color.sky} />
+      <Text style={[type.body, { flex: 1 }]}>{t('lang.fallback', { language: name })}</Text>
+    </View>
+  );
 }
 
 function TabBar({ active, onSelect, vertical }: { active: TabName; onSelect: (t: TabName) => void; vertical: boolean }) {
   const { t } = useStore();
   return (
     <View accessibilityRole="tablist" style={vertical
-      ? { width: 200, paddingTop: space(6), paddingHorizontal: space(3), gap: space(2), borderRightWidth: 1.5, borderRightColor: color.border, backgroundColor: '#EFE8D6' }
-      : { flexDirection: 'row', borderTopWidth: 1.5, borderTopColor: color.border, backgroundColor: color.card, paddingBottom: Platform.OS === 'ios' ? space(5) : 0 }}>
-      {vertical ? <Text style={[type.title, { marginBottom: space(4), paddingHorizontal: space(2) }]}>{t('app.name')}</Text> : null}
+      ? { width: 232, paddingTop: space(6), paddingHorizontal: space(4), gap: space(1.5), backgroundColor: color.card, borderRightWidth: 1, borderRightColor: color.line }
+      : [{ flexDirection: 'row', marginHorizontal: space(3), marginBottom: Platform.OS === 'ios' ? space(6) : space(3), padding: space(1.5), borderRadius: radius.lg, backgroundColor: color.card }, shadow]}>
+      {vertical ? <View style={{ marginBottom: space(6), paddingHorizontal: space(2) }}><Brand label={t('app.name')} /></View> : null}
       {TABS.map(tab => {
         const on = tab.name === active;
         return (
           <Pressable key={tab.name} accessibilityRole="tab" accessibilityState={{ selected: on }} accessibilityLabel={t(tab.label)} onPress={() => onSelect(tab.name)}
             style={({ focused }: PS) => [vertical
-              ? { flexDirection: 'row', alignItems: 'center', gap: space(3), minHeight: 52, paddingHorizontal: space(3), borderRadius: 12, backgroundColor: on ? color.leaf : 'transparent' }
-              : { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 64, paddingVertical: space(2), borderTopWidth: 4, borderTopColor: on ? color.leaf : 'transparent' },
+              ? { flexDirection: 'row', alignItems: 'center', gap: space(3), minHeight: 50, paddingHorizontal: space(3), borderRadius: radius.md, backgroundColor: on ? color.leafTint : 'transparent' }
+              : { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 58, paddingVertical: space(1.5), borderRadius: radius.md, gap: 2, backgroundColor: on ? color.leafTint : 'transparent' },
               focused && { outlineStyle: 'solid', outlineWidth: 3, outlineColor: color.focus } as object]}>
-            <Text aria-hidden style={{ fontSize: 22, color: vertical && on ? '#fff' : on ? color.leafDark : color.stone }}>{tab.glyph}</Text>
-            <Text numberOfLines={vertical ? 1 : 2} style={{ textAlign: 'center', fontSize: vertical ? 16 : 13, fontWeight: on ? '800' : '600', color: vertical && on ? '#fff' : on ? color.leafDark : color.inkSoft }}>{t(tab.label)}</Text>
+            <Icon name={on ? tab.iconOn : tab.icon} size={vertical ? 22 : 24} color={on ? color.leaf : color.muted} />
+            <Text numberOfLines={1} style={{ textAlign: 'center', fontFamily: on ? font.semibold : font.medium, fontSize: vertical ? 15.5 : 12, color: on ? color.leafDark : color.inkSoft }}>{t(tab.label)}</Text>
           </Pressable>
         );
       })}

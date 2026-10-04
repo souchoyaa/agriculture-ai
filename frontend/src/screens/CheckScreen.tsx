@@ -140,8 +140,8 @@ export function CheckScreen({ nav, fieldId }: { nav: Nav; fieldId?: string }) {
           <TextInput value={note} onChangeText={setNote} placeholder={t('check.note.placeholder')} accessibilityLabel={t('check.note')}
             multiline style={[inputStyle, { minHeight: 88, textAlignVertical: 'top', paddingTop: space(3) }]} placeholderTextColor={color.stone} />
           <Row wrap>
-            <Tag tone="info" label={t('history.onPhone').toUpperCase()} />
-            {photo ? <Tag label="📷" /> : null}
+            <Tag tone="info" icon="cellphone" label={t('history.onPhone')} />
+            {photo ? <Tag icon="camera-outline" label="" /> : null}
           </Row>
           <Row wrap>
             <Button kind="secondary" label={t('check.back')} icon="←" onPress={() => setStep(2)} />

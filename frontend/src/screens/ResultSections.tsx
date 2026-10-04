@@ -206,8 +206,8 @@ export function EvidenceList({ evidence }: { evidence?: Analysis['evidence'] }) 
         return (
           <Row key={`${e.label}-${i}`} wrap>
             <Text style={[type.body, { flexShrink: 1 }]}>{name}</Text>
-            <Tag tone={e.recognized ? 'info' : 'stone'} label={(e.recognized ? t('result.evidence.recognized') : t('result.evidence.unrecognized')).toUpperCase()} />
-            {e.specific ? <Tag tone="info" label={t('result.evidence.specific').toUpperCase()} /> : null}
+            <Tag tone={e.recognized ? 'info' : 'stone'} label={(e.recognized ? t('result.evidence.recognized') : t('result.evidence.unrecognized'))} />
+            {e.specific ? <Tag tone="info" label={t('result.evidence.specific')} /> : null}
           </Row>
         );
       })}

@@ -19,8 +19,8 @@ function RecordRow({ record, nav, showField }: { record: ObservationRecord; nav:
   const due = followUpDue(record, new Date());
   const title = a.kind === 'done' ? a.analysis.condition.label : t('history.waiting');
   const statusTag = a.kind === 'done'
-    ? <Tag tone={a.analysis.status === 'needs_review' ? 'alert' : 'stone'} label={t(`result.status.${a.analysis.status}` as MessageId).toUpperCase()} />
-    : <Tag tone="warn" label={`⏳ ${t('history.waiting').toUpperCase()}`} />;
+    ? <Tag tone={a.analysis.status === 'needs_review' ? 'alert' : 'stone'} label={t(`result.status.${a.analysis.status}` as MessageId)} />
+    : <Tag tone="warn" icon="progress-clock" label={t('history.waiting')} />;
   return (
     <Pressable accessibilityRole="button" accessibilityLabel={`${showField && field ? field.name + ', ' : ''}${title}, ${formatDateTime(record.createdAt, locale)}`}
       onPress={() => nav.push({ name: 'result', recordId: record.id })}
@@ -31,10 +31,10 @@ function RecordRow({ record, nav, showField }: { record: ObservationRecord; nav:
         <Text style={type.heading}>{title}</Text>
         <Row wrap>
           {statusTag}
-          {a.kind === 'done' && (a.via === 'mock' || a.analysis.data_mode === 'demo') ? <Tag tone="warn" label={t('common.demo').toUpperCase()} /> : null}
-          <Tag tone="info" label={t('history.onPhone').toUpperCase()} />
-          {due ? <Tag tone={due.getTime() <= Date.now() ? 'alert' : 'stone'} label={(due.getTime() <= Date.now() ? t('history.followUpDue') : t('history.followUpOn', { date: formatDate(due.toISOString(), locale) })).toUpperCase()} /> : null}
-          {record.photoUri ? <Tag label="📷" /> : null}
+          {a.kind === 'done' && (a.via === 'mock' || a.analysis.data_mode === 'demo') ? <Tag tone="warn" icon="flask-outline" label={t('common.demo')} /> : null}
+          <Tag tone="info" icon="cellphone" label={t('history.onPhone')} />
+          {due ? <Tag tone={due.getTime() <= Date.now() ? 'alert' : 'stone'} label={(due.getTime() <= Date.now() ? t('history.followUpDue') : t('history.followUpOn', { date: formatDate(due.toISOString(), locale) }))} /> : null}
+          {record.photoUri ? <Tag icon="camera-outline" label="" /> : null}
         </Row>
       </View>
       <Text aria-hidden style={[type.title, { color: color.stone, alignSelf: 'center' }]}>›</Text>

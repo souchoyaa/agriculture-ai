@@ -12,9 +12,10 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Used only when you tap \u201cUse my current location\u201d to save where a field is. Stored rounded (about 100 m)."
+          "locationWhenInUsePermission": "Used only when you tap “Use my current location” to save where a field is. Stored rounded (about 100 m)."
         }
-      ]
+      ],
+      "expo-font"
     ]
   }
 }

@@ -52,7 +52,7 @@ function PendingView({ record }: { record: ObservationRecord }) {
     <Card tone={a.kind === 'failed' && !a.retryable ? 'alert' : 'warn'}>
       <H2 glyph="⏳">{t('pending.title')}</H2>
       <Text accessibilityLiveRegion="polite" style={type.body}>{working ? t('pending.analysing') : msg}</Text>
-      <Tag tone="info" label={t('history.onPhone').toUpperCase()} />
+      <Tag tone="info" icon="cellphone" label={t('history.onPhone')} />
       {a.kind === 'failed' ? <Button label={working ? t('pending.retrying') : t('pending.retry')} icon="↻" disabled={working} onPress={() => retry(record.id)}
         hint={api.kind === 'mock' ? t('mode.mock.detail') : undefined} /> : null}
     </Card>
@@ -140,7 +140,7 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
                 <Pressable key={s.id} accessibilityRole="link" onPress={() => Linking.openURL(s.url)}>
                   <Text style={[type.small, { color: color.sky, textDecorationLine: 'underline' }]}>{s.title} — {t('result.accessed', { date: formatDate(s.accessed_at, locale) })}</Text>
                 </Pressable>
-              )) : <Tag tone="warn" label={`⚠ ${t('result.noSource')}`} />}
+              )) : <Tag tone="warn" icon="alert-outline" label={t('result.noSource')} />}
             </View>
           );
         }) : <Body soft>{t('result.noGuidance')}</Body>}
