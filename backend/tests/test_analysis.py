@@ -551,3 +551,12 @@ class Transport(unittest.TestCase):
         response = TestClient(app).post("/v1/analyses", json=observation(), headers={"Accept-Encoding": "gzip"})
         self.assertEqual(response.headers.get("content-encoding"), "gzip")
         validate("analysis", response.json())
+
+
+class UncertaintyWording(unittest.TestCase):
+    def test_specific_sign_low_certainty_not_called_unspecific(self):
+        result = run(observation(signals=[{"label": "orange_powder_leaf_underside", "confidence": 0.5}]))
+        self.assertEqual(result["status"], "needs_review")
+        self.assertIn("specific sign", result["condition"]["uncertainty"])
+        self.assertNotIn("not specific enough", result["condition"]["uncertainty"])
+        self.assertIn("not specific enough", run(observation())["condition"]["uncertainty"])

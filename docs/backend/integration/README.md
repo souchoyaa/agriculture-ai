@@ -19,3 +19,22 @@ Original frontend smoke asserts "DEMO RESULT" (written against bootstrap mock-ap
 3. Banner "Server answers are demo data" while data mode is live.
 4. Map: render by properties.kind (see backend-precheck-bace494.md).
 Backend change from this run: alias leaf_drop → premature_leaf_drop; leaf_yellowing / insect_damage / dark_berry_lesions intentionally unrecognised (non-specific / not rust), tested.
+
+## 2026-10-04 04:20Z: integration e85ff60 = backend 24a6816 + frontend e114fc6 (committed, not yet announced)
+Commands (exact):
+- `cd worktrees/integration/backend && uv run python -m unittest discover -s tests` → **Ran 63 tests, OK (skipped=1)** (backend worktree: 63, OK, 0 skipped). Earlier status entries of "64/65 tests" were miscounted; 63 is the verified count.
+- `cd worktrees/integration/frontend && npm ci && npm run check` → tsc + adapters + **13/13 domain checks passed**.
+- `npx expo export --platform web` → OK; servers: `AGRI_CORS_ORIGINS=http://localhost:8091 uv run uvicorn app.main:app --port 8790` (real clock), `python3 -m http.server 8091` in dist; both stopped by PID afterwards.
+- Browser: `npx tsx journey.ts http://localhost:8091 http://localhost:8790 <outdir>` (script in this folder; run from frontend/ for playwright-core).
+
+Result: connection "✓ Connected. Contract 0.1.0, data mode cached."; POST /v1/analyses 200; analysis data_mode **live** (farmer-report), needs_review/undetermined (score 0.33), environment fresh (cache age 4.6 h); UI renders server result, evidence wording, weather, map limits, privacy copy ("Sent to the server…; Not sent: your photo and note"). Screenshots `e85ff60-phone-result-{top,full}.png`.
+
+Still failing / open (sent to frontend): (1) banner "Server answers are demo data" shown for a data_mode=live result → per-result live/demo distinction NOT met; (2) checkbox still sends rust_like_leaf_marks; (3) weather labelled "Measured"; (4) map kind rendering not exercised (abstained result has no map); (5) console: one 404 resource and one ERR_CONNECTION_REFUSED during journey; (6) frontend http-smoke still asserts "data mode demo"/"DEMO RESULT".
+
+## 2026-10-04 04:25Z: integration 95747ce = backend 24a6816 + frontend 8964deb (announced fe-002) — JOINT JOURNEY PASSES
+- `git diff backend -- shared docs/interfaces.md` on integration: empty (frontend imported backend shared verbatim).
+- backend `uv run python -m unittest discover -s tests` → Ran 63 tests, OK (skipped=1).
+- frontend `npm ci && npm run check` → tsc + adapters + 14/14 domain checks.
+- frontend `npx tsx tests/http-smoke.ts http://localhost:8091 http://localhost:8790` (real clock backend, export served on 8091) → "HTTP smoke passed: POST /v1/analyses [200] — agri-backend result with map/weather rendered; no note/photo in request". Screenshots copied: `95747ce-phone-http-result.png`, `95747ce-phone-http-map.png` (map: heat cells by priority, ranked pins 1–5 SW-elongated downwind, "not the chance of infection", legend + ordered text list).
+- Own journey (journey.ts): health "data mode cached"; result stamp "SERVER ESTIMATE · rule-based · not a diagnosis … Based on your symptom report, not on a photo"; analysis data_mode live, orange_powder_leaf_underside recognised as SPECIFIC SIGN, needs_review score 0.42. Per-result live/demo distinction: MET. Remaining: 2 console errors (404 resource; ERR_CONNECTION_REFUSED) — reported.
+- Backend follow-up from this run: low-certainty specific sign was worded "not specific enough" → new message `uncertainty.specific_low_certainty` (en/es/fr), test added (64 tests).
