@@ -71,7 +71,8 @@ export function buildObservation(args: {
     signals: symptomsToSignals(args.symptoms, args.certainty),
     provenance: {
       adapter: 'farmer-report',
-      source: args.hasPhoto ? 'symptom checklist; photo kept on device, not analysed' : 'symptom checklist; no photo',
+      source: (args.hasPhoto ? 'symptom checklist; photo kept on device, not analysed' : 'symptom checklist; no photo')
+        + (args.field.demo && args.field.location ? '; example field location, not verified as your farm' : ''),
     },
   };
 }

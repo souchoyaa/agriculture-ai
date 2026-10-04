@@ -66,7 +66,8 @@ export function CheckScreen({ nav, fieldId }: { nav: Nav; fieldId?: string }) {
     } finally { setSaving(false); }
   }
 
-  const fieldName = state.fields.find(f => f.id === field)?.name;
+  const selectedField = state.fields.find(f => f.id === field);
+  const fieldName = selectedField?.name;
 
   return (
     <View style={{ gap: space(4) }}>
@@ -74,6 +75,8 @@ export function CheckScreen({ nav, fieldId }: { nav: Nav; fieldId?: string }) {
         <Text style={type.label}>{t('check.step', { n: step, total }).toUpperCase()}</Text>
         <H1>{t('check.title')}</H1>
         {step > 1 && fieldName ? <Body soft>{fieldName}</Body> : null}
+        {selectedField?.demo && selectedField.location ? <Card tone="warn"><Body>{t('location.example')}</Body></Card> : null}
+        {selectedField && !selectedField.location ? <Body soft>{t('location.missing')}</Body> : null}
         <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ flexDirection: 'row', gap: space(1), marginTop: space(2) }}>
           {[1, 2, 3].map(i => <View key={i} style={{ flex: 1, height: 6, borderRadius: 3, backgroundColor: i <= step ? color.leaf : color.stoneSoft }} />)}
         </View>

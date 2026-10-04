@@ -1,37 +1,43 @@
-# Agriculture foundation
+# Field companion
 
-Offline demo: Liquid → VLM adapter → canonical observation → backend → canonical analysis → mock/HTTP client adapter. Contract **0.1.0**. All bootstrap analysis is visibly synthetic; no live model/weather needed.
+Offline-first coffee field checks with sourced rule-based analysis, real cached weather, relative scouting priorities, local history and English/French screens. Contract 0.1.0. The Liquid image model remains unavailable: server estimates use the farmer's symptom report and explicitly say so. Demo answers are labelled fixed examples.
 
-## Run and check
+## Run
 
-Backend (Python 3.12, uv):
+Use this **integration worktree** for the combined app. Start the backend in one terminal:
+
 ```sh
 cd backend
-export UV_CACHE_DIR="$PWD/.cache/uv"
-export UV_PYTHON_INSTALL_DIR="$PWD/.cache/python"
+export UV_CACHE_DIR="$PWD/.cache/uv" UV_PYTHON_INSTALL_DIR="$PWD/.cache/python"
 uv sync --python 3.12
-uv run python -m unittest discover -s tests -v
 uv run uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
-Frontend (Node 22+ recommended, npm):
+
+Start the frontend in another:
+
 ```sh
 cd frontend
-export npm_config_cache="$PWD/.cache/npm"
 npm ci
-npm run check
 EXPO_OFFLINE=1 npm run web
-npm run build:web
 ```
-Offline Metro startup avoids Expo network metadata/cache writes outside the workspace; `EXPO_OFFLINE=1 npm run web` was served and checked.
 
-Expo Go/native development: `npm start`, choose Android/iOS with a suitable device/emulator. Native builds/camera are not verified by bootstrap. Web export proves the client bundles independently of backend. Mock mode is the default in App.tsx. Instantiate `httpApi('http://localhost:8000')` to use HTTP; physical devices need the host LAN address and appropriate backend binding. HTTP failures never silently become mock success.
+The app defaults to the offline demo. For actual server estimates, open Settings, select the server source, enter `http://localhost:8000`, and test the connection. Physical devices need the computer's reachable LAN address and suitable backend binding. Configure `AGRI_CORS_ORIGINS` when using a different web origin.
 
-Shared fixtures are validated by both checks. Backend check exercises schema validation, invalid input, unsupported crop and in-process HTTP. Frontend check exercises schemas, mock responses, HTTP mapping and network failure. See docs/interfaces.md, docs/architecture.md and docs/continuation.md.
+## Verified
 
-## Bootstrap evidence and handoff
+- Backend: `uv run python -m unittest discover -s tests` — 71 tests, one optional raw-ERA5 check skipped in this checkout.
+- Frontend: TypeScript, adapters and 17 domain checks pass; `npm run build:web` exports the production app.
+- Earlier integrated milestones: strict real-backend browser journey on phone and desktop, zero console errors/refused requests. Newest source/data refresh awaits another complete browser run after Claude's quota reset.
+- Real Open-Meteo weather fetched 2026-10-04 06:45 Zurich; frozen offline fixtures generated for 06:59 Zurich. Fetch age is shown and data becomes explicitly stale after six hours.
 
-Normal `uv sync --python 3.12` and npm installation passed; portable lockfiles are committed. Backend: three tests passed. Frontend: TypeScript, fixture/mock/HTTP checks and web export passed. The frontend HTTP adapter was exercised against a running FastAPI server. The supplied supervisor passed all 13 fake-provider recovery tests. Browser verification and exact bootstrap/worktree SHA are recorded in the live architecture checkpoint.
+On restricted local shells, run frontend checks with `node --import tsx tests/adapters.ts`, `node --import tsx tests/domain.ts`, and `./node_modules/.bin/tsc --noEmit`; the normal `npm run check` wrapper uses a local IPC socket.
 
-Worktrees: `/Users/sachagodey/Documents/project/hackaton/worktrees/backend`, `frontend`, and `integration` (same parent). Backend owns integration and shared contracts after readiness; frontend owns its client and role docs. The root foundation is frozen after handoff. Workers verify matching run/readiness and bootstrap ancestry, enter their assigned worktrees and install dependencies there with the commands above. Worktree environments are intentionally independent.
+## Scope
 
-Known limits: no native-device verification, persisted cache, sync queue, real Liquid/weather, sourced diagnosis or calibrated risk. npm reports 30 dependency audit findings (7 moderate, 23 high); dependency remediation belongs to the client owner and must preserve Expo compatibility. No automatic major upgrade was applied.
+Photos and notes stay on the device; server mode sends the crop/symptom report, time and saved location. Native photo copies record failed persistence and reset only removes app-owned copies. Android/iOS bundles compile, but physical-device photo/share behavior remains unverified.
+
+Seeded fields have explicit example-location notices. New personal fields currently have no location-entry flow, so their weather/scouting sections stay unavailable; symptom reports still work. Input provenance is retained in analysis output.
+
+Evidence and weather/scouting scores are uncalibrated; they are not diagnosis or infection probabilities. Guidance preserves sources, historical dates, regional applicability and translation limitations. Regional sources include Rwanda Agriculture Board/Plantwise and the 2012 Rwanda survey; no pesticide product or dosage is prescribed. The server stores no shared history.
+
+See [backend instructions](backend/README.md), [frontend evidence](docs/frontend/README.md), and [contracts](docs/interfaces.md). Architecture/bootstrap history remains in Git; the architecture checkout is separate from this combined worktree.

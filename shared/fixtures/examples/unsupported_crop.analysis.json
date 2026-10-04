@@ -1,9 +1,9 @@
 {
  "contract_version": "0.1.0",
- "id": "analysis-88e784cf1a8182a8",
+ "id": "analysis-b4191a39a6cb7947",
  "observation_id": "demo-coffee-001-maize",
  "data_mode": "demo",
- "generated_at": "2026-10-04T00:00:00Z",
+ "generated_at": "2026-10-04T04:59:00Z",
  "environment": {
   "status": "unavailable",
   "as_of": null,

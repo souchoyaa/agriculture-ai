@@ -1,0 +1,75 @@
+{
+  "description": "Proposed mapping from dataset-style class labels (likely vocabulary of a coffee-leaf VLM) to canonical signals. For LiquidVLMAdapter; validate against the real model's labels before use.",
+  "status": "proposed_unverified",
+  "source_ids": [
+    "rocole_2019",
+    "bracol_2019"
+  ],
+  "labels": {
+    "rust": {
+      "signal": "orange_powder_leaf_underside",
+      "condition": "BRACOL images are abaxial (lower side), where uredinia sporulate"
+    },
+    "rust_level_1": {
+      "signal": "rust_like_leaf_marks",
+      "affected_leaf_area_pct": [
+        1,
+        5
+      ],
+      "condition": "RoCoLe mixes upper/lower sides; treat as non-specific"
+    },
+    "rust_level_2": {
+      "signal": "rust_like_leaf_marks",
+      "affected_leaf_area_pct": [
+        6,
+        20
+      ]
+    },
+    "rust_level_3": {
+      "signal": "rust_like_leaf_marks",
+      "affected_leaf_area_pct": [
+        21,
+        50
+      ]
+    },
+    "rust_level_4": {
+      "signal": "rust_like_leaf_marks",
+      "affected_leaf_area_pct": [
+        51,
+        100
+      ]
+    },
+    "cercospora": {
+      "signal": "cercospora_leaf_spot_marks"
+    },
+    "cercospora_leaf_spot": {
+      "signal": "cercospora_leaf_spot_marks"
+    },
+    "brown_leaf_spot": {
+      "signal": "brown_leaf_spot_marks"
+    },
+    "leaf_miner": {
+      "signal": "leaf_miner_mines"
+    },
+    "miner": {
+      "signal": "leaf_miner_mines"
+    },
+    "red_spider_mite": {
+      "signal": "red_spider_mite_damage"
+    },
+    "healthy": {
+      "signal": "healthy_leaf"
+    }
+  },
+  "class_counts": {
+    "rocole_2019": {
+      "healthy": 791,
+      "red_spider_mite": 167,
+      "rust_level_1": 344,
+      "rust_level_2": 166,
+      "rust_level_3": 62,
+      "rust_level_4": 30
+    }
+  },
+  "notes": "RoCoLe is Robusta (Ecuador), BRACOL Arabica (Brazil); neither from East Africa. Severe rust classes are rare (RoCoLe level 4: 30/1560), so model confidence on severe cases may be poorly supported."
+}

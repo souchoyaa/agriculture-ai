@@ -1,0 +1,255 @@
+[
+  {
+    "id": "hdoa_npa_20_03_2021",
+    "title": "New Pest Advisory No. 20-03: Coffee Leaf Rust, Hemileia vastatrix (revised January 2021)",
+    "authors": "Ocenar, J.; Kawabata, A.",
+    "publisher": "Hawai'i Department of Agriculture, Plant Pest Control Branch",
+    "published": "2021-01",
+    "url": "https://dab.hawaii.gov/pi/files/2021/01/NPA-20-03-Coffee-leaf-rust1-21.pdf",
+    "accessed_at": "2026-10-03T23:44:00Z",
+    "license": "Government extension publication; cite, do not redistribute modified copies",
+    "kind": "extension",
+    "used_for": [
+      "symptoms",
+      "biology_free_water",
+      "infection_24_48h_wetness",
+      "lesions_4_6_weeks",
+      "dispersal_wind_rain_contact",
+      "sanitation",
+      "do_not_move_material",
+      "photograph_both_surfaces"
+    ],
+    "region": "Hawaiʻi, USA"
+  },
+  {
+    "id": "hdoa_field_guide_2020",
+    "title": "Field Guide to Coffee Leaf Rust (Hemileia vastatrix), No. 02-PP-2020 (revised 2020-11-24)",
+    "authors": "Ocenar, J.",
+    "publisher": "Hawai'i Department of Agriculture",
+    "published": "2020-11-24",
+    "url": "https://hdoa.hawaii.gov/pi/files/2020/12/CLR-Public-field-guide-with-form11-20.pdf",
+    "accessed_at": "2026-10-03T23:44:00Z",
+    "license": "Government extension publication; cite, do not redistribute modified copies",
+    "kind": "extension",
+    "used_for": [
+      "symptoms",
+      "lower_canopy_first",
+      "photograph_both_surfaces",
+      "flag_area"
+    ],
+    "region": "Hawaiʻi, USA"
+  },
+  {
+    "id": "ctahr_pd118_2021",
+    "title": "Spraying to Suppress Coffee Leaf Rust (Hemileia vastatrix) in Hawai'i (PD-118)",
+    "authors": "Kawabata, A. M.; Nakamoto, S. T.",
+    "publisher": "University of Hawai'i at Manoa, College of Tropical Agriculture and Human Resources",
+    "published": "2021-06",
+    "url": "https://www.ctahr.hawaii.edu/oc/freepubs/pdf/PD-118.pdf",
+    "accessed_at": "2026-10-03T23:44:00Z",
+    "license": "Copyright University of Hawai'i; cite only",
+    "kind": "extension",
+    "used_for": [
+      "lower_canopy_first",
+      "early_detection",
+      "label_is_law",
+      "consult_extension_before_fungicide",
+      "spore_survival_six_weeks"
+    ],
+    "region": "Hawaiʻi, USA"
+  },
+  {
+    "id": "avelino_2015_food_security",
+    "title": "The coffee rust crises in Colombia and Central America (2008-2013): impacts, plausible causes and proposed solutions",
+    "authors": "Avelino, J.; Cristancho, M.; Georgiou, S.; Imbach, P.; Aguilar, L.; Bornemann, G.; et al.",
+    "publisher": "Food Security 7:303-321",
+    "published": "2015-03-11",
+    "doi": "10.1007/s12571-015-0446-9",
+    "url": "https://doi.org/10.1007/s12571-015-0446-9",
+    "accessed_at": "2026-10-03T23:46:00Z",
+    "license": "CC BY 4.0",
+    "kind": "peer_reviewed",
+    "used_for": [
+      "reduced_thermal_amplitude_shorter_latency",
+      "early_warning_resistant_cultivars"
+    ],
+    "region": "Colombia, Central America"
+  },
+  {
+    "id": "talhinhas_2017_mpp",
+    "title": "The coffee leaf rust pathogen Hemileia vastatrix: one and a half centuries around the tropics",
+    "authors": "Talhinhas, P.; Batista, D.; Diniz, I.; Vieira, A.; Silva, D. N.; Loureiro, A.; et al.",
+    "publisher": "Molecular Plant Pathology 18(8):1039-1051",
+    "published": "2017",
+    "doi": "10.1111/mpp.12512",
+    "url": "https://doi.org/10.1111/mpp.12512",
+    "accessed_at": "2026-10-03T23:44:00Z",
+    "license": "Publisher terms; cite only",
+    "kind": "peer_reviewed",
+    "used_for": [
+      "urediniospore_inoculum",
+      "chlorotic_spots_then_orange_uredinia",
+      "resistant_cultivars"
+    ],
+    "region": "Global"
+  },
+  {
+    "id": "marino_2026_frontiers",
+    "title": "Dynamics of coffee leaf rust (Hemileia vastatrix) in Puerto Rico: associations with season, cultivar, altitude, and hyperparasites",
+    "authors": "Mariño, Y. A.; Buitrago, D. P.; Serrato-Díaz, L. M.; Almonte-Javier, E.; Negrón Moreno, S. E.; Bayman, P.",
+    "publisher": "Frontiers in Plant Science",
+    "published": "2026",
+    "doi": "10.3389/fpls.2026.1768440",
+    "url": "https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2026.1768440/full",
+    "accessed_at": "2026-10-03T23:48:00Z",
+    "license": "Open access (Frontiers, CC BY)",
+    "kind": "peer_reviewed_secondary",
+    "used_for": [
+      "germination_temperature_bounds_12_5_32_5",
+      "germination_optimum_21_23",
+      "wetness_6_24h",
+      "latent_shortest_18_28",
+      "dispersal_wind_splash"
+    ],
+    "note": "Review statements citing De Jong et al. 1987 (doi:10.1007/BF01998091) and Kushalappa et al. 1983; primary papers not read directly.",
+    "region": "Puerto Rico (review of global literature)"
+  },
+  {
+    "id": "de_jong_1987_njpp",
+    "title": "Temperature requirements for germination, germ tube growth and appressorium formation of urediospores of Hemileia vastatrix",
+    "authors": "de Jong, E. J.; Eskes, A. B.; Hoogstraten, J. G. J.; Zadoks, J. C.",
+    "publisher": "Netherlands Journal of Plant Pathology 93:61-71",
+    "published": "1987-03",
+    "doi": "10.1007/BF01998091",
+    "url": "https://doi.org/10.1007/BF01998091",
+    "accessed_at": "2026-10-03T23:44:00Z",
+    "license": "Publisher terms; metadata verified via Crossref, full text not accessed",
+    "kind": "peer_reviewed",
+    "used_for": [
+      "germination_temperature_primary_reference"
+    ],
+    "region": "Laboratory"
+  },
+  {
+    "id": "open_meteo",
+    "title": "Open-Meteo Weather Forecast API (hourly temperature_2m, relative_humidity_2m, precipitation, wind)",
+    "authors": "Open-Meteo.com",
+    "publisher": "Open-Meteo",
+    "published": "2026",
+    "url": "https://open-meteo.com/en/docs",
+    "accessed_at": "2026-10-03T23:46:00Z",
+    "license": "CC BY 4.0",
+    "kind": "data",
+    "used_for": [
+      "weather_history_forecast"
+    ],
+    "region": "Global"
+  },
+  {
+    "id": "open_meteo_archive_era5",
+    "title": "Open-Meteo Historical Weather API (ERA5 / ERA5-Land reanalysis), hourly temperature_2m, relative_humidity_2m, precipitation",
+    "authors": "Open-Meteo.com; Copernicus Climate Change Service",
+    "publisher": "Open-Meteo",
+    "published": "2026",
+    "url": "https://open-meteo.com/en/docs/historical-weather-api",
+    "accessed_at": "2026-10-04T00:08:00Z",
+    "license": "CC BY 4.0",
+    "kind": "data",
+    "region": "Global",
+    "used_for": [
+      "chinchina_consistency_check"
+    ]
+  },
+  {
+    "id": "hersbach_2020_era5",
+    "title": "The ERA5 global reanalysis",
+    "authors": "Hersbach, H.; Bell, B.; Berrisford, P.; et al.",
+    "publisher": "Quarterly Journal of the Royal Meteorological Society 146:1999-2049",
+    "published": "2020-06-15",
+    "doi": "10.1002/qj.3803",
+    "url": "https://doi.org/10.1002/qj.3803",
+    "accessed_at": "2026-10-04T00:10:00Z",
+    "license": "CC BY 4.0",
+    "kind": "peer_reviewed",
+    "region": "Global",
+    "used_for": [
+      "reanalysis_dataset_description"
+    ]
+  },
+  {
+    "id": "rocole_2019",
+    "title": "RoCoLe: A robusta coffee leaf images dataset for evaluation of machine learning based methods in plant diseases recognition",
+    "authors": "Parraga-Alava, J.; Cusme, K.; Loor, A.; Santander, E.",
+    "publisher": "Data in Brief 25:104414; dataset Mendeley Data doi:10.17632/c5yvn32dzg.2",
+    "published": "2019-08-19",
+    "doi": "10.1016/j.dib.2019.104414",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6727496/",
+    "accessed_at": "2026-10-04T00:18:00Z",
+    "license": "CC BY 4.0",
+    "kind": "dataset_paper",
+    "region": "Ecuador (Manabí)",
+    "used_for": [
+      "class_vocabulary",
+      "oirsa_severity_levels"
+    ]
+  },
+  {
+    "id": "bracol_2019",
+    "title": "BRACOL - A Brazilian Arabica Coffee Leaf images dataset to identification and quantification of coffee diseases and pests",
+    "authors": "Krohling, R. A.; et al.",
+    "publisher": "Mendeley Data",
+    "published": "2019",
+    "doi": "10.17632/yy2k5y8mxg.1",
+    "url": "https://doi.org/10.17632/yy2k5y8mxg.1",
+    "accessed_at": "2026-10-04T00:19:00Z",
+    "license": "CC BY 4.0",
+    "kind": "dataset",
+    "region": "Brazil (Espírito Santo)",
+    "used_for": [
+      "class_vocabulary",
+      "differential_biotic_stresses"
+    ]
+  },
+  {
+    "id": "rab_plantwise_rw014_2012",
+    "title": "Factsheet for farmers: Coffee leaf rust (RW014En)",
+    "authors": "Mushimiyimana, S.; Nduwayezu, A. (Rwanda Agriculture Board); edited by Plantwise/CABI",
+    "publisher": "Plantwise (CABI)",
+    "published": "2012-05",
+    "url": "https://factsheetadmin.plantwise.org/Uploads/PDFs/20127801774.pdf",
+    "accessed_at": "2026-10-04T04:37:00Z",
+    "license": "CC BY-SA 4.0",
+    "kind": "extension",
+    "region": "Rwanda (also stated relevant to Kenya, Ghana)",
+    "used_for": [
+      "symptoms",
+      "wind_and_human_spread",
+      "action_threshold_two_spots_per_leaf",
+      "spacing_pruning",
+      "resistant_varieties"
+    ],
+    "note": "Contains fungicide product names and doses (2012); deliberately not reproduced in app output — registrations/labels must be checked locally."
+  },
+  {
+    "id": "bigirimana_2012_ajar",
+    "title": "Incidence and severity of coffee leaf rust and other coffee pests and diseases in Rwanda",
+    "authors": "Bigirimana, J.; Njoroge, K.; Gahakwa, D.; Phiri, N. A.",
+    "publisher": "African Journal of Agricultural Research 7(26):3847-3852",
+    "published": "2012-07-10",
+    "doi": "10.5897/ajar11.955",
+    "url": "https://academicjournals.org/journal/AJAR/article-abstract/861952B33957",
+    "accessed_at": "2026-10-04T04:45:00Z",
+    "license": "CC BY 4.0 (stated on publisher page)",
+    "kind": "peer_reviewed",
+    "region": "Rwanda",
+    "used_for": [
+      "rwanda_all_provinces_affected",
+      "altitude_negative_correlation",
+      "commercial_cultivars_susceptible",
+      "mulching_pruning_fertiliser_lower_severity",
+      "intercropping_higher_severity"
+    ],
+    "full_text_url": "https://academicjournals.org/journal/AJAR/article-full-text-pdf/861952B33957.pdf",
+    "note": "Full text read from publisher PDF. Survey of 307 farms during the dry season (2011/2012); findings are associations, not causal effects, and reflect 2012 conditions/cultivars. Altitude: less CLR at >=1800 m, more at <=1400 m (r = -0.71). More than two pustules per leaf recorded in all provinces."
+  }
+]
