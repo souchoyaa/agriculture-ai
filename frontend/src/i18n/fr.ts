@@ -247,6 +247,7 @@ export const fr: Messages = {
   'result.env.fetched': 'Données météo de modèle (pas une station), récupérées {age} h avant l’analyse{cached}.',
   'result.env.cached': ' · copie enregistrée',
   'mode.http.unverified': 'Pas encore vérifié. Ouvrez les réglages et touchez « Tester la connexion ».',
+  'result.photo.notDurable': 'La photo n’a pas pu être copiée dans l’application. Elle est seulement liée depuis la galerie ou un dossier temporaire et peut disparaître. Votre constat est enregistré.',
   'common.loading': 'Chargement…',
   'common.close': 'Fermer',
   'common.yes': 'Oui',

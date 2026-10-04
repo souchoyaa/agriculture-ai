@@ -99,7 +99,7 @@ function ModeBar({ onPress }: { onPress: () => void }) {
     bg = color.skySoft;
   }
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`${text}. ${detail}`} style={{ backgroundColor: bg, paddingHorizontal: space(4), paddingVertical: space(2), borderBottomWidth: 2, borderBottomColor: '#0002', minHeight: 48, justifyContent: 'center' }}>
+    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`${text}. ${detail}`} style={({ focused }: PS) => [focused && { outlineStyle: 'solid', outlineWidth: 3, outlineColor: color.focus, outlineOffset: -3 } as object, { backgroundColor: bg, paddingHorizontal: space(4), paddingVertical: space(2), borderBottomWidth: 2, borderBottomColor: '#0002', minHeight: 48, justifyContent: 'center' }]}>
       <Text style={[type.label, { color: fg, fontSize: 13 }]}>{text}</Text>
       <Text style={[type.small, { color: fg, fontSize: 13, lineHeight: 17 }]} numberOfLines={2}>{detail}</Text>
     </Pressable>

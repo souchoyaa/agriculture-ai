@@ -6,7 +6,7 @@ import { ConnectionGate, type Connection } from './connection';
 import { buildObservation, newId, type Field, type ObservationRecord } from '../domain/model';
 import { translator, type Translate } from '../i18n';
 import { deviceStore, type KeyValueStore } from '../storage';
-import { deletePhoto, persistPhoto } from '../photoStore';
+import { deletePhoto, persistPhoto, PHOTO_STORAGE_KIND } from '../photoStore';
 import { loadState, retryable, runAnalysis, saveState, seedState, type PersistedState, type Settings } from './repository';
 
 export type { Connection };
@@ -138,8 +138,12 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
       const id = newId('obs', now.getTime());
       const observation = buildObservation({ id, field, symptoms: input.symptoms, certainty: input.certainty, locale: current.current.settings.locale, now, hasPhoto: !!input.photoUri });
       let photoUri = input.photoUri;
-      if (photoUri) { try { photoUri = await persistPhoto(photoUri, id); } catch { /* keep picker URI; may be cleared by the OS later */ } }
-      const record: ObservationRecord = { id, fieldId: field.id, createdAt: now.toISOString(), observation, symptoms: input.symptoms, certainty: input.certainty, evidence: input.evidence, photoUri, note: input.note?.trim() || undefined, analysis: { kind: 'waiting' }, completedScouting: [] };
+      let photoStorage: ObservationRecord['photoStorage'];
+      if (photoUri) {
+        try { photoUri = await persistPhoto(photoUri, id); photoStorage = PHOTO_STORAGE_KIND; }
+        catch { photoStorage = 'picker'; }   // report still saved; UI warns the photo may disappear
+      }
+      const record: ObservationRecord = { id, fieldId: field.id, createdAt: now.toISOString(), observation, symptoms: input.symptoms, certainty: input.certainty, evidence: input.evidence, photoUri, photoStorage, note: input.note?.trim() || undefined, analysis: { kind: 'waiting' }, completedScouting: [] };
       await commit(s => ({ ...s, records: [record, ...s.records] }));   // durable local save first
       analyse(record, api);                                               // then request analysis
       return record;
@@ -155,7 +159,8 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
     updateSettings(patch) { commit(s => ({ ...s, settings: { ...s.settings, ...patch } })); },
     testConnection,
     async reset() {
-      for (const r of current.current.records) if (r.photoUri) await deletePhoto(r.photoUri);
+      // Only app-owned copies are removed; picked originals/gallery files are never touched.
+      for (const r of current.current.records) if (r.photoUri && r.photoStorage === 'app') await deletePhoto(r.photoUri);
       const seeded = await seedState(mockApi, current.current.settings);
       await commit(() => seeded);
     },

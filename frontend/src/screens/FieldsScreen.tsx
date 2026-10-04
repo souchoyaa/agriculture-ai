@@ -43,9 +43,9 @@ export function FieldsScreen({ nav }: { nav: Nav }) {
           <Text style={[type.body, { color: '#F1F5EF' }]}>{reasonText(t, top.reason, condLabel(top.latest))}</Text>
           <Row wrap>
             {top.latest && top.latest.analysis.kind !== 'not_requested'
-              ? <Button kind="secondary" label={t('fields.open')} icon="→" onPress={() => nav.push({ name: 'result', recordId: top.latest!.id })} />
+              ? <Button kind="secondary" label={t('fields.open')} a11yLabel={`${t('fields.open')}: ${top.field.name}`} icon="→" onPress={() => nav.push({ name: 'result', recordId: top.latest!.id })} />
               : null}
-            <Button kind="secondary" label={t('fields.checkThis')} icon="＋" onPress={() => nav.push({ name: 'check', fieldId: top.field.id })} />
+            <Button kind="secondary" label={t('fields.checkThis')} a11yLabel={`${t('fields.checkThis')}: ${top.field.name}`} icon="＋" onPress={() => nav.push({ name: 'check', fieldId: top.field.id })} />
           </Row>
         </View>
       ) : null}
@@ -82,8 +82,8 @@ function FieldCard({ summary, nav }: { summary: ReturnType<typeof useFieldSummar
       <Body>{reasonText(t, reason, condLabel(latest))}</Body>
       <Body soft>{latest ? t('fields.lastChecked', { date: formatDate(latest.createdAt, state.settings.locale) }) : t('fields.neverChecked')}</Body>
       <Row wrap>
-        <Button label={t('fields.checkThis')} icon="＋" onPress={() => nav.push({ name: 'check', fieldId: field.id })} style={{ flexGrow: 1 }} />
-        <Button kind="secondary" label={t('fields.open')} icon="→" onPress={() => nav.push({ name: 'field', fieldId: field.id })} style={{ flexGrow: 1 }} />
+        <Button label={t('fields.checkThis')} a11yLabel={`${t('fields.checkThis')}: ${field.name}`} icon="＋" onPress={() => nav.push({ name: 'check', fieldId: field.id })} style={{ flexGrow: 1 }} />
+        <Button kind="secondary" label={t('fields.open')} a11yLabel={`${t('fields.open')}: ${field.name}`} icon="→" onPress={() => nav.push({ name: 'field', fieldId: field.id })} style={{ flexGrow: 1 }} />
       </Row>
     </Card>
   );

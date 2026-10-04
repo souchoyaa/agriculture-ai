@@ -189,6 +189,7 @@ function ReportView({ record }: { record: ObservationRecord }) {
       {record.photoUri ? (
         <View style={{ gap: space(1) }}>
           <Text style={type.label}>{t('result.photo').toUpperCase()}</Text>
+          {record.photoStorage === 'picker' ? <Text accessibilityRole="alert" style={[type.small, { color: color.clay }]}>⚠ {t('result.photo.notDurable')}</Text> : null}
           <Image source={{ uri: record.photoUri }} style={{ width: '100%', height: 200, borderRadius: radius.sm, backgroundColor: color.stoneSoft }} resizeMode="cover" accessibilityLabel={t('result.photo')} />
         </View>
       ) : null}

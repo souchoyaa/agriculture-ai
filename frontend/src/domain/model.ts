@@ -20,6 +20,8 @@ export interface ObservationRecord {
   certainty: 'sure' | 'unsure';
   evidence: string[];            // stable evidence-checklist ids the farmer confirmed
   photoUri?: string;             // device-local only; never uploaded by this app
+  /** 'app' = copied into app storage; 'web' = stored in record; 'picker' = copy failed, original/cache URI kept (may vanish). */
+  photoStorage?: 'app' | 'web' | 'picker';
   note?: string;
   analysis: AnalysisState;
   followUpDays?: number;         // local reminder intent; no push notification

@@ -13,6 +13,7 @@ import path from 'node:path';
 import { CORRUPT_KEY, loadState, runAnalysis, saveState, seedState, STORAGE_KEY, retryable } from '../src/state/repository.ts';
 import { memoryStore } from '../src/storageMemory.ts';
 import { ConnectionGate } from '../src/state/connection.ts';
+import { isAppOwnedPhoto } from '../src/photoPaths.ts';
 import { isSupported, missingKeys, translator } from '../src/i18n/index.ts';
 import { en } from '../src/i18n/en.ts';
 import { fr } from '../src/i18n/fr.ts';
@@ -234,6 +235,16 @@ test('changing address does not probe; a Test-button check survives adoption', a
     assert(gate.isVerified(b)); assert.equal(calls, 1);
     assert.equal(gate.adopt(a), false); assert(!gate.isVerified(b));
   });
+});
+
+test('photo cleanup only targets files inside the app-owned photos directory', () => {
+  const dir = 'file:///data/user/0/app/files/photos';
+  assert(isAppOwnedPhoto(`${dir}/obs-1.jpg`, dir));
+  assert(isAppOwnedPhoto(`${dir}/obs-1.jpg`, `${dir}/`));
+  for (const other of ['file:///storage/emulated/0/DCIM/photos/img.jpg', 'file:///data/user/0/app/cache/ImagePicker/x.jpg',
+    `${dir}-old/x.jpg`, `${dir}/sub/x.jpg`, `${dir}/../secret.jpg`, `${dir}/`, 'content://media/external/images/1', '']) {
+    assert(!isAppOwnedPhoto(other, dir), other);
+  }
 });
 
 (async () => {
