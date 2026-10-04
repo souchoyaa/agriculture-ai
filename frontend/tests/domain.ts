@@ -5,7 +5,7 @@ import addFormats from 'ajv-formats';
 import observationSchema from '../../shared/contracts/observation.schema.json';
 import analysisSchema from '../../shared/contracts/analysis.schema.json';
 import analysisFixture from '../../shared/fixtures/analysis.json';
-import { ApiError, httpApi, mockApi, normalizeAnalysis, type Api, type Analysis } from '../src/api.ts';
+import { ApiError, demoObservation, httpApi, mockApi, normalizeAnalysis, type Api, type Analysis } from '../src/api.ts';
 import { buildObservation, fieldAttention, signalStrength, sortFieldsByAttention, SYMPTOMS, EVIDENCE_CHECKS, type ObservationRecord } from '../src/domain/model.ts';
 import { describeFeatures, priorityBucket, project, timeSlots } from '../src/domain/mapFeatures.ts';
 import { readdirSync, readFileSync } from 'node:fs';
@@ -13,6 +13,9 @@ import path from 'node:path';
 import { CORRUPT_KEY, loadState, runAnalysis, saveState, seedState, STORAGE_KEY, retryable } from '../src/state/repository.ts';
 import { memoryStore } from '../src/storageMemory.ts';
 import { ConnectionGate } from '../src/state/connection.ts';
+import { translateAnalysisWith } from '../src/model/translateText.ts';
+import { interpretProbes } from '../src/model/probes.ts';
+import { priorsFromHistory, runAutomaticCheck, type CheckDeps } from '../src/pipeline/check.ts';
 import { isAppOwnedPhoto } from '../src/photoPaths.ts';
 import { parseCoordinates, roundLocation } from '../src/domain/location.ts';
 import { isSupported, missingKeys, translator } from '../src/i18n/index.ts';
@@ -152,8 +155,10 @@ test('map features are displayed as provided; no frontend risk computation', () 
 
 test('localization: complete French, transparent fallback, ids covered', () => {
   assert.deepEqual(missingKeys('fr'), []);
-  assert(!isSupported('rw'));
-  assert.equal(translator('rw')('tab.fields'), en['tab.fields']);
+  assert(isSupported('rw') && isSupported('sw'), 'Kinyarwanda and Swahili are supported (machine-translated)');
+  assert.notEqual(translator('rw')('tab.fields'), en['tab.fields'], 'rw UI strings are actually translated');
+  assert(!isSupported('am'));
+  assert.equal(translator('am')('tab.fields'), en['tab.fields'], 'unlisted locale falls back to English');
   assert.equal(translator('fr')('history.count', { n: 3 }), '3 constats enregistrés sur ce téléphone');
   for (const s of SYMPTOMS) assert(`symptom.${s.id}` in en, s.id);
   for (const e of EVIDENCE_CHECKS) assert(`evidence.${e}` in en, e);
@@ -285,6 +290,60 @@ test('supported rust evidence never yields "no issue flagged" (bug A regression)
   assert.equal(att.reason, 'condition_supported');
   const healthy = { ...supported, condition: { ...supported.condition, id: 'healthy', abstained: false } };
   assert.equal(fieldAttention([{ ...rec, analysis: { kind: 'done', analysis: healthy, via: 'http' } }], new Date(Date.parse(rec.createdAt) + 3600e3)).level, 'ok');
+});
+
+test('translation changes only farmer-facing text; ids, numbers, statuses and map values are identical', async () => {
+  const a = analysisFixture as Analysis;
+  const t = await translateAnalysisWith(a, async texts => texts.map(x => `«${x}»`));
+  const strip = (o: any): any => Array.isArray(o) ? o.map(strip) : o && typeof o === 'object' ? Object.fromEntries(Object.entries(o).map(([k, v]) => [k, strip(v)])) : typeof o === 'string' ? o.replace(/^«|»$/g, '') : o;
+  assert.deepEqual(strip(t), strip(a), 'removing the marker restores the original exactly');
+  assert.equal(t.status, a.status); assert.equal(t.condition.id, a.condition.id); assert.equal(t.condition.confidence, a.condition.confidence);
+  assert.deepEqual(t.map.features, a.map.features, 'map geometry and priorities untouched');
+  assert.deepEqual(t.recommendations.map(r => r.id), a.recommendations.map(r => r.id));
+  assert.notEqual(t.condition.label, a.condition.label, 'dynamic text actually translated');
+  assert(t.recommendations.every(r => r.text.startsWith('«')));
+});
+
+test('automatic flow: model output → canonical observation → analysis → translation, no questionnaire', async () => {
+  const probe = interpretProbes([
+    { id: 'subject', choice: { leaf: 0.9, plant: 0.05, other: 0.05 } }, { id: 'subject~r', choice: { leaf: 0.95, plant: 0.03, other: 0.02 } },
+    { id: 'condition', choice: { rust: 0.7, cercospora: 0.1, leaf_miner: 0.1, healthy: 0.05, other: 0.05 } }, { id: 'condition~r', choice: { rust: 0.8, cercospora: 0.1, leaf_miner: 0.05, healthy: 0.05, other: 0 } },
+    { id: 'rust_yn', p_yes: 0.97 }]);
+  assert.equal(probe.subject.kind, 'leaf'); assert.equal(probe.followUp, undefined);
+  assert.equal(probe.raw.labels[0].label, 'rust'); assert.equal(probe.raw.labels[0].score, 0.97);
+  const calls: string[] = [];
+  const deps: CheckDeps = {
+    perceive: async () => { calls.push('perceive'); return { ...probe, device: 'test', ms: 1 }; },
+    observe: async (raw, ctx) => { calls.push('observe'); assert.equal(raw.labels[0].label, 'rust'); assert.equal(ctx.locale, 'en', 'machine-translated locales analysed in English');
+      return { ...(demoObservation as any), id: ctx.id, signals: [{ label: 'orange_powder_leaf_underside', confidence: raw.labels[0].score }], provenance: { adapter: 'label-list-vlm', source: 'test' } }; },
+    analyze: async obs => { calls.push('analyze'); return { ...(analysisFixture as Analysis), observation_id: obs.id }; },
+    translate: async a => { calls.push('translate'); return { ...a, condition: { ...a.condition, label: 'translated' } }; },
+    needsTranslation: l => l === 'rw',
+  };
+  const out = await runAutomaticCheck({ id: 'auto-1', observedAt: '2026-10-04T05:00:00Z', field, image: 'x', locale: 'rw', history: [] }, deps);
+  assert.equal(out.kind, 'analysed');
+  assert.deepEqual(calls, ['perceive', 'observe', 'analyze', 'translate']);
+  assert(out.kind === 'analysed' && out.analysis.condition.label === 'translated' && out.observation.provenance.source.includes('on-device'));
+});
+
+test('low-confidence/unsuitable photo asks for one better photo instead of analysing', async () => {
+  const notPlant = interpretProbes([{ id: 'subject', choice: { leaf: 0.05, plant: 0.05, other: 0.9 } }, { id: 'rust_yn', p_yes: 0.6 }]);
+  assert.equal(notPlant.followUp, 'not_a_plant');
+  let analysed = false;
+  const out = await runAutomaticCheck({ id: 'np', observedAt: '2026-10-04T05:00:00Z', field, image: 'x', locale: 'en', history: [] }, {
+    perceive: async () => ({ ...notPlant, device: 't', ms: 1 }), observe: async () => { analysed = true; return demoObservation; },
+    analyze: async () => { analysed = true; return analysisFixture as Analysis; }, translate: async a => a, needsTranslation: () => false });
+  assert.equal(out.kind, 'follow_up'); assert(!analysed, 'nothing is analysed or guessed');
+  const whole = interpretProbes([{ id: 'subject', choice: { leaf: 0.1, plant: 0.85, other: 0.05 } }]);
+  assert.equal(whole.followUp, 'closer_leaf');
+});
+
+test('device history feeds the analysis as prior observations (no re-entry)', async () => {
+  const { records } = await seedState(mockApi);
+  const hist = records.map(r => ({ ...r, fieldId: 'f1' }));
+  const priors = priorsFromHistory(hist, 'f1', 'new');
+  assert(priors.length >= 1);
+  assert(priors.every(p => typeof p.present === 'boolean' && typeof p.latitude === 'number'));
 });
 
 (async () => {

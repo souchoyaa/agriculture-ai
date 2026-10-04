@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, BackHandler, Platform, Pressable, ScrollView, StatusBar, Text, useWindowDimensions, View } from 'react-native';
-import { formatDate, isSupported, LOCALES, type Translate } from './src/i18n';
+import { formatDate, isMachineTranslated, isSupported, LOCALES, type Translate } from './src/i18n';
 import { freshness } from './src/sync/sync';
 
 export function ageText(t: Translate, hours: number): string {
@@ -157,6 +157,12 @@ function Brand({ label }: { label: string }) {
 
 function LanguageNotice() {
   const { t, state } = useStore();
+  if (isMachineTranslated(state.settings.locale)) return (
+    <View style={{ flexDirection: 'row', gap: space(2), alignItems: 'center', backgroundColor: color.skySoft, borderRadius: radius.md, paddingHorizontal: space(3), paddingVertical: space(2) }}>
+      <Icon name="translate" size={18} color={color.sky} />
+      <Text style={[type.small, { flex: 1 }]}>{t('lang.machine')}</Text>
+    </View>
+  );
   if (isSupported(state.settings.locale)) return null;
   const name = LOCALES.find(l => l.code === state.settings.locale)?.name ?? state.settings.locale;
   return (

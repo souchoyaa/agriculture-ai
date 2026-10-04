@@ -2,17 +2,24 @@
 // and the UI says so; nothing is presented as translated when it is not.
 import { en, type Messages } from './en';
 import { fr } from './fr';
+import { rw } from './rw';
+import { sw } from './sw';
 
 export type MessageId = keyof Messages;
 export const LOCALES = [
-  { code: 'en', name: 'English', supported: true },
-  { code: 'fr', name: 'Français', supported: true },
-  { code: 'rw', name: 'Kinyarwanda', supported: false },
-  { code: 'sw', name: 'Kiswahili', supported: false },
+  { code: 'en', name: 'English', supported: true, machine: false },
+  { code: 'fr', name: 'Français', supported: true, machine: false },
+  // Interface and results machine-translated on device (NLLB-200); not reviewed by native speakers.
+  { code: 'rw', name: 'Ikinyarwanda', supported: true, machine: true },
+  { code: 'sw', name: 'Kiswahili', supported: true, machine: true },
 ] as const;
 export type LocaleCode = typeof LOCALES[number]['code'];
 
-const catalogs: Partial<Record<string, Partial<Messages>>> = { en, fr };
+const catalogs: Partial<Record<string, Partial<Messages>>> = { en, fr, rw, sw };
+
+export function isMachineTranslated(locale: string): boolean {
+  return LOCALES.some(l => l.code === locale && l.machine);
+}
 
 export function isSupported(locale: string): boolean {
   return LOCALES.some(l => l.code === locale && l.supported);

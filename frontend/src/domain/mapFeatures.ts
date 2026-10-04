@@ -2,7 +2,7 @@
 // priority/level/score/time come from the feature properties exactly as the service sent them.
 import type { MapFeature } from '../api';
 
-export type FeatureRole = 'cell' | 'reported' | 'scouting_point' | 'other';
+export type FeatureRole = 'cell' | 'reported' | 'scouting_point' | 'uncertainty' | 'other';
 export interface FeatureView {
   key: string; role: FeatureRole; label: string;
   level?: string; score?: number; priority?: number; rank?: number; time?: string; present?: boolean;
@@ -31,7 +31,7 @@ export function describeFeatures(features: MapFeature[]): FeatureView[] {
     const kind = str(p.kind);
     const isArea = f.geometry?.type === 'Polygon' || f.geometry?.type === 'MultiPolygon';
     const role: FeatureRole = kind === 'scouting_priority_cell' || (isArea && num(p.priority) !== undefined) ? 'cell'
-      : kind === 'reported_observation' ? 'reported' : kind === 'scouting_point' ? 'scouting_point' : 'other';
+      : kind === 'reported_observation' ? 'reported' : kind === 'scouting_point' ? 'scouting_point' : kind === 'position_uncertainty' ? 'uncertainty' : 'other';
     const lons = pts.map(c => c[0]); const lats = pts.map(c => c[1]);
     return {
       key: String(f.id ?? p.id ?? `${kind ?? 'f'}-${i}`),
@@ -78,4 +78,12 @@ export function project(points: [number, number][], margin = 0.06): (p: [number,
     x: margin + scale * (((lon - minX) * k + offX) / span),
     y: margin + scale * (1 - ((lat - minY) + offY) / span),
   });
+}
+
+export interface HorizonLayer { hours: number; priorities: number[]; wind_from_deg?: number | null; wind_used?: boolean }
+
+/** Backend horizon layers (same row-major order as the cell features); [] when absent (older engines). */
+export function horizonLayers(map: Record<string, unknown>, cellCount: number): HorizonLayer[] {
+  const raw = Array.isArray(map.horizons) ? map.horizons as HorizonLayer[] : [];
+  return raw.filter(h => typeof h?.hours === 'number' && Array.isArray(h.priorities) && h.priorities.length === cellCount);
 }

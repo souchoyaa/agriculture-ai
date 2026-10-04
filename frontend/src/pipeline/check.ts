@@ -6,7 +6,7 @@
 import type { Analysis, Observation } from '../api';
 import type { Field, ObservationRecord } from '../domain/model';
 import { conditionPresent } from '../domain/model';
-import type { PerceptionResult, RawVisionOutput } from '../model/perception';
+import type { PerceptionResult, RawVisionOutput } from '../model/probes';
 
 export type CheckStep = 'looking' | 'context' | 'translating' | 'done';
 export interface PriorObservation { id?: string; observed_at?: string; condition_id: string; present: boolean; latitude: number; longitude: number; location_basis?: string }
