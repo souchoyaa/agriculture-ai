@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><title>Translate spike</title><pre id="log"></pre>
+<script type="module">
+const log = m => { document.getElementById('log').textContent += m + '\n'; window.__log = (window.__log||[]).concat(m); };
+const w = new Worker('./translate.worker.js', { type: 'module' });
+w.onerror = e => { log('WORKER ERROR ' + e.message); window.__done = true; };
+const text = 'Some spots look like coffee leaf rust. Look under the lower leaves for orange powder. Ask your extension officer before using any spray.';
+let n = 0;
+w.onmessage = e => { const d = e.data;
+  if (d.type === 'progress' && d.status === 'done') log('done ' + d.file);
+  else if (d.type === 'ready') { log('READY ' + d.device); w.postMessage({ type: 'translate', id: 'rw', text, src: 'eng_Latn', tgt: 'kin_Latn' }); w.postMessage({ type: 'translate', id: 'sw', text, src: 'eng_Latn', tgt: 'swh_Latn' }); }
+  else if (d.type === 'result') { log(`RESULT ${d.id} (${d.ms} ms): ${d.text}`); if (++n === 2) window.__done = true; }
+  else if (d.type === 'error') { log('ERROR ' + d.message); window.__done = true; } };
+w.postMessage({ type: 'load' });
+</script>

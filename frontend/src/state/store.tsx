@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import { httpApi, mockApi, type Api } from '../api';
 import { ConnectionGate, type Connection } from './connection';
 import { buildObservation, newId, type Field, type ObservationRecord } from '../domain/model';
+import { roundLocation, type FieldLocation } from '../domain/location';
 import { translator, type Translate } from '../i18n';
 import { deviceStore, type KeyValueStore } from '../storage';
 import { deletePhoto, persistPhoto, PHOTO_STORAGE_KIND } from '../photoStore';
@@ -17,7 +18,8 @@ interface Store {
   ready: boolean; recovered: boolean; storageError?: string;
   state: PersistedState; api: Api; connection: Connection; t: Translate;
   busy: Record<string, boolean>;
-  addField(name: string, crop: string): Promise<Field>;
+  addField(name: string, crop: string, location?: { value: FieldLocation; source: 'gps' | 'manual' }): Promise<Field>;
+  setFieldLocation(fieldId: string, location?: { value: FieldLocation; source: 'gps' | 'manual' }): Promise<void>;
   saveCheck(input: NewCheck): Promise<ObservationRecord>;
   retry(recordId: string): Promise<void>;
   toggleScouting(recordId: string, scoutingId: string): void;
@@ -126,10 +128,18 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
 
   const store: Store = {
     ready, recovered, storageError, state, api, connection, t, busy,
-    async addField(name, crop) {
-      const field: Field = { id: newId('field'), name: name.trim(), crop, demo: false };
+    async addField(name, crop, location) {
+      const field: Field = { id: newId('field'), name: name.trim(), crop, demo: false,
+        ...(location ? { location: roundLocation(location.value), locationSource: location.source } : {}) };
       await commit(s => ({ ...s, fields: [...s.fields, field] }));
       return field;
+    },
+    async setFieldLocation(fieldId, location) {
+      await commit(s => ({ ...s, fields: s.fields.map(f => {
+        if (f.id !== fieldId || f.demo) return f;          // example fields keep their labelled example location
+        if (!location) { const { location: _l, locationSource: _s, ...rest } = f; return rest; }
+        return { ...f, location: roundLocation(location.value), locationSource: location.source };
+      }) }));
     },
     async saveCheck(input) {
       const field = current.current.fields.find(f => f.id === input.fieldId);

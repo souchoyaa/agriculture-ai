@@ -8,6 +8,7 @@ import { AttentionBadge, Body, Button, Card, H1, H2, Row, Tag } from '../ui/comp
 import { color, radius, space, type } from '../ui/theme';
 import type { PS } from '../ui/components';
 import { reasonText } from './FieldsScreen';
+import { LocationEditor } from './LocationEditor';
 
 /** One check in a timeline: what was found, its state and any follow-up. */
 function RecordRow({ record, nav, showField }: { record: ObservationRecord; nav: Nav; showField?: boolean }) {
@@ -18,8 +19,8 @@ function RecordRow({ record, nav, showField }: { record: ObservationRecord; nav:
   const due = followUpDue(record, new Date());
   const title = a.kind === 'done' ? a.analysis.condition.label : t('history.waiting');
   const statusTag = a.kind === 'done'
-    ? <Tag tone={a.analysis.status === 'needs_review' ? 'alert' : 'stone'} label={t(`result.status.${a.analysis.status}` as MessageId).toUpperCase()} />
-    : <Tag tone="warn" label={`⏳ ${t('history.waiting').toUpperCase()}`} />;
+    ? <Tag tone={a.analysis.status === 'needs_review' ? 'alert' : 'stone'} label={t(`result.status.${a.analysis.status}` as MessageId)} />
+    : <Tag tone="warn" icon="progress-clock" label={t('history.waiting')} />;
   return (
     <Pressable accessibilityRole="button" accessibilityLabel={`${showField && field ? field.name + ', ' : ''}${title}, ${formatDateTime(record.createdAt, locale)}`}
       onPress={() => nav.push({ name: 'result', recordId: record.id })}
@@ -30,10 +31,10 @@ function RecordRow({ record, nav, showField }: { record: ObservationRecord; nav:
         <Text style={type.heading}>{title}</Text>
         <Row wrap>
           {statusTag}
-          {a.kind === 'done' && (a.via === 'mock' || a.analysis.data_mode === 'demo') ? <Tag tone="warn" label={t('common.demo').toUpperCase()} /> : null}
-          <Tag tone="info" label={t('history.onPhone').toUpperCase()} />
-          {due ? <Tag tone={due.getTime() <= Date.now() ? 'alert' : 'stone'} label={(due.getTime() <= Date.now() ? t('history.followUpDue') : t('history.followUpOn', { date: formatDate(due.toISOString(), locale) })).toUpperCase()} /> : null}
-          {record.photoUri ? <Tag label="📷" /> : null}
+          {a.kind === 'done' && (a.via === 'mock' || a.analysis.data_mode === 'demo') ? <Tag tone="warn" icon="flask-outline" label={t('common.demo')} /> : null}
+          <Tag tone="info" icon="cellphone" label={t('history.onPhone')} />
+          {due ? <Tag tone={due.getTime() <= Date.now() ? 'alert' : 'stone'} label={(due.getTime() <= Date.now() ? t('history.followUpDue') : t('history.followUpOn', { date: formatDate(due.toISOString(), locale) }))} /> : null}
+          {record.photoUri ? <Tag icon="camera-outline" label="" /> : null}
         </Row>
       </View>
       <Text aria-hidden style={[type.title, { color: color.stone, alignSelf: 'center' }]}>›</Text>
@@ -54,7 +55,7 @@ export function HistoryScreen({ nav }: { nav: Nav }) {
 }
 
 export function FieldScreen({ nav, fieldId }: { nav: Nav; fieldId: string }) {
-  const { t, state } = useStore();
+  const { t, state, setFieldLocation } = useStore();
   const field = state.fields.find(f => f.id === fieldId);
   if (!field) return <Body>{t('common.loading')}</Body>;
   const records = state.records.filter(r => r.fieldId === fieldId).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -67,9 +68,15 @@ export function FieldScreen({ nav, fieldId }: { nav: Nav; fieldId: string }) {
         <H1>{field.name}</H1>
         <AttentionBadge level={att.level} label={t(`attention.${att.level}`)} />
         <Body>{reasonText(t, att.reason, cond)}</Body>
-        <Body soft>{field.location ? t('field.location', { lat: field.location.latitude.toFixed(3), lon: field.location.longitude.toFixed(3) }) : t('field.noLocation')}</Body>
+        {field.demo ? <Body soft>{field.location ? t('field.location', { lat: field.location.latitude.toFixed(3), lon: field.location.longitude.toFixed(3) }) : t('field.noLocation')}</Body> : null}
       </View>
       <Button label={t('field.newCheck')} icon="＋" onPress={() => nav.push({ name: 'check', fieldId })} />
+      {!field.demo ? (
+        <Card>
+          <LocationEditor value={field.location && field.locationSource ? { value: field.location, source: field.locationSource } : undefined}
+            onChange={v => setFieldLocation(field.id, v)} />
+        </Card>
+      ) : null}
       <CompareLastTwo records={records} />
       <H2>{t('field.timeline')}</H2>
       {records.length ? records.map(r => <RecordRow key={r.id} record={r} nav={nav} />) : <Card><Body>{t('field.noChecks')}</Body></Card>}

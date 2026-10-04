@@ -10,6 +10,8 @@ Role-owned notes. Contract 0.1.0. See README.md in this folder for the journey a
 - Farmer self-report is the observation source while no on-device/remote vision is available (see README for the signal mapping).
 - Computed-key object rest destructuring (`const { [id]: _, ...rest } = obj`) misbehaved in the web bundle (busy flag never cleared); use clone + delete.
 
+- Field locations rounded to 3 decimals (≈100 m) at entry; GPS permission requested only on tap; manual entry as equal alternative.
+
 ## TODO / next
 - Done: native photos copied to document storage (verify on a device).
 - When backend publishes sourced guidance, environment or map features, verify rendering against real payloads (renderer covered by unit checks only).
