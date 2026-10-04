@@ -2,7 +2,7 @@
 import type { Analysis } from '../api';
 import { TRANSLATION_MODEL } from './config';
 
-export interface TranslationInfo { target: string; model: string; machine: true; segments: number; ms: number }
+export interface TranslationInfo { target: string; model: string; machine: true; segments: number; ms: number; source_condition_label?: string }
 export type TranslatedAnalysis = Analysis & { translation?: TranslationInfo };
 
 /** Locales handled by the translation model rather than by the engine's own message catalogs. */

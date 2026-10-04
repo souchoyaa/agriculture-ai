@@ -10,7 +10,8 @@
     "screenshots": "tsx tests/screenshots.ts",
     "build:web": "npm run prepare:local && expo export --platform web",
     "bundle:native": "expo export --platform android --platform ios --output-dir .cache/native-export",
-    "prepare:local": "node scripts/build-workers.mjs && node scripts/build-engine.mjs"
+    "prepare:local": "node scripts/build-workers.mjs && node scripts/build-engine.mjs",
+    "build:icons": "node scripts/build-icons.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",

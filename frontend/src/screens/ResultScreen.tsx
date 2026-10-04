@@ -156,6 +156,8 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
           </View>
         </Row>
         <Text accessibilityRole="header" style={type.display}>{analysis.condition.label}</Text>
+        {record.translation?.source_condition_label && record.translation.source_condition_label !== analysis.condition.label
+          ? <Text style={[type.small, { color: color.muted }]}>{t('result.originalLabel', { label: record.translation.source_condition_label })}</Text> : null}
         {analysis.condition.pathogen && !analysis.condition.abstained ? <Text style={[type.small, { fontStyle: 'italic' }]}>{analysis.condition.pathogen}</Text> : null}
         {analysis.condition.abstained && analysis.status !== 'unsupported' ? <Body style={{ fontWeight: '700' }}>{t('result.abstained')}</Body> : null}
         <Body>{analysis.condition.uncertainty}</Body>

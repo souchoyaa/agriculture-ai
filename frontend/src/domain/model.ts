@@ -43,7 +43,7 @@ export interface ObservationRecord {
   /** Photo-first checks: model findings and the current automatic step. Absent on legacy symptom-report records. */
   perception?: PerceptionSummary;
   pipelineStep?: 'saved' | 'looking' | 'context' | 'translating' | 'done';
-  translation?: { target: string; model: string; machine: true; segments: number; ms: number };
+  translation?: { target: string; model: string; machine: true; segments: number; ms: number; source_condition_label?: string };
 }
 
 /** Symptom ids map 1:1 to canonical signal labels (backend coffee signal vocabulary; insect_damage is passed through as unrecognised). */

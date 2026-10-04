@@ -33,5 +33,5 @@ export async function translateAnalysis(a: Analysis, locale: string, store: KeyV
     return out;
   });
   try { await store.setItem(CACHE_KEY, JSON.stringify(cache)); } catch { /* cache is an optimisation */ }
-  return { ...translated, translation: { target: locale, model: TRANSLATION_MODEL.id, machine: true, segments, ms: Date.now() - t0 } };
+  return { ...translated, translation: { target: locale, model: TRANSLATION_MODEL.id, machine: true, segments, ms: Date.now() - t0, source_condition_label: a.condition.label } };
 }

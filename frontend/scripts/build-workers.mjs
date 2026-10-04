@@ -1,15 +1,17 @@
 // Bundles the in-browser model workers (self-contained ES modules) into public/ and copies the
 // ONNX Runtime WebAssembly files so inference never depends on a CDN. Run before web export.
 import { build } from 'esbuild';
-import { cpSync, mkdirSync, readdirSync } from 'node:fs';
+import { cpSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 
 const root = path.dirname(new URL(import.meta.url).pathname) + '/..';
 const require = createRequire(import.meta.url);
 const ortDist = path.join(path.dirname(require.resolve('onnxruntime-web')), '');
+rmSync(`${root}/public/vlm/ort`, { recursive: true, force: true });
 mkdirSync(`${root}/public/vlm/ort`, { recursive: true });
-for (const f of readdirSync(ortDist)) if (/^ort-wasm-simd-threaded.*\.(wasm|mjs)$/.test(f)) cpSync(path.join(ortDist, f), `${root}/public/vlm/ort/${f}`);
+// asyncify: the variant the WebGPU path loads (observed); plain: wasm fallback without WebGPU.
+for (const f of readdirSync(ortDist)) if (/^ort-wasm-simd-threaded(\.asyncify)?\.(wasm|mjs)$/.test(f)) cpSync(path.join(ortDist, f), `${root}/public/vlm/ort/${f}`);
 
 for (const name of readdirSync(`${root}/workers`).filter(f => f.endsWith('.worker.js'))) {
   await build({ entryPoints: [`${root}/workers/${name}`], bundle: true, format: 'esm', platform: 'browser', target: 'es2022',

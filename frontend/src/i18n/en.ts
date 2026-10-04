@@ -351,6 +351,7 @@ export const en = {
   'settings.limit.translation': 'Kinyarwanda and Kiswahili are machine translations, not yet reviewed by native speakers.',
   'settings.limit.weather': 'Weather is model data (Open-Meteo), not a station; offline, the last sync is used and its age is shown.',
   'settings.limit.native': 'On-device models currently run in web browsers with WebGPU (Chrome/Edge); the iOS/Android apps fall back to the demo.',
+  'result.originalLabel': 'Original (English): {label}',
   'common.loading': 'Loading…',
   'common.close': 'Close',
   'common.yes': 'Yes',

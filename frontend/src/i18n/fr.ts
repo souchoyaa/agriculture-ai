@@ -353,6 +353,7 @@ export const fr: Messages = {
   'settings.limit.translation': 'Le kinyarwanda et le kiswahili sont des traductions automatiques, pas encore relues par des locuteurs natifs.',
   'settings.limit.weather': 'La météo provient d’un modèle (Open-Meteo), pas d’une station ; hors ligne, la dernière synchronisation est utilisée et son âge est affiché.',
   'settings.limit.native': 'Les modèles sur l’appareil fonctionnent actuellement dans les navigateurs web avec WebGPU (Chrome/Edge) ; les applications iOS/Android utilisent la démo.',
+  'result.originalLabel': 'Original (anglais) : {label}',
   'common.loading': 'Chargement…',
   'common.close': 'Fermer',
   'common.yes': 'Oui',

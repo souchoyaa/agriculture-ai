@@ -4,7 +4,10 @@ import path from 'node:path';
 
 const root = path.resolve(__dirname, '..');
 const glyphPath = process.env.GLYPHS ?? path.join(root, 'node_modules/@expo/vector-icons/build/vendor/react-native-vector-icons/glyphmaps/MaterialCommunityIcons.json');
-const glyphs = new Set(Object.keys(JSON.parse(readFileSync(glyphPath, 'utf8'))));
+const full = new Set(Object.keys(JSON.parse(readFileSync(glyphPath, 'utf8'))));
+// The app ships a subset font: every referenced name must be in the subset (rebuild with scripts/build-icons.mjs).
+const glyphs = new Set(Object.keys(JSON.parse(readFileSync(path.join(root, 'src/ui/fieldIcons.json'), 'utf8'))));
+for (const g of glyphs) if (!full.has(g)) throw new Error(`subset glyph ${g} not in MaterialCommunityIcons`);
 const files: string[] = [];
 const walk = (d: string) => { for (const f of readdirSync(d)) { const p = path.join(d, f); statSync(p).isDirectory() ? walk(p) : /\.tsx?$/.test(f) && files.push(p); } };
 walk(path.join(root, 'src')); files.push(path.join(root, 'App.tsx'));
@@ -31,4 +34,4 @@ for (const f of files) {
   }
 }
 if (bad.length) { console.error('Unknown icon names:\n' + [...new Set(bad)].join('\n')); process.exitCode = 1; }
-else console.log(`Icons: ${checked} references, all present in MaterialCommunityIcons`);
+else console.log(`Icons: ${checked} references, all present in the shipped subset (${glyphs.size} glyphs)`);

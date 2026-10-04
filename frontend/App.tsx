@@ -10,16 +10,22 @@ import { RESULT_TWO_COLUMN_MIN, ResultScreen } from './src/screens/ResultScreen'
 import { SettingsScreen } from './src/screens/SettingsScreen';
 import { StoreProvider, useStore } from './src/state/store';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useFonts as useManrope, Manrope_700Bold, Manrope_800ExtraBold } from '@expo-google-fonts/manrope';
-import { useFonts as useInter, Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
+import { useFonts } from 'expo-font';
+// Only the 5 weights used, imported per file (the package index would export every weight and italic).
+const FONTS = {
+  Manrope_700Bold: require('@expo-google-fonts/manrope/700Bold/Manrope_700Bold.ttf'),
+  Manrope_800ExtraBold: require('@expo-google-fonts/manrope/800ExtraBold/Manrope_800ExtraBold.ttf'),
+  Inter_400Regular: require('@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf'),
+  Inter_500Medium: require('@expo-google-fonts/inter/500Medium/Inter_500Medium.ttf'),
+  Inter_600SemiBold: require('@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf'),
+};
 import { color, font, gradient, radius, shadow, space, type } from './src/ui/theme';
 import { Icon, type PS } from './src/ui/components';
 
 export default function App() {
   // Fonts ship inside the bundle (no network). Render anyway if loading fails.
-  const [manrope, manropeErr] = useManrope({ Manrope_700Bold, Manrope_800ExtraBold });
-  const [inter, interErr] = useInter({ Inter_400Regular, Inter_500Medium, Inter_600SemiBold });
-  if (!((manrope || manropeErr) && (inter || interErr))) return <View style={{ flex: 1, backgroundColor: color.paper, alignItems: 'center', justifyContent: 'center' }}><ActivityIndicator color={color.leaf} size="large" /></View>;
+  const [fontsLoaded, fontsError] = useFonts(FONTS);
+  if (!(fontsLoaded || fontsError)) return <View style={{ flex: 1, backgroundColor: color.paper, alignItems: 'center', justifyContent: 'center' }}><ActivityIndicator color={color.leaf} size="large" /></View>;
   return <StoreProvider><Shell /></StoreProvider>;
 }
 

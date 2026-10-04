@@ -1,11 +1,15 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, type PressableStateCallbackType, type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import createIconSet from '@expo/vector-icons/createIconSet';
+import fieldGlyphs from './fieldIcons.json';
+
+// Subset of MaterialCommunityIcons with only the glyphs this app uses (scripts/build-icons.mjs, ~16 KB vs 1.3 MB).
+const FieldIcons = createIconSet(fieldGlyphs as Record<string, number>, 'FieldIcons', require('../../assets/fonts/FieldIcons.ttf'));
 import type { Attention } from '../domain/model';
 import { attentionStyle, color, font, MIN_TOUCH, radius, shadow, space, type } from './theme';
 
 export type PS = PressableStateCallbackType & { focused?: boolean };
-type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+type IconName = string;
 
 // Legacy glyph strings used across screens → icon names (one consistent icon set).
 const GLYPH: Record<string, string> = {
@@ -19,7 +23,7 @@ export const iconName = (g?: string): IconName | undefined => (g ? ((GLYPH[g] ??
 export function Icon({ name, size = 20, color: c = color.ink, style }: { name?: string; size?: number; color?: string; style?: StyleProp<TextStyle> }) {
   const n = iconName(name);
   if (!n) return null;
-  return <MaterialCommunityIcons name={n} size={size} color={c} style={style} aria-hidden accessibilityElementsHidden importantForAccessibility="no" />;
+  return <FieldIcons name={n as never} size={size} color={c} style={style} aria-hidden accessibilityElementsHidden importantForAccessibility="no" />;
 }
 
 export function Card({ children, style, tone }: { children: React.ReactNode; style?: StyleProp<ViewStyle>; tone?: 'warn' | 'alert' | 'info' | 'plain' }) {
