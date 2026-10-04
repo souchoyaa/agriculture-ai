@@ -53,5 +53,6 @@
   "map.label.prior_clear": "Earlier report: no rust seen",
   "map.label.scouting_point": "Priority point {rank}",
   "uncertainty.specific_low_certainty": "A specific sign of coffee leaf rust was reported, but with low certainty (evidence score {score}). Confirm it on more leaves before acting.",
-  "review.reason.specific_low_certainty": "A specific sign was reported with low certainty; an expert should confirm before decisions."
+  "review.reason.specific_low_certainty": "A specific sign was reported with low certainty; an expert should confirm before decisions.",
+  "risk.climatology_caveat": "The long-term baseline uses a different weather dataset than the current period, so this comparison is only indicative."
 }

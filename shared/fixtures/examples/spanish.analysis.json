@@ -825,8 +825,9 @@
     ],
     "note": "Small sample; ERA5 lags ~5 days so only early overlap days exist. Not a bias correction."
    },
-   "caveat": "Baseline is ERA5 reanalysis; the current window is operational model/forecast data. Their wetness differs (see cross_source_check); treat the relation as indicative only.",
-   "summary": "Es más favorable de lo habitual para estas fechas en este lugar (reanálisis 2015-2024)."
+   "technical_note": "Baseline is ERA5 reanalysis; the current window is operational model/forecast data. Their wetness differs (see cross_source_check); treat the relation as indicative only.",
+   "summary": "Es más favorable de lo habitual para estas fechas en este lugar (reanálisis 2015-2024).",
+   "caveat": "La referencia de largo plazo usa un conjunto de datos meteorológicos distinto al del periodo actual, así que la comparación es solo orientativa."
   },
   "limitations": [
    "Leaf wetness approximated from relative humidity/precipitation of gridded model data; canopy conditions differ.",

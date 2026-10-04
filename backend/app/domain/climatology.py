@@ -80,7 +80,7 @@ def compare(baseline: dict | None, model: dict, window_dates: list[date], curren
         "per_year": per_year,
         "baseline_source": baseline["source"],
         "cross_source_check": baseline["overlap_check"],
-        "caveat": "Baseline is ERA5 reanalysis; the current window is operational model/forecast data. Their wetness differs (see cross_source_check); treat the relation as indicative only.",
+        "technical_note": "Baseline is ERA5 reanalysis; the current window is operational model/forecast data. Their wetness differs (see cross_source_check); treat the relation as indicative only.",
     }
 
 
