@@ -168,20 +168,23 @@
       "source_ids": [
         "hdoa_npa_20_03_2021",
         "hdoa_field_guide_2020"
-      ]
+      ],
+      "timing": "today"
     },
     {
       "id": "sanitize_clothing_tools",
       "source_ids": [
         "hdoa_npa_20_03_2021",
         "rab_plantwise_rw014_2012"
-      ]
+      ],
+      "timing": "today"
     },
     {
       "id": "rescout_after_latent_period",
       "source_ids": [
         "hdoa_npa_20_03_2021"
-      ]
+      ],
+      "timing": "next"
     },
     {
       "id": "count_spots_threshold",
@@ -189,7 +192,8 @@
         "rab_plantwise_rw014_2012"
       ],
       "region": "rwanda_approx",
-      "source_year": 2012
+      "source_year": 2012,
+      "timing": "today"
     },
     {
       "id": "open_canopy_spacing_pruning",
@@ -198,20 +202,23 @@
         "bigirimana_2012_ajar"
       ],
       "region": "rwanda_approx",
-      "source_year": 2012
+      "source_year": 2012,
+      "timing": "next"
     },
     {
       "id": "consult_extension_before_fungicide",
       "source_ids": [
         "ctahr_pd118_2021",
         "hdoa_npa_20_03_2021"
-      ]
+      ],
+      "timing": "if_worse"
     },
     {
       "id": "remove_feral_coffee_weeds",
       "source_ids": [
         "hdoa_npa_20_03_2021"
-      ]
+      ],
+      "timing": "next"
     },
     {
       "id": "consider_resistant_cultivars",
@@ -220,7 +227,8 @@
         "bigirimana_2012_ajar",
         "rab_plantwise_rw014_2012",
         "talhinhas_2017_mpp"
-      ]
+      ],
+      "timing": "next"
     }
   ],
   "guidance_scope": {

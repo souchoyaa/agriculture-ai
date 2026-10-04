@@ -178,6 +178,8 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
         {analysis.status === 'unsupported' ? <Body>{t('result.unsupported')}</Body> : null}
       </Card>
 
+      <ActionPlan analysis={analysis} />
+
       {analysis.status !== 'unsupported' ? (
         <Card>
           <H2 glyph="◔">{t('result.howSure')}</H2>
@@ -310,6 +312,40 @@ function SaveFailed() {
       <Button icon="content-save-outline" label={state === 'trying' ? t('pending.retrying') : t('save.failed.retry')} disabled={state === 'trying'}
         onPress={async () => { setState('trying'); setState((await retrySave()) ? 'idle' : 'failed'); }} />
       {state === 'failed' ? <Text accessibilityRole="alert" style={type.body}>{t('save.failed.again')}</Text> : null}
+    </Card>
+  );
+}
+
+const TIMINGS = [
+  { key: 'today', icon: 'calendar-today', title: 'plan.today' },
+  { key: 'next', icon: 'calendar-arrow-right', title: 'plan.next' },
+  { key: 'if_worse', icon: 'account-alert-outline', title: 'plan.ifWorse' },
+] as const;
+
+/** TODAY / NEXT / IF IT GETS WORSE — the engine's sourced recommendations, grouped by their `timing`. */
+function ActionPlan({ analysis }: { analysis: Analysis }) {
+  const { t } = useStore();
+  const recs = analysis.recommendations;
+  if (!recs.length) return null;
+  const groups = TIMINGS.map(g => ({ ...g, items: recs.filter(r => ((r.timing as string | undefined) ?? 'next') === g.key) })).filter(g => g.items.length);
+  return (
+    <Card style={{ borderLeftWidth: 5, borderLeftColor: color.leaf }}>
+      <H2 glyph="clipboard-check-outline">{t('plan.title')}</H2>
+      {groups.map(g => (
+        <View key={g.key} style={{ gap: space(2) }}>
+          <Row style={{ gap: space(2) }}>
+            <Icon name={g.icon} size={18} color={g.key === 'if_worse' ? color.clay : color.leaf} />
+            <Text style={[type.label, { color: g.key === 'if_worse' ? color.clay : color.leafDark, fontSize: 13 }]}>{t(g.title).toUpperCase()}</Text>
+          </Row>
+          {g.items.map(r => (
+            <Row key={r.id} style={{ alignItems: 'flex-start', gap: space(2) }}>
+              <Text style={[type.body, { color: color.muted }]}>•</Text>
+              <Text style={[type.body, { flex: 1 }]}>{r.text}</Text>
+            </Row>
+          ))}
+        </View>
+      ))}
+      <Body soft>{t('plan.sourcesBelow')}</Body>
     </Card>
   );
 }

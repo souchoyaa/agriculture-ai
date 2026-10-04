@@ -55,7 +55,8 @@
    "source_ids": [
     "hdoa_npa_20_03_2021",
     "hdoa_field_guide_2020"
-   ]
+   ],
+   "timing": "today"
   },
   {
    "id": "sanitize_clothing_tools",
@@ -63,14 +64,16 @@
    "source_ids": [
     "hdoa_npa_20_03_2021",
     "rab_plantwise_rw014_2012"
-   ]
+   ],
+   "timing": "today"
   },
   {
    "id": "rescout_after_latent_period",
    "text": "Plan to re-inspect in 4-6 weeks: lesions from recent infections appear after this delay.",
    "source_ids": [
     "hdoa_npa_20_03_2021"
-   ]
+   ],
+   "timing": "next"
   },
   {
    "id": "count_spots_threshold",
@@ -78,6 +81,7 @@
    "source_ids": [
     "rab_plantwise_rw014_2012"
    ],
+   "timing": "today",
    "regional_scope": {
     "region_id": "rwanda_approx",
     "match": "approximate_bounding_box",
@@ -92,6 +96,7 @@
     "rab_plantwise_rw014_2012",
     "bigirimana_2012_ajar"
    ],
+   "timing": "next",
    "regional_scope": {
     "region_id": "rwanda_approx",
     "match": "approximate_bounding_box",
@@ -105,14 +110,16 @@
    "source_ids": [
     "ctahr_pd118_2021",
     "hdoa_npa_20_03_2021"
-   ]
+   ],
+   "timing": "if_worse"
   },
   {
    "id": "remove_feral_coffee_weeds",
    "text": "Remove unmanaged (feral) coffee plants and competing weeds near the plot.",
    "source_ids": [
     "hdoa_npa_20_03_2021"
-   ]
+   ],
+   "timing": "next"
   },
   {
    "id": "consider_resistant_cultivars",
@@ -122,7 +129,8 @@
     "bigirimana_2012_ajar",
     "rab_plantwise_rw014_2012",
     "talhinhas_2017_mpp"
-   ]
+   ],
+   "timing": "next"
   }
  ],
  "sources": [

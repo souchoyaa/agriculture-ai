@@ -35,12 +35,14 @@
   {
    "id": "retake_photo",
    "text": "Take a clearer photo of the leaf underside in daylight and analyse again.",
-   "source_ids": []
+   "source_ids": [],
+   "timing": "today"
   },
   {
    "id": "seek_local_review",
    "text": "Ask a local agricultural officer to review the photos before acting.",
-   "source_ids": []
+   "source_ids": [],
+   "timing": "if_worse"
   }
  ],
  "sources": [

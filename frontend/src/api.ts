@@ -35,7 +35,7 @@ export interface Analysis {
   environment: { status: Freshness; as_of: string | null; temperature_c: number | null; relative_humidity_pct: number | null; rainfall_mm: number | null; [extra: string]: unknown };
   map: { status: 'available' | 'unavailable' | 'unsupported'; type: 'FeatureCollection'; features: MapFeature[]; limitations: string; [extra: string]: unknown };
   scouting: { id: string; text: string; rank?: number; priority?: number; location?: { latitude: number; longitude: number }; distance_m?: number; source_ids?: string[]; [extra: string]: unknown }[];
-  recommendations: { id: string; text: string; source_ids: string[]; regional_scope?: RegionalScope; [extra: string]: unknown }[];
+  recommendations: { id: string; text: string; source_ids: string[]; regional_scope?: RegionalScope; timing?: 'today' | 'next' | 'if_worse'; [extra: string]: unknown }[];
   sources: { id: string; title: string; url: string; accessed_at: string; license?: string; kind?: string; publisher?: string; [extra: string]: unknown }[];
   weather_risk?: WeatherRisk;
   review?: { suggested: boolean; reasons?: { id: string; text: string }[]; requires_user_authorization?: boolean; auto_contact?: boolean };

@@ -243,19 +243,20 @@ def analyze(observation: dict, now: datetime | None = None, allow_network: bool 
     if abstained:
         result["scouting"] = [{"id": "photograph_both_leaf_surfaces", "text": t("scouting.photograph_both_leaf_surfaces"),
                                "source_ids": ["hdoa_npa_20_03_2021"]}]
-        recs = [("retake_photo", [], None), ("seek_local_review", [], None)]
+        recs = [("retake_photo", [], None, "today"), ("seek_local_review", [], None, "if_worse")]
         used_sources.add("hdoa_npa_20_03_2021")
     else:
         result["scouting"] = [{"id": s["id"], "text": t(f"scouting.{s['id']}"), "source_ids": s["source_ids"]}
                               for s in condition["scouting"] if s["id"] != "walk_priority_points" or points] + points
-        recs = [(r["id"], r["source_ids"], regional_scope(r["region"], r["source_year"]) if r.get("region") else None)
+        recs = [(r["id"], r["source_ids"], regional_scope(r["region"], r["source_year"]) if r.get("region") else None, r.get("timing", "next"))
                 for r in condition["recommendations"] if not r.get("region") or r["region"] in regions]
-        for _, ids, _ in recs:
+        for _, ids, _, _ in recs:
             used_sources |= set(ids)
         for s in condition["scouting"]:
             used_sources |= set(s["source_ids"])
-    result["recommendations"] = [{"id": rid, "text": t(f"recommendation.{rid}"), "source_ids": ids, **({"regional_scope": scope} if scope else {})}
-                                 for rid, ids, scope in recs]
+    # timing: today | next | if_worse (farmer-facing grouping; set per recommendation in the condition data).
+    result["recommendations"] = [{"id": rid, "text": t(f"recommendation.{rid}"), "source_ids": ids, "timing": timing, **({"regional_scope": scope} if scope else {})}
+                                 for rid, ids, scope, timing in recs]
 
     # Human review is proposed, never sent.
     reasons = []

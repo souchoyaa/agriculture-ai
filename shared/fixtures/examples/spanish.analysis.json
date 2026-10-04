@@ -120,7 +120,8 @@
    "source_ids": [
     "hdoa_npa_20_03_2021",
     "hdoa_field_guide_2020"
-   ]
+   ],
+   "timing": "today"
   },
   {
    "id": "sanitize_clothing_tools",
@@ -128,14 +129,16 @@
    "source_ids": [
     "hdoa_npa_20_03_2021",
     "rab_plantwise_rw014_2012"
-   ]
+   ],
+   "timing": "today"
   },
   {
    "id": "rescout_after_latent_period",
    "text": "Planifique una nueva inspección en 4-6 semanas: las lesiones de infecciones recientes aparecen tras ese plazo.",
    "source_ids": [
     "hdoa_npa_20_03_2021"
-   ]
+   ],
+   "timing": "next"
   },
   {
    "id": "count_spots_threshold",
@@ -143,6 +146,7 @@
    "source_ids": [
     "rab_plantwise_rw014_2012"
    ],
+   "timing": "today",
    "regional_scope": {
     "region_id": "rwanda_approx",
     "match": "approximate_bounding_box",
@@ -157,6 +161,7 @@
     "rab_plantwise_rw014_2012",
     "bigirimana_2012_ajar"
    ],
+   "timing": "next",
    "regional_scope": {
     "region_id": "rwanda_approx",
     "match": "approximate_bounding_box",
@@ -170,14 +175,16 @@
    "source_ids": [
     "ctahr_pd118_2021",
     "hdoa_npa_20_03_2021"
-   ]
+   ],
+   "timing": "if_worse"
   },
   {
    "id": "remove_feral_coffee_weeds",
    "text": "Elimine las plantas de café abandonadas (asilvestradas) y las malezas competidoras cerca de la parcela.",
    "source_ids": [
     "hdoa_npa_20_03_2021"
-   ]
+   ],
+   "timing": "next"
   },
   {
    "id": "consider_resistant_cultivars",
@@ -187,7 +194,8 @@
     "bigirimana_2012_ajar",
     "rab_plantwise_rw014_2012",
     "talhinhas_2017_mpp"
-   ]
+   ],
+   "timing": "next"
   }
  ],
  "sources": [
