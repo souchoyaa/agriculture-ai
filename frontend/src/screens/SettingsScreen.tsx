@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
-import { LOCALES } from '../i18n';
+import { ageText, formatDate, LOCALES } from '../i18n';
+import { freshness } from '../sync/sync';
+import { TRANSLATION_MODEL, VISION_MODEL } from '../model/config';
+import { visionCached } from '../model/perception';
 import type { Connection } from '../state/connection';
 import { useStore } from '../state/store';
 import { Body, Button, Card, Choice, H1, H2, Row } from '../ui/components';
@@ -8,7 +11,8 @@ import { color, space, type } from '../ui/theme';
 import { inputStyle } from './FieldsScreen';
 
 export function SettingsScreen() {
-  const { t, state, updateSettings, testConnection, reset } = useStore();
+  const { t, state, updateSettings, testConnection, reset, sync, syncing, syncNow, localAvailable } = useStore();
+  const f = freshness(sync);
   const [url, setUrl] = useState(state.settings.baseUrl);
   const [confirming, setConfirming] = useState(false);
   const [tested, setTested] = useState<Connection>();
@@ -30,8 +34,9 @@ export function SettingsScreen() {
       <Card>
         <H2>{t('settings.source')}</H2>
         <View accessibilityRole="radiogroup" style={{ gap: space(2) }}>
-          <Choice multi={false} label={t('settings.source.mock')} detail={t('settings.source.mock.detail')} selected={state.settings.source === 'mock'} onPress={() => { setTested(undefined); updateSettings({ source: 'mock' }); }} />
-          <Choice multi={false} label={t('settings.source.http')} detail={t('settings.source.http.detail')} selected={state.settings.source === 'http'} onPress={() => { setTested(undefined); updateSettings({ source: 'http' }); }} />
+          <Choice multi={false} glyph="cellphone-check" label={t('settings.source.local')} detail={localAvailable ? t('settings.source.local.detail') : t('settings.source.local.unavailable')} selected={state.settings.source === 'local'} onPress={() => { setTested(undefined); updateSettings({ source: 'local' }); }} />
+          <Choice multi={false} glyph="flask-outline" label={t('settings.source.mock')} detail={t('settings.source.mock.detail')} selected={state.settings.source === 'mock'} onPress={() => { setTested(undefined); updateSettings({ source: 'mock' }); }} />
+          <Choice multi={false} glyph="server-network" label={t('settings.source.http')} detail={t('settings.source.http.detail')} selected={state.settings.source === 'http'} onPress={() => { setTested(undefined); updateSettings({ source: 'http' }); }} />
         </View>
         {state.settings.source === 'http' ? (
           <View style={{ gap: space(2) }}>
@@ -44,6 +49,23 @@ export function SettingsScreen() {
             {tested?.kind === 'unreachable' ? <Text accessibilityRole="alert" style={[type.body, { color: color.clay }]}>✕ {t('settings.test.fail', { message: tested.message })}</Text> : null}
           </View>
         ) : null}
+      </Card>
+
+      <Card>
+        <H2 glyph="sync">{t('settings.sync')}</H2>
+        <Body>{f.lastSuccessAt ? t('sync.weatherAge', { age: ageText(t, f.ageHours ?? 0) }) : t('sync.never')}{f.forecastUntil ? ` · ${t('sync.forecastUntil', { date: formatDate(f.forecastUntil, state.settings.locale) })}` : ''}</Body>
+        <Body soft>{t('settings.sync.detail', { n: f.locations })}</Body>
+        {f.failed ? <Body soft>{t('settings.sync.partial', { n: f.failed })}</Body> : null}
+        <Button kind="secondary" icon="cloud-sync-outline" label={syncing ? t('sync.syncing') : t('settings.sync.now')} disabled={syncing} onPress={() => { syncNow(); }} />
+      </Card>
+
+      <Card>
+        <H2 glyph="chip">{t('settings.models')}</H2>
+        <Body>{VISION_MODEL.displayName}</Body>
+        <Body soft>{t('settings.models.vision', { mb: VISION_MODEL.approxDownloadMB, cached: visionCached() ? t('settings.models.cached') : t('settings.models.notCached') })}</Body>
+        <Body>{TRANSLATION_MODEL.displayName}</Body>
+        <Body soft>{t('settings.models.translation', { mb: TRANSLATION_MODEL.approxDownloadMB, license: TRANSLATION_MODEL.license })}</Body>
+        <Body soft>{t('settings.models.swap')}</Body>
       </Card>
 
       <Card>
@@ -62,7 +84,7 @@ export function SettingsScreen() {
 
       <Card tone="info">
         <H2>{t('settings.limits')}</H2>
-        {(['inference', 'sync', 'map', 'notify', 'voice'] as const).map(k => <Body key={k}>• {t(`settings.limit.${k}`)}</Body>)}
+        {(['model', 'calibration', 'translation', 'weather', 'sync', 'notify', 'voice', 'native'] as const).map(k => <Body key={k}>• {t(`settings.limit.${k}`)}</Body>)}
       </Card>
     </View>
   );

@@ -6,9 +6,12 @@ import path from 'node:path';
 
 const APP = process.argv[2] ?? 'http://localhost:8094';
 const OFFLINE = process.argv.includes('--offline');
+const LOCALE = process.argv.find(a => a.startsWith('--locale='))?.slice(9);
 const OUT = path.resolve(__dirname, '../../docs/frontend/screenshots');
 
+const TAB_FIELDS = /^(Fields|Amasambu|Mashamba)/;
 async function check(page: Page, label: string) {
+  if (LOCALE) return checkLocalised(page, label);
   await page.getByRole('tab', { name: 'Fields' }).click();
   await page.getByRole('button', { name: /Check this field: Hillside coffee/ }).first().click();
   const questionnaire = await page.getByText(/How sure are you\?|What do you see\?/).count();
@@ -22,6 +25,22 @@ async function check(page: Page, label: string) {
   for (const expected of [/Rust-like orange powder/, /Where to look next/, /Is the weather favourable/, /not fine-tuned/]) if (!expected.test(body)) throw new Error(`${label}: missing ${expected}`);
   await page.screenshot({ path: path.join(OUT, `photo-${label}-result.png`) });
   return seconds;
+}
+
+/** Local-language run: UI in the machine-translated locale, result text translated on device. */
+async function checkLocalised(page: Page, label: string) {
+  await page.getByRole('tab', { name: 'Settings' }).click();
+  await page.getByRole('radio', { name: LOCALE === 'rw' ? /Ikinyarwanda/ : /Kiswahili/ }).click();
+  await page.getByRole('tab', { name: TAB_FIELDS }).click();
+  await page.getByRole('button', { name: /Hillside coffee/ }).filter({ hasText: /.+/ }).first().click();
+  await page.locator('[role=button]').filter({ hasText: /example|mfano|urugero|ifoto|picha/i }).last().click().catch(() => {});
+  const t0 = Date.now();
+  await page.getByText(/NLLB-200/).first().waitFor({ timeout: 60000 });
+  await page.waitForFunction(() => /Hemileia vastatrix/.test(document.body.innerText), undefined, { timeout: 900000 });
+  const body = await page.locator('body').innerText();
+  if (/Possible coffee leaf rust/.test(body)) throw new Error('condition label not translated');
+  await page.screenshot({ path: path.join(OUT, `photo-${label}-${LOCALE}-result.png`) });
+  return ((Date.now() - t0) / 1000).toFixed(1);
 }
 
 (async () => {

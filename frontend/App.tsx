@@ -1,11 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, BackHandler, Platform, Pressable, ScrollView, StatusBar, Text, useWindowDimensions, View } from 'react-native';
-import { formatDate, isMachineTranslated, isSupported, LOCALES, type Translate } from './src/i18n';
+import { ageText, formatDate, isMachineTranslated, isSupported, LOCALES } from './src/i18n';
 import { freshness } from './src/sync/sync';
-
-export function ageText(t: Translate, hours: number): string {
-  return hours < 1 ? t('age.justNow') : hours < 48 ? t('age.hours', { n: Math.round(hours) }) : t('age.days', { n: Math.round(hours / 24) });
-}
 import type { Nav, Route, TabName } from './src/navigation';
 import { CheckScreen } from './src/screens/CheckScreen';
 import { FieldsScreen } from './src/screens/FieldsScreen';

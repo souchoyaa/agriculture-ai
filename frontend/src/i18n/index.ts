@@ -57,3 +57,7 @@ export function formatDateTime(iso: string | null | undefined, locale: string): 
   try { return d.toLocaleString(isSupported(locale) ? locale : 'en', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
   catch { return d.toISOString().slice(0, 16).replace('T', ' '); }
 }
+
+export function ageText(t: Translate, hours: number): string {
+  return hours < 1 ? t('age.justNow') : hours < 48 ? t('age.hours', { n: Math.round(hours) }) : t('age.days', { n: Math.round(hours / 24) });
+}
