@@ -44,3 +44,8 @@ Still failing / open (sent to frontend): (1) banner "Server answers are demo dat
 - journey.ts (now parameterised: `VIEWPORT_W=390|1440 TAG=… npx tsx journey.ts <app> <api> <out>`): phone and desktop both POST 200, SERVER ESTIMATE, data_mode live, orange_powder_leaf_underside; **0 unexpected console errors** (favicon 404 fixed); 1 expected ERR_CONNECTION_REFUSED = frontend's documented health probe of the default address when switching to Server mode (shown as SERVER UNREACHABLE until set).
 - frontend tests/http-smoke.ts: PASS. Screenshots: cefe8bc-w390-*, cefe8bc-w1440-* (two-column desktop: sources with access dates, guidance-scope caveat "Guidance sources come from: Hawaiʻi, USA", "Nothing is ever sent automatically", user-prepared officer message), cefe8bc-phone-http-map.png.
 - Backend follow-up: review reason for low-certainty specific sign reworded (`specific_low_certainty`, en/es/fr).
+
+## 2026-10-04 04:33Z: integration b353a66 = frontend 02a3de9 (fe-004) + backend 7377b45 — CLEAN
+- backend: Ran 64 tests, OK (skipped=1); frontend: npm run check 15/15 domain; expo export OK.
+- frontend strict tests/http-smoke.ts (fails on any requestfailed, HTTP ≥ 400 or console error): PASS vs :8790/:8091.
+- journey.ts phone 390 + desktop 1440 (screenshots int-02a3de9-w*): POST 200, data_mode live, SERVER ESTIMATE, orange_powder_leaf_underside; **0 console errors, 0 connection refusals**.
