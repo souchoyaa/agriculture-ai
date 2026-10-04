@@ -13,7 +13,7 @@ const CHROME = process.env.CHROME_PATH ?? '/Applications/Google Chrome.app/Conte
   await page.getByRole('tab', { name: 'Settings' }).click();
   await page.getByRole('radio', { name: /^Server/ }).click();
   await page.getByRole('textbox', { name: 'Server address' }).fill(API);
-  await page.getByRole('button', { name: 'Test connection' }).click();
+  await page.getByRole('button', { name: 'Test connection', exact: true }).click();
   await page.getByText(/Connected\./).waitFor({ timeout: 10000 });
   const connected = (await page.getByText(/Connected\./).innerText());
   await page.getByRole('tab', { name: 'New check' }).click();
