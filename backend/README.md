@@ -7,20 +7,24 @@ FastAPI + uv. Domain logic in `app/domain/` (no HTTP), VLM boundary in `app/adap
 cd backend
 export UV_CACHE_DIR="$PWD/.cache/uv" UV_PYTHON_INSTALL_DIR="$PWD/.cache/python"
 uv sync --python 3.12
-uv run python -m unittest discover -s tests          # 46 tests, offline
+uv run python -m unittest discover -s tests          # 64 tests, offline (verified 2026-10-04 04:30Z)
 uv run python scripts/demo.py                        # all scenarios end-to-end, writes docs/backend/examples/*.geojson|svg
 AGRI_FIXED_NOW=2026-10-04T00:00:00Z uv run uvicorn app.main:app --host 127.0.0.1 --port 8000
 uv run python scripts/demo.py --base-url http://127.0.0.1:8000   # same journey over real HTTP
 uv run python scripts/generate_fixtures.py [--check]  # shared/fixtures from backend output
 ```
-Optional network: `AGRI_WEATHER_LIVE=1` (live Open-Meteo, cache fallback); `scripts/fetch_data.py forecast --lat .. --lon ..`; `scripts/fetch_data.py era5-chinchina && scripts/validate_chinchina.py`.
+Optional network: `AGRI_WEATHER_LIVE=1` (live Open-Meteo, cache fallback); `scripts/fetch_data.py forecast --lat .. --lon ..`; `scripts/fetch_data.py era5-chinchina && scripts/validate_chinchina.py`; `scripts/fetch_data.py climatology && scripts/build_climatology.py` (ERA5 2015–2024 baseline).
+CORS for a web build on another origin: `AGRI_CORS_ORIGINS=http://localhost:8091`. Responses are gzip-compressed when accepted.
 Without `AGRI_FIXED_NOW` the real clock is used, so the committed weather cache (fetched 2026-10-03T23:46Z) is reported `stale` — intended.
+
+## Integration status
+Integration branch `integration` (worktrees/integration) `aa8f660` = frontend `8964deb` + backend `00c971e`: backend tests, frontend `npm run check` (14/14 domain), frontend `tests/http-smoke.ts` and `docs/backend/integration/journey.ts` in headless Chrome against the real backend all pass. Evidence, exact commands and screenshots: `docs/backend/integration/README.md`. Open (minor, frontend): 2 browser console errors.
 
 ## Coverage
 | Crop | Condition | Signals understood | Locales |
 | --- | --- | --- | --- |
 | coffee | coffee leaf rust (*Hemileia vastatrix*) | orange_powder_leaf_underside (specific), rust_like_leaf_marks, yellow_spots_upper_leaf, lesions_lower_canopy_first, premature_leaf_drop, brown_dry_lesion_centres | en; es, fr agent-authored (not native-reviewed); others fall back to en with `fallback: true` |
-Other crops → `unsupported`. Weather cache: one demo point (−1.95, 30.06; synthetic farm location, real Open-Meteo data). Elsewhere weather is `unavailable` unless live fetch is enabled.
+Look-alike conditions (Cercospora/brown leaf spot, leaf miner, red spider mite, healthy) never add evidence and block `supported` when confident; optional leaf-area % → OIRSA severity level. Other crops → `unsupported`. Weather cache: one demo point (−1.95, 30.06; synthetic farm location, real Open-Meteo data). Elsewhere weather is `unavailable` unless live fetch is enabled.
 
 ## What the output means
 - `condition.confidence`: uncalibrated evidence score from image signals, not a probability. `supported` needs a specific signal; < 0.35 abstains.
