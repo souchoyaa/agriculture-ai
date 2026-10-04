@@ -7,13 +7,13 @@ FastAPI + uv. Domain logic in `app/domain/` (no HTTP), VLM boundary in `app/adap
 cd backend
 export UV_CACHE_DIR="$PWD/.cache/uv" UV_PYTHON_INSTALL_DIR="$PWD/.cache/python"
 uv sync --python 3.12
-uv run python -m unittest discover -s tests          # 71 tests, offline (verified 2026-10-04 04:56Z)
+uv run python -m unittest discover -s tests          # 73 tests, offline (verified 2026-10-04 04:56Z)
 uv run python scripts/demo.py                        # all scenarios end-to-end, writes docs/backend/examples/*.geojson|svg
 AGRI_FIXED_NOW=2026-10-04T04:59:00Z uv run uvicorn app.main:app --host 127.0.0.1 --port 8000
 uv run python scripts/demo.py --base-url http://127.0.0.1:8000   # same journey over real HTTP
 uv run python scripts/generate_fixtures.py [--check]  # shared/fixtures from backend output
 ```
-Optional network: `AGRI_WEATHER_LIVE=1` (live Open-Meteo, cache fallback); `scripts/fetch_data.py forecast --lat .. --lon ..`; `scripts/fetch_data.py era5-chinchina && scripts/validate_chinchina.py`; `scripts/fetch_data.py climatology && scripts/build_climatology.py` (ERA5 2015–2024 baseline).
+Optional network: `AGRI_WEATHER_LIVE=1` (reuse a fresh cache for the same point, else live Open-Meteo, else stale-cache fallback; `AGRI_WEATHER_CACHE=<dir>` relocates the cache); `scripts/fetch_data.py forecast --lat .. --lon ..`; `scripts/fetch_data.py era5-chinchina && scripts/validate_chinchina.py`; `scripts/fetch_data.py climatology && scripts/build_climatology.py` (ERA5 2015–2024 baseline).
 CORS for a web build on another origin: `AGRI_CORS_ORIGINS=http://localhost:8091`. Responses are gzip-compressed when accepted.
 Without `AGRI_FIXED_NOW` the real clock is used. The real weather cache was fetched 2026-10-04T04:45:47Z; it is fresh for six hours after that fetch, then explicitly stale. The frozen fixture analysis time is 2026-10-04T04:59:00Z.
 

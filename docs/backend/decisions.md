@@ -30,3 +30,4 @@ Claude backend fetched the real Open-Meteo cache at 2026-10-04T04:45:47.168074+0
 
 ## Mixed observation provenance
 The client explicitly identifies seeded example-field coordinates during capture and in results. Live farmer reports retain an example-location note in observation provenance, and the backend preserves that supplied source in its observation component. New personal fields currently have no location-entry flow; their real weather/scouting context remains unavailable.
+- **Live weather mode** (`AGRI_WEATHER_LIVE=1`): a fresh cache (≤ 6 h) within 2 km is reused without a request (`notes: fresh_cache_reused_no_request`); otherwise Open-Meteo is fetched and cached; on failure any cache within 15 km is used, possibly stale. Real-network check 2026-10-04 ~08:29Z, Huye (−2.60, 29.74): 1st request live fetch 1.1 s, 2nd reused cache 0.01 s; climatology `unavailable` there (baseline only for the demo point).
