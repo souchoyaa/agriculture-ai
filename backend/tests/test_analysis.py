@@ -647,3 +647,40 @@ class GuidanceScopeLocalization(unittest.TestCase):
         self.assertNotEqual(en["local_check_required"], fr["local_check_required"])
         self.assertEqual(fr["local_check_required"], [c["text"] for c in fr["local_checks"]])
         self.assertEqual(fr["applicability_locale"], "en")
+
+
+class LabelListAdapter(unittest.TestCase):
+    from app.adapters.vlm import LabelListVLMAdapter
+    context = {"id": "img-1", "observed_at": "2026-10-04T04:30:00Z", "crop": "coffee", "locale": "fr"}
+
+    def observe(self, labels, **context):
+        return self.LabelListVLMAdapter().observe({"model": "test-model", "model_version": "0", "labels": labels},
+                                                  {**self.context, **context})
+
+    def test_maps_dataset_labels_and_keeps_unknown_unrecognised(self):
+        obs = self.observe([{"label": "Rust", "score": 0.8}, {"label": "rust level 3", "score": 0.6},
+                            {"label": "Cercospora", "score": 0.4}, {"label": "sunburn", "score": 0.9}])
+        self.assertEqual([s["label"] for s in obs["signals"]],
+                         ["orange_powder_leaf_underside", "rust_like_leaf_marks", "cercospora_leaf_spot_marks", "sunburn"])
+        self.assertEqual(obs["signals"][1]["affected_leaf_area_range_pct"], [21, 50])
+        self.assertNotIn("affected_leaf_area_pct", obs["signals"][1], "class range is not a measurement")
+        self.assertFalse(obs["signals"][3]["mapped"])
+        self.assertIn("assumed label-list output format", obs["provenance"]["source"])
+
+    def test_never_invents_location_and_feeds_analysis(self):
+        obs = self.observe([{"label": "rust", "score": 0.9}])
+        self.assertNotIn("location", obs)
+        result = run(obs)
+        self.assertEqual(result["condition"]["id"], "coffee_leaf_rust")
+        self.assertEqual(result["map"]["status"], "unavailable")
+        self.assertEqual(result["evidence"][0]["origin"], "image_model")
+        self.assertEqual(result["localization"]["used"], "fr")
+
+    def test_unknown_only_labels_abstain(self):
+        result = run(self.observe([{"label": "sunburn", "score": 0.99}]))
+        self.assertTrue(result["condition"]["abstained"])
+
+    def test_invalid_score_rejected(self):
+        from jsonschema.exceptions import ValidationError
+        with self.assertRaises(ValidationError):
+            self.observe([{"label": "rust", "score": 1.4}])

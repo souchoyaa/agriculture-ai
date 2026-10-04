@@ -7,7 +7,7 @@ FastAPI + uv. Domain logic in `app/domain/` (no HTTP), VLM boundary in `app/adap
 cd backend
 export UV_CACHE_DIR="$PWD/.cache/uv" UV_PYTHON_INSTALL_DIR="$PWD/.cache/python"
 uv sync --python 3.12
-uv run python -m unittest discover -s tests          # 73 tests, offline (verified 2026-10-04 04:56Z)
+uv run python -m unittest discover -s tests          # 77 tests, offline (verified 2026-10-04 04:56Z)
 uv run python scripts/demo.py                        # all scenarios end-to-end, writes docs/backend/examples/*.geojson|svg
 AGRI_FIXED_NOW=2026-10-04T04:59:00Z uv run uvicorn app.main:app --host 127.0.0.1 --port 8000
 uv run python scripts/demo.py --base-url http://127.0.0.1:8000   # same journey over real HTTP
@@ -34,7 +34,7 @@ Look-alike conditions (Cercospora/brown leaf spot, leaf miner, red spider mite, 
 - Sources: `data/sources.json` (URL, access date, licence, region). Guidance from Hawaiʻi extension material plus Rwanda Agriculture Board/Plantwise factsheet and a Rwandan farm survey; generic measures only, no product/dose advice (`guidance_scope`, `regional_context`).
 
 ## Next step for the real Liquid adapter
-Implement `LiquidVLMAdapter.observe(raw)` in `app/adapters/vlm.py`: map model labels onto the signal vocabulary in `data/conditions/*.json`, keep per-signal confidence, never invent location/locale, set `provenance.adapter = "liquid-vlm"` + model version, validate with `contracts.validate("observation", …)`. Unknown labels pass through as unrecognised (they cannot raise the score).
+`app/adapters/vlm.py` now has `LabelListVLMAdapter.observe(raw, context)`: for a classifier-style output `{"model", "model_version", "labels": [{"label", "score"}]}` it maps dataset-style class names (RoCoLe/BRACOL vocabulary) through `data/vlm_label_map.json` (`proposed_unverified`), keeps scores as per-signal confidence, passes unknown labels through as unrecognised (they cannot raise the score), records RoCoLe severity classes only as `affected_leaf_area_range_pct` (a range, not a measurement), takes id/time/crop/location/locale from the app's capture context (never invented) and validates the canonical observation. The input format is an assumption. Once a real Liquid output sample exists: if it is label+score, wrap this adapter in `LiquidVLMAdapter` and verify the label map against the model's actual classes; otherwise implement `LiquidVLMAdapter.observe` with the same rules. It is not yet wired to an HTTP route (the app still posts canonical observations).
 
 ## Limitations
 No expert review of weights/thresholds/translations; no incidence-based validation; gridded model weather (not canopy/station); no DEM/shade/farm boundary; a Python service is not evidence of on-device deployment.
