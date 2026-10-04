@@ -10,7 +10,7 @@ import { useStore } from '../state/store';
 import { Body, Button, Card, Choice, H1, H2, Row, StrengthMeter, Tag } from '../ui/components';
 import { color, radius, space, type } from '../ui/theme';
 import { RiskMap } from './RiskMap';
-import { EvidenceList, ReviewCard, ScopeCard, SourcesList, WeatherCard } from './ResultSections';
+import { EvidenceList, RegionalContext, ReviewCard, ScopeCard, SourcesList, WeatherCard } from './ResultSections';
 
 const STATUS_GLYPH: Record<Analysis['status'], { glyph: string; fg: string; bg: string }> = {
   needs_review: { glyph: '▲', fg: color.clay, bg: color.claySoft },
@@ -133,6 +133,7 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
           return (
             <View key={r.id} style={{ gap: space(1), borderLeftWidth: 4, borderLeftColor: sources.length ? color.leaf : color.turmeric, paddingLeft: space(3) }}>
               <Body>{r.text}</Body>
+              {r.regional_scope?.note ? <Body soft>⌖ {r.regional_scope.note}</Body> : null}
               {sources.length ? sources.map(s => (
                 <Pressable key={s.id} accessibilityRole="link" onPress={() => Linking.openURL(s.url)}>
                   <Text style={[type.small, { color: color.sky, textDecorationLine: 'underline' }]}>{s.title} — {t('result.accessed', { date: formatDate(s.accessed_at, locale) })}</Text>
@@ -141,6 +142,7 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
             </View>
           );
         }) : <Body soft>{t('result.noGuidance')}</Body>}
+        <RegionalContext items={analysis.regional_context} sources={analysis.sources} />
         <ScopeCard scope={analysis.guidance_scope} />
         <SourcesList sources={analysis.sources} />
       </Card>

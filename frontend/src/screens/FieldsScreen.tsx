@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
 import { fieldAttention, sortFieldsByAttention, type Field } from '../domain/model';
 import { formatDate, type MessageId } from '../i18n';
 import type { Nav } from '../navigation';
@@ -47,6 +47,10 @@ export function FieldsScreen({ nav }: { nav: Nav }) {
               : null}
             <Button kind="secondary" label={t('fields.checkThis')} a11yLabel={`${t('fields.checkThis')}: ${top.field.name}`} icon="＋" onPress={() => nav.push({ name: 'check', fieldId: top.field.id })} />
           </Row>
+          <Pressable accessibilityRole="button" accessibilityLabel={`${t('field.timeline')}: ${top.field.name}`} onPress={() => nav.push({ name: 'field', fieldId: top.field.id })}
+            style={{ minHeight: 48, justifyContent: 'center', alignSelf: 'flex-start' }}>
+            <Text style={[type.body, { color: '#fff', textDecorationLine: 'underline', fontWeight: '700' }]}>☰ {t('field.timeline')}</Text>
+          </Pressable>
         </View>
       ) : null}
 
