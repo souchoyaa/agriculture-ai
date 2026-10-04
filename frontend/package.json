@@ -8,12 +8,14 @@
     "web": "expo start --web",
     "check": "tsc --noEmit && tsx tests/adapters.ts && tsx tests/domain.ts",
     "screenshots": "tsx tests/screenshots.ts",
-    "build:web": "expo export --platform web"
+    "build:web": "expo export --platform web",
+    "bundle:native": "expo export --platform android --platform ios --output-dir .cache/native-export"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
     "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "54.0.33",
+    "expo-file-system": "~19.0.24",
     "expo-image-picker": "~17.0.11",
     "react": "19.1.0",
     "react-dom": "19.1.0",

@@ -34,7 +34,7 @@ Symptom ids are the canonical `signals[].label`. `confidence` encodes the farmer
 - AsyncStorage (device storage on native, localStorage on web), one versioned key; corrupt data is backed up and example data restored with a visible notice.
 - Check saved first, then analysed. Server unreachable → record stays `failed` + retryable, shown as "Saved — waiting for analysis" with Try again; a verified server connection (health OK, or browser `online` event re-test) retries automatically. Failed server checks are **never** silently re-run through the demo adapter. Interrupted in-flight analyses become retryable on next launch.
 - There is no upload/sync service in contract 0.1.0 (`POST /v1/analyses` is stateless); everything is "On this phone". Nothing is described as synced.
-- Web photos are stored as small data URLs (≤ ~700 kB) so they survive reload; larger ones are refused with a message. Native photos keep the picker URI (may be in cache; not yet copied to app storage).
+- Web photos are stored as small data URLs (≤ ~700 kB) so they survive reload; larger ones are refused with a message. Native photos are copied into the app document directory (`photos/<check id>`, expo-file-system) at save; reset deletes them. Native code path verified only by `npm run bundle:native` (Android/iOS Hermes bundles compile), not on a device.
 
 ## Run and check
 
@@ -45,6 +45,7 @@ npm ci
 npm run check            # tsc + fixture/mock/HTTP adapter checks + 10 domain/persistence/i18n checks
 EXPO_OFFLINE=1 npm run web
 npm run build:web        # static export in dist/
+npm run bundle:native    # Android + iOS JS bundles compile (no device needed)
 # Browser journey + screenshots (Chrome required; serve dist on a CORS-allowed origin):
 (cd dist && python3 -m http.server 8081) &
 npm run screenshots      # phone + desktop journey, persistence-after-reload, offline pending, locale fallback
