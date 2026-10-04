@@ -359,6 +359,7 @@ export const fr: Messages = {
   'plan.next': 'Ensuite',
   'plan.ifWorse': 'Si cela s’aggrave',
   'plan.sourcesBelow': 'Chaque étape provient de sources de vulgarisation ou de recherche publiées ; voir Conseils plus bas.',
+  'result.map.pointsFixed': 'Les cases montrent cette période ; les points numérotés restent ceux du plan sur 7 jours.',
   'common.loading': 'Chargement…',
   'common.close': 'Fermer',
   'common.yes': 'Oui',

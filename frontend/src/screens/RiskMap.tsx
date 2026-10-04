@@ -73,6 +73,7 @@ export function RiskMap({ map, scouting }: { map: Analysis['map']; scouting: Ana
           })}
         </View>
       ) : null}
+      {layer && layer.hours !== defaultHours ? <Body soft>{t('result.map.pointsFixed')}</Body> : null}
       {layer ? (
         <Row style={{ gap: space(2) }}>
           <Icon name="weather-windy" size={18} color={color.sky} />

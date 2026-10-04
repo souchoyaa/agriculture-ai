@@ -357,6 +357,7 @@ export const en = {
   'plan.next': 'Next',
   'plan.ifWorse': 'If it gets worse',
   'plan.sourcesBelow': 'Each step is from published extension or research sources; see Guidance below.',
+  'result.map.pointsFixed': 'Squares show this period; numbered points stay those of the 7-day plan.',
   'common.loading': 'Loading…',
   'common.close': 'Close',
   'common.yes': 'Yes',
