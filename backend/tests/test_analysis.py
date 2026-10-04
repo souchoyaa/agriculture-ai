@@ -80,6 +80,17 @@ class EvidenceAndAbstention(unittest.TestCase):
         alone = run(observation(signals=[{"label": "rust_like_leaf_marks", "confidence": 0.6}]))
         self.assertGreater(extra["condition"]["confidence"], alone["condition"]["confidence"])
 
+    def test_duplicate_labels_do_not_inflate_support(self):
+        once = run(observation(signals=[{"label": "orange_powder_leaf_underside", "confidence": 0.6}]))
+        twice = run(observation(signals=[{"label": "orange_powder_leaf_underside", "confidence": 0.6}] * 2))
+        self.assertEqual(once["condition"]["confidence"], 0.51)
+        self.assertEqual(twice["condition"]["confidence"], once["condition"]["confidence"])
+        self.assertEqual(twice["status"], "needs_review")
+        self.assertTrue(twice["evidence"][1]["duplicate"])
+        mixed = run(observation(signals=[{"label": "Orange_Powder_Leaf_Underside ", "confidence": 0.3},
+                                         {"label": "orange_powder_leaf_underside", "confidence": 0.6}]))
+        self.assertEqual(mixed["condition"]["confidence"], 0.51, "highest-confidence duplicate kept, case/space-normalized")
+
     def test_unsupported_crop(self):
         result = run(observation(crop="maize"))
         self.assertEqual(result["status"], "unsupported")

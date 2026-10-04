@@ -21,3 +21,4 @@ Bootstrap `frontend/src/api.ts` derived types via `typeof analysis.json`; its li
 - Real Liquid adapter: map model labels → signal vocabulary in condition files.
 - Additional conditions (e.g. coffee berry disease) only after review of sources.
 - Elevation/shade covariates for within-farm suitability (needs DEM/farm boundary).
+- Evidence: repeated signal labels (case/space-normalized) count once at their highest confidence; duplicates listed with `duplicate: true`, contribution 0 (steering 6268b401/68209b2b).

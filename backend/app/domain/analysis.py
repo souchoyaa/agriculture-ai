@@ -16,13 +16,25 @@ def iso(t: datetime) -> str:
 
 
 def evidence_score(signals: list[dict], condition: dict) -> tuple[float, list[dict], bool]:
-    """Noisy-OR over recognised signals. Returns (score, evidence rows, any specific signal)."""
+    """Noisy-OR over recognised signals. Returns (score, evidence rows, any specific signal).
+
+    A repeated label is the same symptom, not independent evidence: only its highest-confidence entry
+    counts; other entries are kept in the evidence list with `duplicate: true` and no contribution.
+    """
     known = condition["signals"]
+    best = {}
+    for index, signal in enumerate(signals):
+        label = signal["label"].strip().lower()
+        if label not in best or signal["confidence"] > signals[best[label]]["confidence"]:
+            best[label] = index
     rows, remaining, specific = [], 1.0, False
-    for signal in signals:
-        spec = known.get(signal["label"])
+    for index, signal in enumerate(signals):
+        label = signal["label"].strip().lower()
+        spec = known.get(label)
         row = {"label": signal["label"], "confidence": signal["confidence"], "recognized": spec is not None}
-        if spec:
+        if best[label] != index:
+            row.update(duplicate=True, contribution=0.0)
+        elif spec:
             contribution = spec["weight"] * signal["confidence"]
             remaining *= 1 - contribution
             specific |= spec["specific"] and signal["confidence"] >= 0.5
