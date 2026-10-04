@@ -1,0 +1,15 @@
+<!doctype html><meta charset="utf-8"><title>Engine test</title><pre id="log"></pre>
+<script type="module">
+const log = m => { document.getElementById('log').textContent += m + '\n'; window.__log = (window.__log||[]).concat(m); };
+const w = new Worker('./engine.worker.js', { type: 'module' });
+w.onerror = e => { log('WORKER ERROR ' + e.message); window.__done = true; };
+const raw = { model: 'LiquidAI/LFM2.5-VL-450M-ONNX', model_version: 'main', labels: [{ label: 'rust', score: 0.93 }, { label: 'cercospora', score: 0.12 }] };
+const context = { id: 'engine-test-1', observed_at: '2026-10-04T04:30:00Z', crop: 'coffee', locale: 'fr', location: { latitude: -1.95, longitude: 30.06 } };
+w.onmessage = e => { const d = e.data;
+  if (d.type === 'ready') log(`READY python ${d.python} in ${d.ms} ms`);
+  else if (d.type === 'result' && d.id === 'obs') { log(`OBSERVE (${d.ms} ms): adapter=${d.value.provenance.adapter} signals=${JSON.stringify(d.value.signals.map(s => [s.label, s.confidence]))}`);
+    w.postMessage({ type: 'analyze', id: 'ana', observation: d.value, now: '2026-10-04T04:59:00Z' }); }
+  else if (d.type === 'result' && d.id === 'ana') { const a = d.value; log(`ANALYZE (${d.ms} ms): status=${a.status} condition=${a.condition.label} score=${a.condition.confidence} env=${a.environment.status} weather_class=${a.weather_risk?.class} map=${a.map.status}/${a.map.features.length} recs=${a.recommendations.length} locale=${a.localization?.used}`); window.__done = true; }
+  else if (d.type === 'error') { log('ERROR ' + d.message); window.__done = true; } };
+w.postMessage({ type: 'observe', id: 'obs', raw, context });
+</script>

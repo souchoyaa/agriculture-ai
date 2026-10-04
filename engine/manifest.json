@@ -1,0 +1,20 @@
+{
+  "built_at": "2026-10-04T12:55:28.701Z",
+  "pyodide": "314.0.7",
+  "python": "3.14.2",
+  "packages": [
+    "attrs",
+    "jsonschema",
+    "jsonschema-specifications",
+    "pyrsistent",
+    "referencing",
+    "rpds-py",
+    "six",
+    "typing-extensions"
+  ],
+  "bytes": {
+    "pyodide_core": 13394199,
+    "wheels": 386932,
+    "backend_zip": 172381
+  }
+}

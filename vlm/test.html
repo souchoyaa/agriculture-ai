@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><title>VLM spike</title>
+<body style="font-family:sans-serif;padding:16px"><h3>LFM2.5-VL-450M in-browser test</h3><pre id="log"></pre>
+<script type="module">
+const log = m => { document.getElementById('log').textContent += m + '\n'; window.__log = (window.__log||[]).concat(m); };
+const w = new Worker('./vlm.worker.js', { type: 'module' }); w.onerror = e => { log('WORKER ERROR ' + (e.message || e.filename || 'unknown')); window.__done = true; };
+let last = 0;
+w.onmessage = e => {
+  const d = e.data;
+  if (d.type === 'progress') { if (d.status === 'progress' && d.total && Date.now() - last > 3000) { last = Date.now(); log(`dl ${d.file} ${(d.loaded/1e6).toFixed(0)}/${(d.total/1e6).toFixed(0)} MB`); } else if (d.status === 'done') log(`done ${d.file}`); }
+  else if (d.type === 'ready') { log('READY on ' + d.device); window.__t1 = performance.now();
+    w.postMessage({ type: 'run', id: 1, image: '/agriculture-ai/samples/coffee-leaf-rust.jpg', maxNewTokens: 200, messages: [
+      { role: 'user', content: [{ type: 'image' }, { type: 'text', text: 'Describe exactly what you see on this plant leaf: colours, spots, powder, holes, which side of the leaf. Be factual.' }] }] }); }
+  else if (d.type === 'result') { log(`RESULT (${d.ms} ms): ${d.text}`); window.__done = true; }
+  else if (d.type === 'error') { log('ERROR ' + d.message); window.__done = true; }
+};
+log('loading…'); window.__t0 = performance.now(); w.postMessage({ type: 'load' });
+</script>

@@ -1,0 +1,25 @@
+<!doctype html><meta charset="utf-8"><title>VLM probe test</title><pre id="log"></pre>
+<script type="module">
+const log = m => { document.getElementById('log').textContent += m + '\n'; window.__log = (window.__log||[]).concat(m); };
+const config = { id: 'LiquidAI/LFM2.5-VL-450M-ONNX', revision: 'main', dtype: { webgpu: { vision_encoder: 'fp16', embed_tokens: 'fp16', decoder_model_merged: 'q4' }, wasm: { vision_encoder: 'q8', embed_tokens: 'fp32', decoder_model_merged: 'q4' } } };
+const system = 'You are a careful agricultural image inspector. Answer with the letter of the best option only.';
+const mc = (id, text, opts) => ({ id, options: opts.map((o, k) => ({ id: o[0], key: 'ABCDEFG'[k] })), text: text + '\n' + opts.map((o, k) => `${'ABCDEFG'[k]}) ${o[1]}`).join('\n') + '\nAnswer:' });
+const defs = [
+  ['subject', 'What does this photo mainly show?', [['leaf', 'a close-up of a plant leaf'], ['plant', 'a whole plant or branch'], ['other', 'something that is not a plant']]],
+  ['condition', 'Which description best matches the leaf?', [['rust', 'orange or yellow-orange powdery spots'], ['cercospora', 'round brown spots with a pale grey centre and a yellow halo'], ['leaf_miner', 'pale brown dry blotches or tunnels from insect larvae'], ['healthy', 'green and healthy with no spots'], ['other', 'some other damage']]],
+  ['quality', 'How clear is the photo?', [['good', 'sharp and well lit'], ['poor', 'blurry, dark or too far away']]],
+  ['side', 'Which side of the leaf is visible?', [['upper', 'the upper (top) surface'], ['under', 'the underside (lower surface)'], ['unclear', 'cannot tell']]],
+];
+const questions = defs.flatMap(([id, t, o]) => [mc(id, t, o), mc(id + '~r', t, [...o].reverse())]);
+const merge = answers => { const out = {}; for (const a of answers) { const id = a.id.replace('~r', ''); out[id] ??= {}; for (const [k, v] of Object.entries(a.choice)) out[id][k] = (out[id][k] ?? 0) + v / 2; } return out; };
+const images = ['/agriculture-ai/samples/coffee-leaf-rust.jpg', '/agriculture-ai/samples/coffee-healthy.jpg', '/agriculture-ai/samples/coffee-cup-not-plant.jpg'];
+const w = new Worker('./vlm.worker.js', { type: 'module' });
+w.onerror = e => { log('WORKER ERROR ' + e.message); window.__done = true; };
+let i = 0;
+const next = () => { if (i >= images.length) { window.__done = true; return; } w.postMessage({ type: 'probe', id: images[i], image: images[i], questions, system }); };
+w.onmessage = e => { const d = e.data;
+  if (d.type === 'ready') { log('READY ' + d.device); next(); }
+  else if (d.type === 'probe-result') { const m = merge(d.answers); log(`${d.id} (${d.ms} ms): ` + Object.entries(m).map(([q, c]) => `${q}{` + Object.entries(c).map(([k, v]) => `${k}:${v.toFixed(2)}`).join(' ') + '}').join(' ')); i++; next(); }
+  else if (d.type === 'error') { log('ERROR ' + d.message); window.__done = true; } };
+w.postMessage({ type: 'load', config });
+</script>
