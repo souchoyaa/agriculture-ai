@@ -18,6 +18,8 @@ Labels: the top banner describes the **service** (health `capabilities`: no imag
 
 Layout: phones stack everything; ≥ 900 px uses a side rail; ≥ 1180 px the result splits into understand/act (left) and map/weather/follow-up (right). Network requests are deliberate: the saved server is probed once at launch; choosing Server or editing the address does **not** probe (banner: "Not checked yet") until Test connection. The connected HTTP smoke fails on any failed request, HTTP ≥ 400 or console error (zero observed). The offline journey intentionally targets `http://127.0.0.1:9` (unreachable) and tolerates only those failures.
 
+Keyboard (verified in Chrome): Tab order is mode banner → primary actions → tabs; every focusable shows a 3 px outline; Enter/Space activate; repeated buttons carry the field name in their accessible label ("Check this field: Hillside coffee"). No animations are used (nothing to reduce for reduced-motion).
+
 ## Structure and conventions
 
 - `src/api.ts` — canonical types, `mockApi`, `httpApi(baseUrl)`, `normalizeAnalysis` (missing sections → `unavailable`, never zero risk; missing identity → `invalid_response`). Views only see the `Api` interface. Real model integration belongs behind the backend adapter; nothing in the UI changes.

@@ -23,12 +23,12 @@ export function Body({ children, style, soft }: { children: React.ReactNode; sty
 }
 
 type ButtonKind = 'primary' | 'secondary' | 'quiet' | 'danger';
-export function Button({ label, onPress, kind = 'primary', disabled, icon, hint, style }: {
-  label: string; onPress: () => void; kind?: ButtonKind; disabled?: boolean; icon?: string; hint?: string; style?: StyleProp<ViewStyle>;
+export function Button({ label, onPress, kind = 'primary', disabled, icon, hint, style, a11yLabel }: {
+  label: string; a11yLabel?: string; onPress: () => void; kind?: ButtonKind; disabled?: boolean; icon?: string; hint?: string; style?: StyleProp<ViewStyle>;
 }) {
   const k = buttonKinds[kind];
   return (
-    <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityHint={hint} accessibilityState={{ disabled: !!disabled }}
+    <Pressable accessibilityRole="button" accessibilityLabel={a11yLabel ?? label} accessibilityHint={hint} accessibilityState={{ disabled: !!disabled }}
       disabled={disabled} onPress={onPress}
       style={({ pressed, focused }: PS) => [styles.button, { backgroundColor: k.bg, borderColor: k.border }, pressed && { opacity: 0.8, transform: [{ scale: 0.99 }] }, focused && styles.focus, disabled && { opacity: 0.45 }, style]}>
       {icon ? <Text aria-hidden style={[styles.buttonText, { color: k.fg }]}>{icon}</Text> : null}
