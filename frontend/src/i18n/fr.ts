@@ -248,6 +248,7 @@ export const fr: Messages = {
   'result.env.cached': ' · copie enregistrée',
   'mode.http.unverified': 'Pas encore vérifié. Ouvrez les réglages et touchez « Tester la connexion ».',
   'result.photo.notDurable': 'La photo n’a pas pu être copiée dans l’application. Elle est seulement liée depuis la galerie ou un dossier temporaire et peut disparaître. Votre constat est enregistré.',
+  'result.regional': 'Dans votre région',
   'common.loading': 'Chargement…',
   'common.close': 'Fermer',
   'common.yes': 'Oui',

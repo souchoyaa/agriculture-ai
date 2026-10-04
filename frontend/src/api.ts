@@ -40,6 +40,7 @@ export interface Analysis {
   weather_risk?: WeatherRisk;
   review?: { suggested: boolean; reasons?: { id: string; text: string }[]; requires_user_authorization?: boolean; auto_contact?: boolean };
   localization?: { requested?: string; used?: string; fallback?: boolean; reviewed_by_native_speaker?: boolean; catalog_status?: string };
+  regional_context?: { id: string; region?: string; text: string; source_ids?: string[] }[];
   guidance_scope?: { applicability?: string; local_check_required?: string[]; regions_of_guidance_sources?: string[] };
   evidence?: { label: string; confidence?: number; recognized?: boolean; specific?: boolean; contribution?: number }[];
   offline: { cached: boolean; stale: boolean; sync_status: 'local_only' | 'pending' | 'synced' | 'failed'; [extra: string]: unknown };

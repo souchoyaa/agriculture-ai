@@ -246,6 +246,7 @@ export const en = {
   'result.env.cached': ' · saved copy',
   'mode.http.unverified': 'Not checked yet. Open Settings and tap Test connection.',
   'result.photo.notDurable': 'The photo could not be copied into app storage. It is only linked from the gallery or a temporary folder and may disappear. Your report is saved.',
+  'result.regional': 'In your region',
   'common.loading': 'Loading…',
   'common.close': 'Close',
   'common.yes': 'Yes',

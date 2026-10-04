@@ -142,6 +142,28 @@ export function ReviewCard({ analysis, record }: { analysis: Analysis; record: O
   );
 }
 
+/** Region-specific sourced context from the backend (e.g. Rwanda survey), shown near guidance. */
+export function RegionalContext({ items, sources }: { items?: Analysis['regional_context']; sources: Analysis['sources'] }) {
+  const { t } = useStore();
+  if (!items?.length) return null;
+  const byId = new Map(sources.map(s => [s.id, s]));
+  return (
+    <View style={{ gap: space(2), backgroundColor: color.skySoft, borderRadius: radius.sm, padding: space(3) }}>
+      <Text style={type.label}>⌖ {t('result.regional').toUpperCase()}</Text>
+      {items.filter(i => i && typeof i.text === 'string').map(i => (
+        <View key={i.id} style={{ gap: 2 }}>
+          <Body>{i.text}</Body>
+          {(i.source_ids ?? []).map(id => byId.get(id)).filter(Boolean).map(s => (
+            <Pressable key={s!.id} accessibilityRole="link" onPress={() => Linking.openURL(s!.url)}>
+              <Text style={[type.small, { color: color.sky, textDecorationLine: 'underline' }]}>{s!.title}</Text>
+            </Pressable>
+          ))}
+        </View>
+      ))}
+    </View>
+  );
+}
+
 export function ScopeCard({ scope }: { scope?: Analysis['guidance_scope'] }) {
   const { t } = useStore();
   if (!scope || (!scope.local_check_required?.length && !scope.regions_of_guidance_sources?.length)) return null;

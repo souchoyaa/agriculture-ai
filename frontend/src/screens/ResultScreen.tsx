@@ -10,7 +10,7 @@ import { useStore } from '../state/store';
 import { Body, Button, Card, Choice, H1, H2, Row, StrengthMeter, Tag } from '../ui/components';
 import { color, radius, space, type } from '../ui/theme';
 import { RiskMap } from './RiskMap';
-import { EvidenceList, ReviewCard, ScopeCard, SourcesList, WeatherCard } from './ResultSections';
+import { EvidenceList, RegionalContext, ReviewCard, ScopeCard, SourcesList, WeatherCard } from './ResultSections';
 
 const STATUS_GLYPH: Record<Analysis['status'], { glyph: string; fg: string; bg: string }> = {
   needs_review: { glyph: '▲', fg: color.clay, bg: color.claySoft },
@@ -141,6 +141,7 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
             </View>
           );
         }) : <Body soft>{t('result.noGuidance')}</Body>}
+        <RegionalContext items={analysis.regional_context} sources={analysis.sources} />
         <ScopeCard scope={analysis.guidance_scope} />
         <SourcesList sources={analysis.sources} />
       </Card>
