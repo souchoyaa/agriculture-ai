@@ -24,6 +24,7 @@
     "expo-image-picker": "~17.0.11",
     "expo-linear-gradient": "~15.0.8",
     "expo-location": "~19.0.8",
+    "pyodide": "^314.0.7",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.5",

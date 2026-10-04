@@ -16,3 +16,7 @@ __pycache__/
 .cache/
 public/vlm/ort/
 public/vlm/*.worker.js
+frontend/public/engine/pyodide/
+frontend/public/engine/backend.zip
+frontend/public/engine/manifest.json
+frontend/public/engine/*.worker.js

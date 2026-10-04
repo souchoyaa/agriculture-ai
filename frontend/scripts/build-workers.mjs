@@ -13,7 +13,7 @@ for (const f of readdirSync(ortDist)) if (/^ort-wasm-simd-threaded.*\.(wasm|mjs)
 
 for (const name of readdirSync(`${root}/workers`).filter(f => f.endsWith('.worker.js'))) {
   await build({ entryPoints: [`${root}/workers/${name}`], bundle: true, format: 'esm', platform: 'browser', target: 'es2022',
-    outfile: `${root}/public/vlm/${name}`, minify: true, logLevel: 'warning',
+    outfile: `${root}/public/${name.startsWith('engine') ? 'engine' : 'vlm'}/${name}`, minify: true, logLevel: 'warning',
     // ORT's own wasm loaders are fetched from /vlm/ort at runtime
     external: [], define: { 'process.env.NODE_ENV': '"production"' } });
   console.log('built', name);
