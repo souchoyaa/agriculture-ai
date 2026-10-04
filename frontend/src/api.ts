@@ -64,7 +64,7 @@ export interface Health {
   capabilities?: { image_inference?: string; weather?: string; calibration?: string; persistence?: string; [extra: string]: unknown };
 }
 export interface Api {
-  readonly kind: 'mock' | 'http';
+  readonly kind: 'mock' | 'http' | 'local';
   readonly baseUrl?: string;
   analyze(input: Observation): Promise<Analysis>;
   health(): Promise<Health>;

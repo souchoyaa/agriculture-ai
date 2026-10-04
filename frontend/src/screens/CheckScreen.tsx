@@ -1,154 +1,117 @@
 import React, { useState } from 'react';
-import { Image, Platform, Text, TextInput, View } from 'react-native';
+import { Image, Platform, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { EVIDENCE_CHECKS, SYMPTOMS } from '../domain/model';
 import type { MessageId } from '../i18n';
 import type { Nav } from '../navigation';
 import { useStore } from '../state/store';
-import { Body, Button, Card, Choice, H1, H2, Row, Tag } from '../ui/components';
-import { color, radius, space, type } from '../ui/theme';
-import { inputStyle } from './FieldsScreen';
+import { Body, Button, Card, Choice, H1, Icon, Row } from '../ui/components';
+import { color, font, radius, space, type } from '../ui/theme';
+import { CROP_ICON } from './FieldsScreen';
 
-const MAX_WEB_PHOTO_CHARS = 700_000; // keep localStorage well under typical 5 MB quota
+const MAX_WEB_PHOTO_CHARS = 1_200_000; // localStorage-friendly data URL (≈0.9 MB JPEG)
+export const SAMPLE_PHOTO = '/samples/coffee-leaf-rust.jpg';
 
-export function CheckScreen({ nav, fieldId }: { nav: Nav; fieldId?: string }) {
-  const { t, state, saveCheck } = useStore();
-  const [step, setStep] = useState(fieldId ? 2 : 1);
+/** Downscale a web data URL so it stays small enough to keep with the record. */
+async function shrinkDataUrl(dataUrl: string, maxSide = 1280, quality = 0.8): Promise<string> {
+  if (Platform.OS !== 'web' || typeof document === 'undefined') return dataUrl;
+  const img = new window.Image(); img.src = dataUrl; await img.decode();
+  const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+  const canvas = document.createElement('canvas'); canvas.width = Math.round(img.width * scale); canvas.height = Math.round(img.height * scale);
+  canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL('image/jpeg', quality);
+}
+
+async function toDataUrl(url: string): Promise<string> {
+  const blob = await (await fetch(url)).blob();
+  return await new Promise((resolve, reject) => { const r = new FileReader(); r.onload = () => resolve(String(r.result)); r.onerror = reject; r.readAsDataURL(blob); });
+}
+
+/**
+ * Photo-first check: pick the field (only if needed), take or choose one photo, and the app does the rest.
+ * No symptom questionnaire — the on-device model looks at the photo.
+ */
+export function CheckScreen({ nav, fieldId, analyseAnywayFor }: { nav: Nav; fieldId?: string; analyseAnywayFor?: string }) {
+  const { t, state, checkPhoto } = useStore();
   const [field, setField] = useState(fieldId ?? state.fields[0]?.id);
-  const [photo, setPhoto] = useState<string>();
-  const [photoMsg, setPhotoMsg] = useState<MessageId>();
-  const [evidence, setEvidence] = useState<string[]>([]);
-  const [symptoms, setSymptoms] = useState<string[]>([]);
-  const [certainty, setCertainty] = useState<'sure' | 'unsure'>('unsure');
-  const [note, setNote] = useState('');
-  const [error, setError] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const total = 3;
+  const [msg, setMsg] = useState<MessageId>();
+  const [busy, setBusy] = useState(false);
+  const selected = state.fields.find(f => f.id === field);
 
-  const toggle = (list: string[], set: (v: string[]) => void, id: string) =>
-    set(list.includes(id) ? list.filter(x => x !== id) : [...list, id]);
-
-  const toggleSymptom = (id: string) => {
-    setError(false);
-    if (id === 'none_visible') { setSymptoms(symptoms.includes(id) ? [] : [id]); return; }
-    toggle(symptoms.filter(s => s !== 'none_visible'), setSymptoms, id);
-  };
-
-  async function getPhoto(source: 'camera' | 'library') {
-    setPhotoMsg(undefined);
-    try {
-      if (source === 'camera' && Platform.OS !== 'web') {
-        const perm = await ImagePicker.requestCameraPermissionsAsync();
-        if (!perm.granted) { setPhotoMsg('check.photo.denied'); return; }
-      }
-      const options: ImagePicker.ImagePickerOptions = { mediaTypes: ['images'], quality: 0.4, base64: Platform.OS === 'web', exif: false };
-      const result = source === 'camera' ? await ImagePicker.launchCameraAsync(options) : await ImagePicker.launchImageLibraryAsync(options);
-      if (result.canceled || !result.assets?.[0]) return;
-      const asset = result.assets[0];
-      if (Platform.OS === 'web') {
-        // Blob URLs vanish on reload; keep a small data URL so the saved check stays complete.
-        const data = asset.base64 ? `data:${asset.mimeType ?? 'image/jpeg'};base64,${asset.base64}` : asset.uri.startsWith('data:') ? asset.uri : undefined;
-        if (!data || data.length > MAX_WEB_PHOTO_CHARS) { setPhotoMsg('check.photo.tooLarge'); return; }
-        setPhoto(data);
-      } else setPhoto(asset.uri);
-    } catch {
-      setPhotoMsg('check.photo.unavailable');
-    }
-  }
-
-  async function save() {
+  async function start(source: 'camera' | 'library' | 'sample') {
     if (!field) return;
-    if (symptoms.length === 0) { setError(true); return; }
-    setSaving(true);
+    setMsg(undefined);
     try {
-      const record = await saveCheck({ fieldId: field, symptoms, certainty, evidence, photoUri: photo, note });
+      let uri: string | undefined;
+      if (source === 'sample') uri = await shrinkDataUrl(await toDataUrl(SAMPLE_PHOTO));
+      else {
+        if (source === 'camera' && Platform.OS !== 'web') {
+          const perm = await ImagePicker.requestCameraPermissionsAsync();
+          if (!perm.granted) { setMsg('check.photo.denied'); return; }
+        }
+        const options: ImagePicker.ImagePickerOptions = { mediaTypes: ['images'], quality: 0.7, base64: Platform.OS === 'web', exif: false };
+        const result = source === 'camera' ? await ImagePicker.launchCameraAsync(options) : await ImagePicker.launchImageLibraryAsync(options);
+        if (result.canceled || !result.assets?.[0]) return;
+        const a = result.assets[0];
+        uri = Platform.OS === 'web'
+          ? await shrinkDataUrl(a.base64 ? `data:${a.mimeType ?? 'image/jpeg'};base64,${a.base64}` : a.uri)
+          : a.uri;
+      }
+      if (Platform.OS === 'web' && uri && uri.length > MAX_WEB_PHOTO_CHARS) { setMsg('check.photo.tooLarge'); return; }
+      setBusy(true);
+      const record = await checkPhoto({ fieldId: field, photoUri: uri!, replacesId: analyseAnywayFor });
       nav.replace({ name: 'result', recordId: record.id });
-    } finally { setSaving(false); }
+    } catch {
+      setMsg('check.photo.unavailable');
+    } finally { setBusy(false); }
   }
-
-  const selectedField = state.fields.find(f => f.id === field);
-  const fieldName = selectedField?.name;
 
   return (
-    <View style={{ gap: space(4) }}>
+    <View style={{ gap: space(5) }}>
       <View style={{ gap: space(1) }}>
-        <Text style={type.label}>{t('check.step', { n: step, total }).toUpperCase()}</Text>
         <H1>{t('check.title')}</H1>
-        {step > 1 && fieldName ? <Body soft>{fieldName}</Body> : null}
-        {selectedField?.demo && selectedField.location ? <Card tone="warn"><Body>{t('location.example')}</Body></Card> : null}
-        {selectedField && !selectedField.location ? <Body soft>{t('location.missing')}</Body> : null}
-        <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ flexDirection: 'row', gap: space(1), marginTop: space(2) }}>
-          {[1, 2, 3].map(i => <View key={i} style={{ flex: 1, height: 6, borderRadius: 3, backgroundColor: i <= step ? color.leaf : color.stoneSoft }} />)}
-        </View>
+        <Body soft>{t('check.photoFirst.lead')}</Body>
       </View>
 
-      {step === 1 ? (
-        <View style={{ gap: space(3) }}>
-          <H2>{t('check.field.q')}</H2>
-          <View accessibilityRole="radiogroup" style={{ gap: space(2) }}>
-            {state.fields.map(f => <Choice key={f.id} multi={false} label={f.name} detail={t(`crop.${f.crop}` as MessageId)} selected={field === f.id} onPress={() => setField(f.id)} />)}
-          </View>
-          <Button label={t('check.next')} icon="→" disabled={!field} onPress={() => setStep(2)} />
+      {state.fields.length > 1 && !fieldId ? (
+        <View accessibilityRole="radiogroup" style={{ gap: space(2) }}>
+          {state.fields.map(f => <Choice key={f.id} multi={false} glyph={CROP_ICON[f.crop] ?? 'sprout'} label={f.name} detail={t(`crop.${f.crop}` as MessageId)} selected={field === f.id} onPress={() => setField(f.id)} />)}
         </View>
+      ) : selected ? (
+        <Row style={{ gap: space(2) }}>
+          <Icon name={CROP_ICON[selected.crop] ?? 'sprout'} size={22} color={color.leaf} />
+          <Text style={[type.heading, { fontFamily: font.heading }]}>{selected.name}</Text>
+        </Row>
       ) : null}
 
-      {step === 2 ? (
-        <View style={{ gap: space(3) }}>
-          <H2>{t('check.photo.q')}</H2>
-          {photo ? (
-            <Card>
-              <Image source={{ uri: photo }} style={{ width: '100%', height: 220, borderRadius: radius.sm, backgroundColor: color.stoneSoft }} resizeMode="cover" accessibilityLabel={t('result.photo')} />
-              <Button kind="quiet" label={t('check.photo.remove')} icon="✕" onPress={() => setPhoto(undefined)} />
-            </Card>
-          ) : (
-            <Row wrap>
-              <Button label={t('check.photo.take')} icon="◉" onPress={() => getPhoto('camera')} style={{ flexGrow: 1 }} />
-              <Button kind="secondary" label={t('check.photo.pick')} icon="▤" onPress={() => getPhoto('library')} style={{ flexGrow: 1 }} />
-            </Row>
-          )}
-          {photoMsg ? <Card tone="warn"><Text accessibilityRole="alert" style={type.body}>{t(photoMsg)}</Text></Card> : null}
-          <Card tone="info"><Body>🔒 {t('check.photo.privacy')}</Body></Card>
-          <H2>{t('check.tips.title')}</H2>
-          <View style={{ gap: space(2) }}>
-            {EVIDENCE_CHECKS.map(id => <Choice key={id} label={t(`evidence.${id}`)} selected={evidence.includes(id)} onPress={() => toggle(evidence, setEvidence, id)} />)}
-          </View>
-          <Body soft>{t('check.tips.note')}</Body>
-          <Row wrap>
-            <Button kind="secondary" label={t('check.back')} icon="←" onPress={() => setStep(1)} />
-            <Button label={t('check.next')} icon="→" onPress={() => setStep(3)} style={{ flexGrow: 1 }} />
-          </Row>
-        </View>
-      ) : null}
+      {selected?.demo && selected.location ? <Card tone="warn"><Body>{t('location.example')}</Body></Card> : null}
+      {selected && !selected.location ? <Body soft>{t('location.missing')}</Body> : null}
 
-      {step === 3 ? (
-        <View style={{ gap: space(3) }}>
-          <H2>{t('check.symptoms.q')}</H2>
-          <Body soft>{t('check.symptoms.hint')}</Body>
-          <View style={{ gap: space(2) }}>
-            {SYMPTOMS.map(s => <Choice key={s.id} glyph={s.glyph} label={t(`symptom.${s.id}`)} selected={symptoms.includes(s.id)} onPress={() => toggleSymptom(s.id)} />)}
-          </View>
-          {error ? <Text accessibilityRole="alert" style={[type.heading, { color: color.clay }]}>{t('check.needSymptom')}</Text> : null}
-          <H2>{t('check.certainty.q')}</H2>
-          <View accessibilityRole="radiogroup" style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space(2) }}>
-            {(['sure', 'unsure'] as const).map(c => (
-              <View key={c} style={{ flexGrow: 1, minWidth: 140 }}>
-                <Choice multi={false} label={t(`certainty.${c}`)} selected={certainty === c} onPress={() => setCertainty(c)} />
-              </View>
-            ))}
-          </View>
-          <Text style={type.heading}>{t('check.note')}</Text>
-          <TextInput value={note} onChangeText={setNote} placeholder={t('check.note.placeholder')} accessibilityLabel={t('check.note')}
-            multiline style={[inputStyle, { minHeight: 88, textAlignVertical: 'top', paddingTop: space(3) }]} placeholderTextColor={color.stone} />
-          <Row wrap>
-            <Tag tone="info" icon="cellphone" label={t('history.onPhone')} />
-            {photo ? <Tag icon="camera-outline" label="" /> : null}
-          </Row>
-          <Row wrap>
-            <Button kind="secondary" label={t('check.back')} icon="←" onPress={() => setStep(2)} />
-            <Button label={saving ? t('check.saving') : t('check.save')} icon="✓" disabled={saving} onPress={save} style={{ flexGrow: 1 }} />
-          </Row>
+      <Card style={{ alignItems: 'center', gap: space(4), paddingVertical: space(8) }}>
+        <View style={{ width: 120, height: 120, borderRadius: 60, backgroundColor: color.leafTint, alignItems: 'center', justifyContent: 'center' }}>
+          <Icon name="camera-iris" size={64} color={color.leaf} />
         </View>
-      ) : null}
+        <Text style={[type.title, { textAlign: 'center' }]}>{t('check.photoFirst.title')}</Text>
+        <View style={{ gap: space(2), alignSelf: 'stretch' }}>
+          {(['tip.closeLeaf', 'tip.daylight', 'tip.underside'] as const).map(k => (
+            <Row key={k} style={{ gap: space(2) }}><Icon name="check-circle-outline" size={18} color={color.leaf} /><Text style={[type.body, { flex: 1 }]}>{t(`check.${k}` as MessageId)}</Text></Row>
+          ))}
+        </View>
+        <Button label={busy ? t('check.saving') : t('check.photo.take')} icon="camera" disabled={busy} onPress={() => start('camera')} style={{ alignSelf: 'stretch' }} />
+        <Row wrap style={{ alignSelf: 'stretch' }}>
+          <Button kind="secondary" label={t('check.photo.pick')} icon="image-outline" disabled={busy} onPress={() => start('library')} style={{ flexGrow: 1 }} />
+          <Button kind="secondary" label={t('check.photo.sample')} icon="leaf" disabled={busy} onPress={() => start('sample')} style={{ flexGrow: 1 }} />
+        </Row>
+      </Card>
+
+      {msg ? <Card tone="warn"><Text accessibilityRole="alert" style={type.body}>{t(msg)}</Text></Card> : null}
+      <Row style={{ gap: space(2), alignItems: 'flex-start' }}>
+        <Icon name="shield-lock-outline" size={18} color={color.muted} />
+        <Text style={[type.small, { flex: 1, color: color.muted }]}>{t('check.photoFirst.privacy')}</Text>
+      </Row>
     </View>
   );
+}
+
+export function PhotoPreview({ uri }: { uri: string }) {
+  return <Image source={{ uri }} style={{ width: '100%', aspectRatio: 4 / 3, borderRadius: radius.md, backgroundColor: color.stoneSoft }} resizeMode="cover" accessibilityIgnoresInvertColors />;
 }

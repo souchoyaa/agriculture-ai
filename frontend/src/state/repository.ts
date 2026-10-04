@@ -7,10 +7,10 @@ import type { KeyValueStore } from '../storage';
 export const STORAGE_KEY = 'field-companion/state/v1';
 export const CORRUPT_KEY = 'field-companion/state/corrupt-backup';
 
-export interface Settings { locale: string; source: 'mock' | 'http'; baseUrl: string }
+export interface Settings { locale: string; source: 'local' | 'mock' | 'http'; baseUrl: string }
 export interface PersistedState { version: 1; fields: Field[]; records: ObservationRecord[]; settings: Settings }
 
-export const DEFAULT_SETTINGS: Settings = { locale: 'en', source: 'mock', baseUrl: 'http://localhost:8000' };
+export const DEFAULT_SETTINGS: Settings = { locale: 'en', source: 'local', baseUrl: 'http://localhost:8000' };
 
 export async function runAnalysis(record: ObservationRecord, api: Api, now = new Date()): Promise<AnalysisState> {
   try {
@@ -74,5 +74,5 @@ export async function saveState(store: KeyValueStore, state: PersistedState): Pr
 }
 
 export function retryable(record: ObservationRecord): boolean {
-  return record.analysis.kind === 'not_requested' || (record.analysis.kind === 'failed' && record.analysis.retryable);
+  return record.analysis.kind === 'not_requested' || (record.analysis.kind === 'failed' && record.analysis.retryable && record.analysis.code !== 'model_unavailable');
 }

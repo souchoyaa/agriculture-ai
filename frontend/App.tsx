@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, BackHandler, Platform, Pressable, ScrollView, StatusBar, Text, useWindowDimensions, View } from 'react-native';
-import { isSupported, LOCALES } from './src/i18n';
+import { formatDate, isSupported, LOCALES, type Translate } from './src/i18n';
+import { freshness } from './src/sync/sync';
+
+export function ageText(t: Translate, hours: number): string {
+  return hours < 1 ? t('age.justNow') : hours < 48 ? t('age.hours', { n: Math.round(hours) }) : t('age.days', { n: Math.round(hours / 24) });
+}
 import type { Nav, Route, TabName } from './src/navigation';
 import { CheckScreen } from './src/screens/CheckScreen';
 import { FieldsScreen } from './src/screens/FieldsScreen';
@@ -92,9 +97,17 @@ function Shell() {
 }
 
 function ModeChip({ onPress }: { onPress: () => void }) {
-  const { t, api, connection, state } = useStore();
+  const { t, api, connection, state, sync, syncing } = useStore();
   let chip: string; let detail: string; let icon = 'flask-outline'; let bg = color.turmericSoft; let fg = color.turmericInk;
   if (api.kind === 'mock') { chip = t('mode.chip.mock'); detail = t('mode.mock.detail'); }
+  else if (api.kind === 'local') {
+    // On-device: offline is normal; show quiet data freshness instead of a connection state.
+    icon = 'cellphone-check'; bg = color.leafTint; fg = color.leafDark; chip = t('mode.chip.local');
+    const f = freshness(sync);
+    const parts = [syncing ? t('sync.syncing') : f.lastSuccessAt ? t('sync.weatherAge', { age: ageText(t, f.ageHours ?? 0) }) : t('sync.never')];
+    if (f.forecastUntil) parts.push(t('sync.forecastUntil', { date: formatDate(f.forecastUntil, state.settings.locale) }));
+    detail = parts.join(' · ');
+  }
   else {
     icon = 'server-network'; bg = color.skySoft; fg = color.sky;
     chip = t('mode.chip.http');

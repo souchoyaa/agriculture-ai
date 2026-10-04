@@ -5,11 +5,12 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "web": "expo start --web",
-    "check": "tsc --noEmit && tsx tests/adapters.ts && tsx tests/domain.ts",
+    "web": "npm run prepare:local && expo start --web",
+    "check": "tsc --noEmit && tsx tests/adapters.ts && tsx tests/domain.ts && tsx tests/icons.ts",
     "screenshots": "tsx tests/screenshots.ts",
-    "build:web": "expo export --platform web",
-    "bundle:native": "expo export --platform android --platform ios --output-dir .cache/native-export"
+    "build:web": "npm run prepare:local && expo export --platform web",
+    "bundle:native": "expo export --platform android --platform ios --output-dir .cache/native-export",
+    "prepare:local": "node scripts/build-workers.mjs && node scripts/build-engine.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",

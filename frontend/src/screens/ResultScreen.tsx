@@ -8,7 +8,7 @@ import { formatDate, formatDateTime, type MessageId } from '../i18n';
 import type { Nav } from '../navigation';
 import { useStore } from '../state/store';
 import { Body, Button, Card, Choice, H1, H2, Icon, Row, StrengthMeter, Tag } from '../ui/components';
-import { color, radius, space, type } from '../ui/theme';
+import { color, font, radius, space, type } from '../ui/theme';
 import { RiskMap } from './RiskMap';
 import { EvidenceList, RegionalContext, ReviewCard, ScopeCard, SourcesList, WeatherCard } from './ResultSections';
 
@@ -36,31 +36,96 @@ export function ResultScreen({ nav, recordId }: { nav: Nav; recordId: string }) 
       {record.saveFailed ? <SaveFailed /> : null}
       {record.analysis.kind === 'done'
         ? <AnalysisView record={record} analysis={record.analysis.analysis} via={record.analysis.via} nav={nav} />
-        : <PendingView record={record} />}
+        : <PendingView record={record} nav={nav} />}
+      {record.analysis.kind === 'done' ? <PerceptionCard record={record} /> : null}
       <ReportView record={record} />
     </View>
   );
 }
 
-function PendingView({ record }: { record: ObservationRecord }) {
-  const { t, retry, busy, api } = useStore();
+const STEPS = ['looking', 'context', 'translating'] as const;
+
+function PendingView({ record, nav }: { record: ObservationRecord; nav: Nav }) {
+  const { t, retry, busy, api, state, updateSettings } = useStore();
   const a = record.analysis;
   const working = busy[record.id] || a.kind === 'waiting';
+  if (a.kind === 'follow_up') {
+    return (
+      <Card tone="warn">
+        <H2 glyph="camera-retake-outline">{t(a.reason === 'not_a_plant' ? 'followup.notPlant.title' : 'followup.closer.title')}</H2>
+        <Body>{t(a.reason === 'not_a_plant' ? 'followup.notPlant.body' : 'followup.closer.body')}</Body>
+        <Button icon="camera" label={t('followup.retake')} onPress={() => nav.replace({ name: 'check', fieldId: record.fieldId })} />
+        {a.reason === 'closer_leaf' ? <Button kind="secondary" icon="play-circle-outline" label={t('followup.analyseAnyway')} disabled={working} onPress={() => retry(record.id)} /> : null}
+      </Card>
+    );
+  }
+  if (record.pipelineStep && a.kind === 'waiting') {
+    const machine = !['en', 'fr', 'es'].includes(state.settings.locale);
+    const steps = STEPS.filter(s => s !== 'translating' || machine);
+    const at = Math.max(0, steps.indexOf(record.pipelineStep as typeof STEPS[number]));
+    return (
+      <Card>
+        <H2 glyph="leaf-circle-outline">{t('pipeline.title')}</H2>
+        <View accessibilityLiveRegion="polite" style={{ gap: space(3) }}>
+          {steps.map((s, i) => {
+            const done = record.pipelineStep === 'done' || i < at; const now = i === at && record.pipelineStep !== 'saved';
+            return (
+              <Row key={s} style={{ gap: space(3) }}>
+                <View style={{ width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: done ? color.leaf : now ? color.leafTint : color.stoneSoft }}>
+                  <Icon name={done ? 'check' : now ? 'dots-horizontal' : 'circle-small'} size={18} color={done ? '#fff' : color.leaf} />
+                </View>
+                <Text style={[type.body, { flex: 1, color: done || now ? color.ink : color.muted }]}>{t(`pipeline.${s}` as MessageId)}</Text>
+              </Row>
+            );
+          })}
+        </View>
+        <Body soft>{t('pipeline.firstTime')}</Body>
+      </Card>
+    );
+  }
   const msg = a.kind === 'failed'
-    ? (a.code === 'network_unavailable' || a.code === 'timeout' || a.code === 'interrupted' ? t('pending.network') : a.retryable ? t('pending.error', { code: a.code }) : t('pending.permanent', { code: a.code }))
+    ? (a.code === 'model_unavailable' ? t('pending.modelUnavailable')
+      : a.code === 'network_unavailable' || a.code === 'timeout' || a.code === 'interrupted' ? t('pending.network') : a.retryable ? t('pending.error', { code: a.code }) : t('pending.permanent', { code: a.code }))
     : t('pending.analysing');
   return (
     <Card tone={a.kind === 'failed' && !a.retryable ? 'alert' : 'warn'}>
-      <H2 glyph="⏳">{t('pending.title')}</H2>
+      <H2 glyph="progress-clock">{t('pending.title')}</H2>
       <Text accessibilityLiveRegion="polite" style={type.body}>{working ? t('pending.analysing') : msg}</Text>
       {record.saveFailed ? null : <Tag tone="info" icon="cellphone" label={t('history.onPhone')} />}
-      {a.kind === 'failed' ? <Button label={working ? t('pending.retrying') : t('pending.retry')} icon="↻" disabled={working} onPress={() => retry(record.id)}
+      {a.kind === 'failed' ? <Button label={working ? t('pending.retrying') : t('pending.retry')} icon="refresh" disabled={working} onPress={() => retry(record.id)}
         hint={api.kind === 'mock' ? t('mode.mock.detail') : undefined} /> : null}
+      {a.kind === 'failed' && a.code === 'model_unavailable' && api.kind !== 'mock'
+        ? <Button kind="secondary" icon="flask-outline" label={t('pending.useDemo')} onPress={() => { updateSettings({ source: 'mock' }); }} /> : null}
     </Card>
   );
 }
 
-function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecord; analysis: Analysis; via: 'mock' | 'http'; nav: Nav }) {
+/** What the on-device model reported — transparent, uncalibrated, with the active checkpoint named. */
+function PerceptionCard({ record }: { record: ObservationRecord }) {
+  const { t } = useStore();
+  const p = record.perception;
+  if (!p) return null;
+  const top = p.labels.slice(0, 4);
+  return (
+    <Card>
+      <H2 glyph="eye-outline">{t('perception.title')}</H2>
+      {top.map(l => (
+        <View key={l.label} style={{ gap: 4 }}>
+          <Row style={{ justifyContent: 'space-between' }}>
+            <Text style={type.body}>{t(`label.${l.label}` as MessageId)}</Text>
+            <Text style={[type.small, { fontFamily: font.semibold }]}>{Math.round(l.score * 100)}%</Text>
+          </Row>
+          <View style={{ height: 8, borderRadius: 4, backgroundColor: color.stoneSoft, overflow: 'hidden' }}>
+            <View style={{ width: `${Math.round(l.score * 100)}%`, height: 8, borderRadius: 4, backgroundColor: color.sky }} />
+          </View>
+        </View>
+      ))}
+      <Body soft>{t('perception.note', { model: p.displayName, device: p.device, s: (p.ms / 1000).toFixed(1) })}</Body>
+    </Card>
+  );
+}
+
+function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecord; analysis: Analysis; via: 'mock' | 'http' | 'local'; nav: Nav }) {
   const { t, state, toggleScouting, setFollowUp } = useStore();
   const locale = state.settings.locale;
   const status = STATUS_GLYPH[analysis.status] ?? STATUS_GLYPH.unavailable;
@@ -77,7 +142,7 @@ function AnalysisView({ record, analysis, via, nav }: { record: ObservationRecor
     <View style={{ flexDirection: twoCol ? 'row' : 'column', gap: space(4), alignItems: 'flex-start' }}>
     <View style={{ gap: space(4), flex: twoCol ? 1 : undefined, width: twoCol ? undefined : '100%' }}>
       <View accessibilityRole="alert" style={{ backgroundColor: isDemo ? color.turmeric : color.skySoft, borderRadius: radius.sm, padding: space(3), borderWidth: 2, borderColor: isDemo ? '#8A6A00' : color.sky }}>
-        <Text style={[type.label, { color: color.ink, fontSize: 14 }]}>{isDemo ? t('result.demoStamp') : t('result.liveStamp')}</Text>
+        <Text style={[type.label, { color: color.ink, fontSize: 14 }]}>{isDemo ? t('result.demoStamp') : via === 'local' ? t('result.localStamp') : t('result.liveStamp')}</Text>
         {via === 'mock' ? <Text style={[type.small, { color: color.ink, marginTop: 2 }]}>{t('result.mockExample')}</Text>
           : !isDemo ? <Text style={[type.small, { color: color.ink, marginTop: 2 }]}>{t('result.estimateUncalibrated')}</Text> : null}
         {record.observation.provenance.adapter === 'farmer-report' ? <Text style={[type.small, { color: color.ink, marginTop: 2 }]}>{t('result.fromReport')}</Text> : null}
@@ -184,25 +249,25 @@ function LocalizationNote({ analysis, locale }: { analysis: Analysis; locale: st
 
 function ReportView({ record }: { record: ObservationRecord }) {
   const { t } = useStore();
+  const legacy = record.symptoms.length > 0;
+  if (!legacy && !record.photoUri) return null;
   return (
     <Card>
-      <H2 glyph="✍">{t('result.yourReport')}</H2>
-      <Body>{record.symptoms.map(s => t(`symptom.${s}` as MessageId)).join(' · ')}</Body>
-      <Body soft>{t('check.certainty.q')} {t(`certainty.${record.certainty}`)}</Body>
-      {record.evidence.length ? <Body soft>✓ {record.evidence.map(e => t(`evidence.${e}` as MessageId)).join(' · ')}</Body> : null}
+      <H2 glyph="image-outline">{t(legacy ? 'result.yourReport' : 'result.photo')}</H2>
+      {legacy ? <Body>{record.symptoms.map(s => t(`symptom.${s}` as MessageId)).join(' · ')}</Body> : null}
+      {legacy ? <Body soft>{t('check.certainty.q')} {t(`certainty.${record.certainty}`)}</Body> : null}
       {record.note ? <Body>“{record.note}”</Body> : null}
       {record.photoUri ? (
         <View style={{ gap: space(1) }}>
-          <Text style={type.label}>{t('result.photo').toUpperCase()}</Text>
-          {record.photoStorage === 'picker' ? <Text accessibilityRole="alert" style={[type.small, { color: color.clay }]}>⚠ {t('result.photo.notDurable')}</Text> : null}
-          <Image source={{ uri: record.photoUri }} style={{ width: '100%', height: 200, borderRadius: radius.sm, backgroundColor: color.stoneSoft }} resizeMode="cover" accessibilityLabel={t('result.photo')} />
+          {record.photoStorage === 'picker' ? <Text accessibilityRole="alert" style={[type.small, { color: color.clay }]}>{t('result.photo.notDurable')}</Text> : null}
+          <Image source={{ uri: record.photoUri }} style={{ width: '100%', aspectRatio: 4 / 3, borderRadius: radius.md, backgroundColor: color.stoneSoft }} resizeMode="cover" accessibilityLabel={t('result.photo')} />
         </View>
       ) : null}
     </Card>
   );
 }
 
-function Details({ analysis, record, via }: { analysis: Analysis; record: ObservationRecord; via: 'mock' | 'http' }) {
+function Details({ analysis, record, via }: { analysis: Analysis; record: ObservationRecord; via: 'mock' | 'http' | 'local' }) {
   const { t, state } = useStore();
   const [open, setOpen] = useState(false);
   const locale = state.settings.locale;

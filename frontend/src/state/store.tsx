@@ -9,10 +9,20 @@ import { translator, type Translate } from '../i18n';
 import { deviceStore, type KeyValueStore } from '../storage';
 import { deletePhoto, persistPhoto, PHOTO_STORAGE_KIND } from '../photoStore';
 import { loadState, retryable, runAnalysis, saveState, seedState, type PersistedState, type Settings } from './repository';
+import { demoObservation } from '../api';
+import { VISION_MODEL } from '../model/config';
+import { perceive, type PerceptionResult } from '../model/perception';
+import { needsMachineTranslation, translateAnalysis } from '../model/translation';
+import { engineAvailable, localEngineApi, observe as engineObserve } from '../engine/localEngine';
+import { runAutomaticCheck, type CheckDeps } from '../pipeline/check';
+import { EMPTY_SYNC, loadSync, syncDue, syncNow as runSync, type SyncPackage } from '../sync/sync';
 
 export type { Connection };
 
 interface NewCheck { fieldId: string; symptoms: string[]; certainty: 'sure' | 'unsure'; evidence: string[]; photoUri?: string; note?: string }
+interface PhotoCheck { fieldId: string; photoUri: string; analyseAnyway?: boolean; replacesId?: string }
+/** Example field coordinates also synced so the demo works offline after one sync. */
+const DEMO_POINT = { latitude: -1.95, longitude: 30.06 };
 
 interface Store {
   ready: boolean; recovered: boolean; storageError?: string;
@@ -21,6 +31,9 @@ interface Store {
   addField(name: string, crop: string, location?: { value: FieldLocation; source: 'gps' | 'manual' }): Promise<Field>;
   setFieldLocation(fieldId: string, location?: { value: FieldLocation; source: 'gps' | 'manual' }): Promise<void>;
   saveCheck(input: NewCheck): Promise<ObservationRecord>;
+  checkPhoto(input: PhotoCheck): Promise<ObservationRecord>;
+  sync: SyncPackage; syncing: boolean; syncNow(): Promise<SyncPackage>;
+  localAvailable: boolean;
   retry(recordId: string): Promise<void>;
   retrySave(): Promise<boolean>;
   toggleScouting(recordId: string, scoutingId: string): void;
@@ -52,7 +65,14 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
   const activeApi = useRef<Api>(mockApi);
   const writes = useRef<Promise<void>>(Promise.resolve());
 
-  const api = useMemo<Api>(() => state.settings.source === 'http' ? apiForUrl(state.settings.baseUrl) : mockApi, [state.settings.source, state.settings.baseUrl]);
+  const [sync, setSync] = useState<SyncPackage>(EMPTY_SYNC);
+  const [syncing, setSyncing] = useState(false);
+  const syncRef = useRef<SyncPackage>(EMPTY_SYNC);
+  const localAvailable = engineAvailable();
+  // On-device engine is the default; platforms without workers (native, for now) fall back to the labelled demo.
+  const localApi = useMemo(() => localEngineApi(async () => Object.values(syncRef.current.weather)), []);
+  const api = useMemo<Api>(() => state.settings.source === 'http' ? apiForUrl(state.settings.baseUrl)
+    : state.settings.source === 'local' && localAvailable ? localApi : mockApi, [state.settings.source, state.settings.baseUrl, localAvailable, localApi]);
   const t = useMemo(() => translator(state.settings.locale), [state.settings.locale]);
   activeApi.current = api;
 
@@ -79,6 +99,18 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
 
   const patchRecord = useCallback((id: string, patch: (r: ObservationRecord) => ObservationRecord) =>
     commit(s => ({ ...s, records: s.records.map(r => r.id === id ? patch(r) : r) })), [commit]);
+
+  useEffect(() => { loadSync(storage).then(p => { syncRef.current = p; setSync(p); }); }, [storage]);
+
+  const syncNow = useCallback(async () => {
+    setSyncing(true);
+    try {
+      const points = current.current.fields.map(f => f.location).filter((l): l is FieldLocation => !!l);
+      const pkg = await runSync(storage, [...points, DEMO_POINT]);
+      syncRef.current = pkg; setSync(pkg);
+      return pkg;
+    } finally { setSyncing(false); }
+  }, [storage]);
 
   useEffect(() => {
     let alive = true;
@@ -131,12 +163,61 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
   // never silently re-run through the demo adapter (a manual retry in demo mode is explicit).
   useEffect(() => { if (ready && connection.kind === 'ok') retryPending(); }, [ready, connection.kind, api]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Periodic sync: when the device is online and the last attempt is older than AUTO_SYNC_AFTER_H.
+  useEffect(() => {
+    if (!ready) return;
+    const online = typeof navigator === 'undefined' || navigator.onLine !== false;
+    if (online && syncDue(syncRef.current)) syncNow();
+  }, [ready]); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (Platform.OS !== 'web' || typeof window === 'undefined') return;
-    const online = () => { testConnection(); };
+    const online = () => { testConnection(); if (syncDue(syncRef.current)) syncNow(); };
     window.addEventListener('online', online);
     return () => window.removeEventListener('online', online);
   }, [testConnection]);
+
+  /** Runs the automatic chain for a saved photo check and records every stage on the record. */
+  const runPhotoPipeline = async (id: string, analyseAnyway?: boolean) => {
+    const record = current.current.records.find(r => r.id === id);
+    const field = record && current.current.fields.find(f => f.id === record.fieldId);
+    if (!record || !field || !record.photoUri) return;
+    const using = api;
+    const local = using.kind === 'local';
+    const deps: CheckDeps = local || using.kind === 'http' ? {
+      perceive: img => perceive(img),
+      observe: (raw, ctx) => engineObserve(raw, ctx),
+      analyze: obs => using.analyze(obs),
+      translate: (a, loc) => translateAnalysis(a, loc, storage),
+      needsTranslation: needsMachineTranslation,
+    } : {
+      // Demo mode: deterministic, offline, clearly labelled — no model, fixed example answer.
+      perceive: async () => ({ raw: { model: 'demo-fixture', model_version: '0', strategy: 'labels', labels: [{ label: 'rust', score: 0.65 }] }, subject: { kind: 'leaf', scores: { leaf: 1, plant: 0, other: 0 } }, device: 'none (demo)', ms: 0 } as PerceptionResult),
+      observe: async () => ({ ...JSON.parse(JSON.stringify(demoObservation)), id: record.id, observed_at: record.createdAt }),
+      analyze: obs => mockApi.analyze(obs),
+      translate: async a => a,
+      needsTranslation: () => false,
+    };
+    setBusy(b => ({ ...b, [id]: true }));
+    try {
+      const outcome = await runAutomaticCheck({ id, observedAt: record.createdAt, field, image: record.photoUri, locale: current.current.settings.locale,
+        history: current.current.records, analyseAnyway }, deps, step => { patchRecord(id, r => ({ ...r, pipelineStep: step })); });
+      const p = outcome.perception;
+      const perception = { model: p.raw.model, displayName: local || using.kind === 'http' ? VISION_MODEL.displayName : 'Demo example (no model)', fineTuned: local || using.kind === 'http' ? VISION_MODEL.fineTuned : false,
+        device: p.device, ms: p.ms, labels: p.raw.labels, subject: p.subject };
+      if (outcome.kind === 'follow_up') await patchRecord(id, r => ({ ...r, perception, analysis: { kind: 'follow_up', reason: outcome.followUp, at: new Date().toISOString() } }));
+      else {
+        const { translation, ...analysis } = outcome.analysis as any;
+        await patchRecord(id, r => ({ ...r, perception, observation: outcome.observation, analysis: { kind: 'done', analysis, via: using.kind }, ...(translation ? { translation } : {}), pipelineStep: 'done' }));
+      }
+    } catch (e) {
+      const message = String((e as Error)?.message ?? e);
+      const code = /worker_unsupported|model not loaded|WebGPU|wasm|fetch|Failed to fetch|load/i.test(message) ? 'model_unavailable' : 'pipeline_error';
+      await patchRecord(id, r => ({ ...r, analysis: { kind: 'failed', code, message, retryable: true, at: new Date().toISOString() } }));
+    } finally {
+      setBusy(b => { const next = { ...b }; delete next[id]; return next; });
+    }
+  };
 
   const store: Store = {
     ready, recovered, storageError, state, api, connection, t, busy,
@@ -171,10 +252,31 @@ export function StoreProvider({ children, storage = deviceStore }: { children: R
       analyse(record, api);                                               // then request analysis
       return record;
     },
+    async checkPhoto(input) {
+      const field = current.current.fields.find(f => f.id === input.fieldId);
+      if (!field) throw new Error('Unknown field');
+      const now = new Date();
+      const id = newId('obs', now.getTime());
+      let photoUri = input.photoUri;
+      let photoStorage: ObservationRecord['photoStorage'];
+      try { photoUri = await persistPhoto(photoUri, id); photoStorage = PHOTO_STORAGE_KIND; } catch { photoStorage = 'picker'; }
+      const locale = current.current.settings.locale;
+      const placeholder = { contract_version: '0.1.0', id, data_mode: 'live' as const, observed_at: now.toISOString(), crop: field.crop, locale,
+        ...(field.location ? { location: field.location } : {}), signals: [], provenance: { adapter: 'pending', source: 'photo awaiting on-device analysis' } };
+      const record: ObservationRecord = { id, fieldId: field.id, createdAt: now.toISOString(), observation: placeholder, symptoms: [], certainty: 'unsure', evidence: [],
+        photoUri, photoStorage, analysis: { kind: 'waiting' }, completedScouting: [], pipelineStep: 'saved' };
+      const durable = await commit(s => ({ ...s, records: [record, ...s.records.filter(r => r.id !== input.replacesId || r.analysis.kind !== 'follow_up')] }));
+      if (!durable) await patchRecord(id, r => ({ ...r, saveFailed: true }));
+      void runPhotoPipeline(id, input.analyseAnyway);
+      return record;
+    },
+    sync, syncing, syncNow, localAvailable,
     async retrySave() { return commit(st => ({ ...st })); },
     async retry(recordId) {
       const record = current.current.records.find(r => r.id === recordId);
-      if (record) await analyse(record, api);
+      if (!record) return;
+      if (record.pipelineStep && record.photoUri && (!record.perception || record.analysis.kind === 'follow_up')) return runPhotoPipeline(recordId, record.analysis.kind === 'follow_up');
+      await analyse(record, api);
     },
     toggleScouting(recordId, scoutingId) {
       patchRecord(recordId, r => ({ ...r, completedScouting: r.completedScouting.includes(scoutingId) ? r.completedScouting.filter(x => x !== scoutingId) : [...r.completedScouting, scoutingId] }));

@@ -12,8 +12,17 @@ export interface Field {
 export type AnalysisState =
   | { kind: 'not_requested' }
   | { kind: 'waiting' }                                   // queued locally, waiting for connection/retry
-  | { kind: 'done'; analysis: Analysis; via: 'mock' | 'http' }
-  | { kind: 'failed'; code: string; message: string; retryable: boolean; at: string };
+  | { kind: 'done'; analysis: Analysis; via: 'mock' | 'http' | 'local' }
+  | { kind: 'failed'; code: string; message: string; retryable: boolean; at: string }
+  /** The model asked for better evidence (one short follow-up) instead of guessing. */
+  | { kind: 'follow_up'; reason: 'not_a_plant' | 'closer_leaf'; at: string };
+
+/** What the on-device vision model reported for this photo (kept for transparency and history). */
+export interface PerceptionSummary {
+  model: string; displayName: string; fineTuned: boolean; device: string; ms: number;
+  labels: { label: string; score: number }[];
+  subject: { kind: 'leaf' | 'plant' | 'other'; scores: Record<string, number> };
+}
 
 export interface ObservationRecord {
   id: string; fieldId: string; createdAt: string;
@@ -30,6 +39,10 @@ export interface ObservationRecord {
   completedScouting: string[];   // scouting ids the farmer ticked off
   /** Set when the durable local write failed; the record exists only in memory until a retry succeeds. */
   saveFailed?: boolean;
+  /** Photo-first checks: model findings and the current automatic step. Absent on legacy symptom-report records. */
+  perception?: PerceptionSummary;
+  pipelineStep?: 'saved' | 'looking' | 'context' | 'translating' | 'done';
+  translation?: { target: string; model: string; machine: true; segments: number; ms: number };
 }
 
 /** Symptom ids map 1:1 to canonical signal labels (backend coffee signal vocabulary; insect_damage is passed through as unrecognised). */
@@ -101,6 +114,7 @@ export function fieldAttention(records: ObservationRecord[], now: Date, staleDay
   const a = latest.analysis;
   if (a.kind === 'waiting' || a.kind === 'failed') return { level: 'check', latest, reason: 'analysis_pending' };
   if (a.kind === 'not_requested') return { level: 'check', latest, reason: 'analysis_pending' };
+  if (a.kind === 'follow_up') return { level: 'check', latest, reason: 'photo_needed' };
   if (a.analysis.status === 'needs_review') return { level: 'act', latest, reason: 'needs_review' };
   // A supported finding of a named condition is a reason to act, never "no issue".
   if (a.analysis.status === 'supported' && conditionPresent(a.analysis)) return { level: 'act', latest, reason: 'condition_supported' };
