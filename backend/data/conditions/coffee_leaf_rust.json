@@ -120,7 +120,8 @@
     "downwind_stretch": 1.0,
     "dispersal_source_ids": [
       "hdoa_npa_20_03_2021",
-      "marino_2026_frontiers"
+      "marino_2026_frontiers",
+      "rab_plantwise_rw014_2012"
     ],
     "note": "Wind and rain-splash dispersal are documented; decay length, stretch and grid size are uncalibrated layout assumptions for scouting, not fitted dispersal kernels."
   },
@@ -162,13 +163,27 @@
     {
       "id": "sanitize_clothing_tools",
       "source_ids": [
-        "hdoa_npa_20_03_2021"
+        "hdoa_npa_20_03_2021",
+        "rab_plantwise_rw014_2012"
       ]
     },
     {
       "id": "rescout_after_latent_period",
       "source_ids": [
         "hdoa_npa_20_03_2021"
+      ]
+    },
+    {
+      "id": "count_spots_threshold",
+      "source_ids": [
+        "rab_plantwise_rw014_2012"
+      ]
+    },
+    {
+      "id": "open_canopy_spacing_pruning",
+      "source_ids": [
+        "rab_plantwise_rw014_2012",
+        "bigirimana_2012_ajar"
       ]
     },
     {
@@ -187,20 +202,23 @@
     {
       "id": "consider_resistant_cultivars",
       "source_ids": [
-        "talhinhas_2017_mpp",
-        "avelino_2015_food_security"
+        "avelino_2015_food_security",
+        "bigirimana_2012_ajar",
+        "rab_plantwise_rw014_2012",
+        "talhinhas_2017_mpp"
       ]
     }
   ],
   "guidance_scope": {
-    "applicability": "Biology (free water, temperature range, latency, dispersal, lower-canopy onset) is pathogen-level and applies across regions. Practical guidance is drawn mainly from Hawaiʻi extension publications; only generic measures (inspection, sanitation, movement limits, re-scouting, consulting extension, resistant cultivars) are retained. Hawaiʻi-specific regulatory reporting, product lists and contacts are deliberately omitted.",
+    "applicability": "Biology (free water, temperature range, latency, dispersal, lower-canopy onset) is pathogen-level and applies across regions. Practical guidance is drawn mainly from Hawaiʻi extension publications; only generic measures (inspection, sanitation, movement limits, re-scouting, consulting extension, resistant cultivars) are retained. Hawaiʻi-specific regulatory reporting, product lists and contacts are deliberately omitted. Rwanda-specific guidance (RAB/Plantwise 2012) and a Rwandan farm survey (Bigirimana et al. 2012) were added; product names and doses in the RAB factsheet are intentionally not reproduced.",
     "local_check_required": [
       "pesticide registration and labels",
       "official reporting obligations",
       "locally recommended resistant cultivars"
     ],
     "regions_of_guidance_sources": [
-      "Hawaiʻi, USA"
+      "Hawaiʻi, USA",
+      "Rwanda"
     ]
   },
   "differentials": {
@@ -268,5 +286,21 @@
   "aliases": {
     "leaf_drop": "premature_leaf_drop"
   },
-  "aliases_note": "Synonyms used by client vocabularies (frontend farmer report). Unmapped labels stay unrecognised and cannot raise the score."
+  "aliases_note": "Synonyms used by client vocabularies (frontend farmer report). Unmapped labels stay unrecognised and cannot raise the score.",
+  "regional_notes": [
+    {
+      "id": "rwanda_survey_context",
+      "region": "Rwanda",
+      "bbox": [
+        28.85,
+        -2.85,
+        30.9,
+        -1.05
+      ],
+      "source_ids": [
+        "bigirimana_2012_ajar"
+      ],
+      "note": "Approximate national bounding box (lon_min, lat_min, lon_max, lat_max); includes small areas of neighbouring countries."
+    }
+  ]
 }

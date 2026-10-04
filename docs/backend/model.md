@@ -60,3 +60,9 @@ Images (~GB) were not downloaded: Liquid training is out of scope and no backend
 - Analysis JSON 59 KB (121 grid cells dominate); gzip 9.5 KB — HTTP responses are gzip-compressed when the client accepts it (GZipMiddleware ≥ 1 KB).
 - Committed backend data (sources, conditions, messages, weather cache, climatology, validation): ~88 KB. Backend venv ~19 MB.
 - This is a Python service; it is not evidence of on-device mobile performance.
+
+## Regional (Rwanda) sources — added 2026-10-04
+- **RAB / Plantwise factsheet RW014En (2012, CC BY-SA 4.0)**, read in full: yellow powdery spots under leaves, leaf fall and branch death; spread mainly by wind and by people (clothes); control considered at ~2 spots per leaf; recommended spacing and pruning to open the bush; resistant varieties when available. It names fungicides and doses — deliberately **not** reproduced (2012 registrations/labels; app gives no product/dose advice). It also says rust "is severe in dry and warm periods", which is not in conflict with the free-water requirement for infection (severity/leaf fall can peak after wet infection periods) but is not encoded in the model.
+- **Bigirimana et al. 2012, AJAR, doi:10.5897/ajar11.955** (abstract read; 307-farm stratified survey): CLR in all provinces, highest severity in Eastern Province (incidence up to 100 %), altitude negatively correlated with severity (r = −0.71), all commercial cultivars susceptible, mulching/pruning/fertiliser associated with lower severity, intercropping with higher.
+- Output: two sourced recommendations (`count_spots_threshold`, `open_canopy_spacing_pruning`) and `regional_context` (only when the location falls in an approximate Rwanda bounding box). Altitude is not used quantitatively (no DEM; correlation ≠ local effect size).
+- Not accessible: PlantwisePlus Pest Management Decision Guide (doi:10.1079/pwkb.20187800418, HTTP 403) — not cited.

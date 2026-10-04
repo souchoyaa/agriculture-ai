@@ -23,4 +23,5 @@ Analysis adds: `condition.{abstained, candidate_id, confidence_kind, pathogen}`;
 Extra endpoints: GET /v1/conditions (coverage, locales), GET /v1/sources. `AGRI_FIXED_NOW` pins time for reproducible demos; `AGRI_WEATHER_LIVE=1` enables live Open-Meteo with cache fallback.
 Examples for every state: shared/fixtures/examples/*.json (incl. differential_severity).
 `condition.differentials[]` {signal, condition_id, label (localized), confidence}, `condition.support_blocked_by_differential`, `condition.severity` {affected_leaf_area_pct, level 0-4} | null; observation signals may carry optional `affected_leaf_area_pct`.
+`regional_context[]` (additive): {id, region, text (localized), source_ids} when the location is inside a curated region (Rwanda).
 `weather_risk.climatology` (additive): {status, relation above_usual/typical/below_usual, current_fraction, baseline_median/p25/p75, per_year, summary (localized), possible_source_bias, caveat (localized, farmer-facing), technical_note (English, developer-facing)}.

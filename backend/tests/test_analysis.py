@@ -571,3 +571,20 @@ class FarmerFacingCopy(unittest.TestCase):
             self.assertNotIn("_", text, "no internal field names in farmer-facing text")
         self.assertNotEqual(en["caveat"], fr["caveat"])
         self.assertIn("cross_source_check", en["technical_note"])
+
+
+class RegionalGuidance(unittest.TestCase):
+    def test_rwanda_context_only_inside_region(self):
+        kigali = run(observation())
+        self.assertEqual([n["id"] for n in kigali["regional_context"]], ["rwanda_survey_context"])
+        self.assertIn("bigirimana_2012_ajar", {s["id"] for s in kigali["sources"]})
+        elsewhere = run(observation(location={"latitude": 4.99, "longitude": -75.6}))
+        self.assertEqual(elsewhere["regional_context"], [])
+        self.assertEqual(run(observation(location=None))["regional_context"], [])
+
+    def test_regional_recommendations_sourced_without_doses(self):
+        result = run(observation())
+        recs = {r["id"]: r for r in result["recommendations"]}
+        self.assertIn("rab_plantwise_rw014_2012", recs["count_spots_threshold"]["source_ids"])
+        text = " ".join(r["text"] for r in result["recommendations"])
+        self.assertIsNone(re.search(r"\b(\d+\s?(ml|g|l)\b|cyproconazole|copper oxychloride)", text, re.I))

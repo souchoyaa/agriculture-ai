@@ -57,7 +57,8 @@
    "id": "sanitize_clothing_tools",
    "text": "After visiting affected trees, wash clothing and clean footwear and tools before entering other plots.",
    "source_ids": [
-    "hdoa_npa_20_03_2021"
+    "hdoa_npa_20_03_2021",
+    "rab_plantwise_rw014_2012"
    ]
   },
   {
@@ -65,6 +66,21 @@
    "text": "Plan to re-inspect in 4-6 weeks: lesions from recent infections appear after this delay.",
    "source_ids": [
     "hdoa_npa_20_03_2021"
+   ]
+  },
+  {
+   "id": "count_spots_threshold",
+   "text": "Count rust spots on a sample of leaves. Rwandan extension guidance considers control when there are about two spots per leaf; discuss with your extension officer before acting.",
+   "source_ids": [
+    "rab_plantwise_rw014_2012"
+   ]
+  },
+  {
+   "id": "open_canopy_spacing_pruning",
+   "text": "Keep recommended tree spacing and prune to open the bush. In a Rwandan farm survey, pruning, mulching and fertilising were linked with less rust, and intercropping with more.",
+   "source_ids": [
+    "rab_plantwise_rw014_2012",
+    "bigirimana_2012_ajar"
    ]
   },
   {
@@ -86,8 +102,10 @@
    "id": "consider_resistant_cultivars",
    "text": "For future planting, ask about rust-resistant coffee varieties suited to your area.",
    "source_ids": [
-    "talhinhas_2017_mpp",
-    "avelino_2015_food_security"
+    "avelino_2015_food_security",
+    "bigirimana_2012_ajar",
+    "rab_plantwise_rw014_2012",
+    "talhinhas_2017_mpp"
    ]
   }
  ],
@@ -108,6 +126,26 @@
     "early_warning_resistant_cultivars"
    ],
    "region": "Colombia, Central America"
+  },
+  {
+   "id": "bigirimana_2012_ajar",
+   "title": "Incidence and severity of coffee leaf rust and other coffee pests and diseases in Rwanda",
+   "authors": "Bigirimana, J.; Njoroge, K.; Gahakwa, D.; Phiri, N. A.",
+   "publisher": "African Journal of Agricultural Research 7(26)",
+   "published": "2012-07-10",
+   "doi": "10.5897/ajar11.955",
+   "url": "https://doi.org/10.5897/ajar11.955",
+   "accessed_at": "2026-10-04T04:39:00Z",
+   "license": "Open access (Academic Journals); abstract read via Semantic Scholar, full text not read",
+   "kind": "peer_reviewed",
+   "region": "Rwanda",
+   "used_for": [
+    "rwanda_all_provinces_affected",
+    "altitude_negative_correlation",
+    "commercial_cultivars_susceptible",
+    "mulching_pruning_fertiliser_lower_severity",
+    "intercropping_higher_severity"
+   ]
   },
   {
    "id": "ctahr_pd118_2021",
@@ -167,6 +205,26 @@
     "photograph_both_surfaces"
    ],
    "region": "Hawaiʻi, USA"
+  },
+  {
+   "id": "rab_plantwise_rw014_2012",
+   "title": "Factsheet for farmers: Coffee leaf rust (RW014En)",
+   "authors": "Mushimiyimana, S.; Nduwayezu, A. (Rwanda Agriculture Board); edited by Plantwise/CABI",
+   "publisher": "Plantwise (CABI)",
+   "published": "2012-05",
+   "url": "https://factsheetadmin.plantwise.org/Uploads/PDFs/20127801774.pdf",
+   "accessed_at": "2026-10-04T04:37:00Z",
+   "license": "CC BY-SA 4.0",
+   "kind": "extension",
+   "region": "Rwanda (also stated relevant to Kenya, Ghana)",
+   "used_for": [
+    "symptoms",
+    "wind_and_human_spread",
+    "action_threshold_two_spots_per_leaf",
+    "spacing_pruning",
+    "resistant_varieties"
+   ],
+   "note": "Contains fungicide product names and doses (2012); deliberately not reproduced in app output — registrations/labels must be checked locally."
   },
   {
    "id": "talhinhas_2017_mpp",
@@ -358,14 +416,16 @@
   "limitations": "No location supplied; map and scouting points unavailable."
  },
  "guidance_scope": {
-  "applicability": "Biology (free water, temperature range, latency, dispersal, lower-canopy onset) is pathogen-level and applies across regions. Practical guidance is drawn mainly from Hawaiʻi extension publications; only generic measures (inspection, sanitation, movement limits, re-scouting, consulting extension, resistant cultivars) are retained. Hawaiʻi-specific regulatory reporting, product lists and contacts are deliberately omitted.",
+  "applicability": "Biology (free water, temperature range, latency, dispersal, lower-canopy onset) is pathogen-level and applies across regions. Practical guidance is drawn mainly from Hawaiʻi extension publications; only generic measures (inspection, sanitation, movement limits, re-scouting, consulting extension, resistant cultivars) are retained. Hawaiʻi-specific regulatory reporting, product lists and contacts are deliberately omitted. Rwanda-specific guidance (RAB/Plantwise 2012) and a Rwandan farm survey (Bigirimana et al. 2012) were added; product names and doses in the RAB factsheet are intentionally not reproduced.",
   "local_check_required": [
    "pesticide registration and labels",
    "official reporting obligations",
    "locally recommended resistant cultivars"
   ],
   "regions_of_guidance_sources": [
-   "Hawaiʻi, USA"
+   "Hawaiʻi, USA",
+   "Rwanda"
   ]
- }
+ },
+ "regional_context": []
 }
