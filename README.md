@@ -62,7 +62,7 @@ PROFILE=.cache/chrome-models npx tsx tests/photo-journey.ts http://localhost:809
 
 ## Honest limits
 
-Public, not fine-tuned vision checkpoint; uncalibrated scores (not probabilities, not validated against field
+Uncalibrated scores (not probabilities, not validated against field
 incidence); weather is model data, not stations; rw/sw are unreviewed machine translations; on-device models run in
 WebGPU browsers — the native iOS/Android builds currently fall back to the labelled demo. See Settings → "What this
 version does not do".
